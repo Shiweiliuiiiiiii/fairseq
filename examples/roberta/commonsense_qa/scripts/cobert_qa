@@ -1,3 +1,20 @@
+#!/bin/bash
+#SBATCH --job-name=robert_commonsenseqa
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-00:59:59
+#SBATCH --cpus-per-task=18
+#SBATCH -o robert_commonsenseqa.out
+
+
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate transformer
+
+
 MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-05              # Peak LR for polynomial LR scheduler.
@@ -29,5 +46,5 @@ CUDA_VISIBLE_DEVICES=0 fairseq-train --fp16 --ddp-backend=legacy_ddp \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
     --seed $SEED
-    
+
 python ../evaluate.py
