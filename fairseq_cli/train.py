@@ -328,7 +328,8 @@ def train(
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
                 loss = trainer.criterion(model, sample)
-                loss.backward()
+                print(loss)
+                # loss.backward()
 
                 grads_abs = []
                 for name, weight in model.named_parameters():
