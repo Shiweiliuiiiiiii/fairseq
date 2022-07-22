@@ -30,4 +30,4 @@ CUDA_VISIBLE_DEVICES=0 python train.py --fp16 --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED
+    --seed $SEED --sparse --fix --sparse_init snip
