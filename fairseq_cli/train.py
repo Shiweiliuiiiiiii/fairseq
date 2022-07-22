@@ -12,6 +12,7 @@ import logging
 import math
 import os
 import sys
+import copy
 from typing import Any, Callable, Dict, List, Optional, Tuple
 from .sparse_core import Masking, CosineDecay
 
@@ -197,10 +198,8 @@ def main(cfg: FairseqConfig) -> None:
             )
             break
 
-        # sparsify models here
-
         # train for one epoch
-        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
+        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
         if should_stop:
             break
 
@@ -257,7 +256,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -265,7 +264,7 @@ def train(
         fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
         shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
     )
-    print(f'the current itr is {epoch_itr.epoch}')
+
     update_freq = (
         cfg.optimization.update_freq[epoch_itr.epoch - 1]
         if epoch_itr.epoch <= len(cfg.optimization.update_freq)
@@ -318,6 +317,52 @@ def train(
     progress.update_config(_flatten_config(cfg))
 
     trainer.begin_epoch(epoch_itr.epoch)
+
+    def SNIP(net, trainer, keep_ratio, progress, masks):
+        model = copy.deepcopy(net)
+        model.train()
+
+        for i, samples in enumerate(progress):
+            for j, sample in enumerate(samples):  # delayed update loop
+                if j > 0:
+                    break
+                sample, is_dummy_batch = trainer._prepare_sample(sample)
+                loss = trainer(model, sample)
+                trainer.optimizer.backward(loss)
+
+                grads_abs = []
+                for name, weight in model.named_parameters():
+                    if name not in masks: continue
+                    grads_abs.append(torch.abs(weight * weight.grad))
+
+                # Gather all scores in a single vector and normalise
+                all_scores = torch.cat([torch.flatten(x) for x in grads_abs])
+
+                num_params_to_keep = int(len(all_scores) * keep_ratio)
+                threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
+                acceptable_score = threshold[-1]
+
+                layer_wise_sparsities = []
+                for g in grads_abs:
+                    mask = (g > acceptable_score).float()
+                    sparsity = float((mask == 0).sum().item() / mask.numel())
+                    layer_wise_sparsities.append(sparsity)
+
+                model.zero_grad()
+
+            return layer_wise_sparsities
+
+    if epoch_itr.epoch == 0:
+        if mask.sparse_init == 'snip':
+            layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
+            for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
+                mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
+                    mask.device)
+            mask.apply_mask()
+            mask.print_status()
+        else:
+            mask.init(model=trainer.model, train_loader=None, device=mask.device,
+                      mode=mask.sparse_init, density=(1 - mask.sparsity))
 
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
