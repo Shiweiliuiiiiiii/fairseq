@@ -13,7 +13,7 @@ import math
 import os
 import sys
 from typing import Any, Callable, Dict, List, Optional, Tuple
-from sparse_core import Masking, CosineDecay
+from .sparse_core import Masking, CosineDecay
 
 # We need to setup root logger before importing any fairseq libraries.
 logging.basicConfig(
