@@ -321,6 +321,7 @@ def train(
     def SNIP(net, trainer, keep_ratio, progress, masks):
         model = copy.deepcopy(net)
         model.train()
+        model.no_sync()
 
         for i, samples in enumerate(progress):
             for j, sample in enumerate(samples):  # delayed update loop
@@ -330,8 +331,8 @@ def train(
                 loss = trainer.criterion(model, sample)
                 print(loss)
 
-                # trainer.optimizer.backward(loss[0])
-                loss[0].backward()
+                trainer.optimizer.backward(loss[0])
+                # loss[0].backward()
 
                 grads_abs = []
                 for name, weight in model.named_parameters():
