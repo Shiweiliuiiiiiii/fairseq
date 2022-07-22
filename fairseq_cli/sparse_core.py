@@ -5,7 +5,7 @@ import copy
 import numpy as np
 import torch.optim as optim
 import torch.nn.functional as F
-from funcs import redistribution_funcs, growth_funcs, prune_funcs
+from .funcs import redistribution_funcs, growth_funcs, prune_funcs
 
 
 
