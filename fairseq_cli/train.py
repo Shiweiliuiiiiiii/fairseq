@@ -332,7 +332,7 @@ def train(
                 # loss.backward()
 
                 grads_abs = []
-                for name, weight in model.named_parameters():
+                for name, weight in trainer.model.named_parameters():
                     if name not in masks: continue
                     grads_abs.append(torch.abs(weight * weight.grad))
 
