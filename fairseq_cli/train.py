@@ -328,6 +328,7 @@ def train(
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
                 loss = trainer.criterion(model, sample)
+                print(loss)
 
                 # trainer.optimizer.backward(loss[0])
                 loss[0].backward()
