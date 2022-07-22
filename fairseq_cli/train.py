@@ -357,7 +357,7 @@ def train(
             return layer_wise_sparsities
 
     if epoch_itr.epoch == 1:
-        print('********************************8')
+        print('********************************')
         if mask.sparse_init == 'snip':
             layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
             for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
