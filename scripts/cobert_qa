@@ -44,6 +44,6 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --fix --sparse-init global_magnitude --sparsity $sparsity \
-done
+    --seed $SEED --sparse --fix --sparse-init global_magnitude --sparsity $sparsity
 python examples/roberta/commonsense_qa/evaluate.py
+done
