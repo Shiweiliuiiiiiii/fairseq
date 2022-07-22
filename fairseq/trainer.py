@@ -830,10 +830,11 @@ class Trainer(object):
                         ignore_grad=is_dummy_batch,
                         **extra_kwargs,
                     )
-                    if mask:
-                        mask.apply_mask()
-                        mask.print_status()
                     del loss
+
+           
+                mask.apply_mask()
+                mask.print_status()
 
                 logging_outputs.append(logging_output)
                 sample_size += sample_size_i
