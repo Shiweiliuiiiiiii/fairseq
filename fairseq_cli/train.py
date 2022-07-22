@@ -321,7 +321,8 @@ def train(
     def SNIP(net, trainer, keep_ratio, progress, masks):
         model = copy.deepcopy(net)
         model.train()
-        model.no_sync()
+        trainer.criterion.train()
+        trainer.model.no_sync()
 
         for i, samples in enumerate(progress):
             for j, sample in enumerate(samples):  # delayed update loop
