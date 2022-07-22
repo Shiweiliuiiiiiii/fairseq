@@ -377,7 +377,7 @@ def train(
         with metrics.aggregate("train_inner"), torch.autograd.profiler.record_function(
             "train_step-%d" % i
         ):
-            log_output = trainer.train_step(samples, mask)
+            log_output = trainer.train_step(samples, mask=mask)
 
         if log_output is not None:  # not OOM, overflow, ...
             # log mid-epoch stats
