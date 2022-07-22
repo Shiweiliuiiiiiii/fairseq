@@ -189,7 +189,6 @@ def main(cfg: FairseqConfig) -> None:
     train_meter = meters.StopwatchMeter()
     train_meter.start()
     while epoch_itr.next_epoch_idx <= max_epoch:
-        print(f'epoch_itr.next_epoch_idx is {epoch_itr.next_epoch_idx}')
         if lr <= cfg.optimization.stop_min_lr:
             logger.info(
                 f"stopping training because current learning rate ({lr}) is smaller "
@@ -266,6 +265,7 @@ def train(
         fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
         shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
     )
+    print(f'the current itr is {itr}')
     update_freq = (
         cfg.optimization.update_freq[epoch_itr.epoch - 1]
         if epoch_itr.epoch <= len(cfg.optimization.update_freq)
