@@ -13,7 +13,7 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 
-CUDA_VISIBLE_DEVICES=0 python train.py --fp16 --ddp-backend=legacy_ddp \
+CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
