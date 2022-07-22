@@ -52,7 +52,7 @@ class Masking(object):
         self.fix = self.args.spa.fix
         self.sparse_init = self.args.spa.sparse_init
         self.sparsity = sparsity
-        self.device = torch.device('gpu')
+        self.device = torch.device('cuda')
         self.growth_mode = growth_mode
         self.prune_mode = prune_mode
         self.redistribution_mode = redistribution_mode
