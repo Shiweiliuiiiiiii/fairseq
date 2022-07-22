@@ -6,7 +6,7 @@ roberta = RobertaModel.from_pretrained('checkpoints', 'checkpoint_best.pt', 'dat
 roberta.eval()  # disable dropout
 roberta.cuda()  # use the GPU (optional)
 nsamples, ncorrect = 0, 0
-with open('data/CommonsenseQA/valid.jsonl') as h:
+with open('/home/sliu/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
     for line in h:
         example = json.loads(line)
         scores = []

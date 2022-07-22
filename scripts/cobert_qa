@@ -1,3 +1,16 @@
+#!/bin/bash
+#SBATCH --job-name=bert_qa
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-01:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o bert_qa.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate transformer
 
 
 MAX_UPDATES=3000      # Number of training steps.
@@ -30,4 +43,6 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --fix --sparse-init global_magnitude \
+    --seed $SEED --sparse --fix --sparse-init global_magnitude  \
+
+python .examples/roberta/commonsense_qa/evaluate.py
