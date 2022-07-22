@@ -777,7 +777,7 @@ class Trainer(object):
         self._dummy_batch = batch
 
     @metrics.aggregate("train")
-    def train_step(self, samples, raise_oom=False):
+    def train_step(self, samples, raise_oom=False, mask=False):
         """Do forward, backward and parameter update."""
         self._set_seed()
         self.model.train()
@@ -830,6 +830,9 @@ class Trainer(object):
                         ignore_grad=is_dummy_batch,
                         **extra_kwargs,
                     )
+                    if mask:
+                        mask.apply_mask()
+                        mask.print_status()
                     del loss
 
                 logging_outputs.append(logging_output)
