@@ -322,7 +322,6 @@ def train(
         model = copy.deepcopy(net)
         model.train()
         trainer.criterion.train()
-        trainer.model.no_sync()
 
         for i, samples in enumerate(progress):
             for j, sample in enumerate(samples):  # delayed update loop
