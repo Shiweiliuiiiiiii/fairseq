@@ -281,7 +281,7 @@ class Masking(object):
     def apply_mask(self):
 
         # synchronism masks
-        if self.cfg.distributed_training.distributed_world_size != 1:
+        if self.args.distributed_training.distributed_world_size != 1:
             self.synchronism_masks()
 
         for module in self.modules:
