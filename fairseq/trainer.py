@@ -834,7 +834,6 @@ class Trainer(object):
 
                 if mask:
                     mask.apply_mask()
-                    mask.print_status()
 
                 logging_outputs.append(logging_output)
                 sample_size += sample_size_i
