@@ -327,7 +327,7 @@ def train(
                 if j > 0:
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
-                loss = trainer(model, sample)
+                loss = trainer.criterion(model, sample)
                 trainer.optimizer.backward(loss)
 
                 grads_abs = []
