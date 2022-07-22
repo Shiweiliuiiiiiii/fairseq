@@ -1100,6 +1100,39 @@ class EMAConfig(FairseqDataclass):
         metadata={"help": "If true, store EMA model in fp32 even if model is in fp16"},
     )
 
+@dataclass
+class SparseConfig(FairseqDataclass):
+    """
+    Arguments pertaining to what sparse settings to use.
+
+    Using `HfArgumentParser` we can turn this class
+    into argparse arguments to be able to specify them on
+    the command line.
+    """
+    sparse: bool = field(
+        default=False, metadata={"help": "Enable sparse training."}
+    )
+    fix: bool = field(
+        default=False, metadata={"help": "Fixing the topology of the sparse model."}
+    )
+    growth: Optional[str] = field(
+        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+    )
+    prune: Optional[str] = field(
+        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+    )
+    sparse_init: Optional[str] = field(
+        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+    )
+    redistribution: Optional[str] = field(
+        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+    )
+    sparsity: float = field(
+        default=0.5, metadata={"help": "Sparsity of the model"}
+    )
+    prune_rate: float = field(
+        default=0.5, metadata={"help": "Sparsity of the model"}
+    )
 
 @dataclass
 class FairseqConfig(FairseqDataclass):
@@ -1122,3 +1155,4 @@ class FairseqConfig(FairseqDataclass):
     bpe: Any = None
     tokenizer: Any = None
     ema: EMAConfig = EMAConfig()
+    spa: SparseConfig = SparseConfig()

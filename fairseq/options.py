@@ -21,6 +21,7 @@ from fairseq.dataclass.configs import (
     InteractiveConfig,
     OptimizationConfig,
     EMAConfig,
+    SparseConfig
 )
 from fairseq.dataclass.utils import gen_parser_from_dataclass
 
@@ -42,6 +43,7 @@ def get_training_parser(default_task="translation"):
     add_optimization_args(parser)
     add_checkpoint_args(parser)
     add_ema_args(parser)
+    add_sparse_args(parser)
     return parser
 
 
@@ -411,3 +413,7 @@ def get_args(
 def add_ema_args(parser):
     group = parser.add_argument_group("EMA configuration")
     gen_parser_from_dataclass(group, EMAConfig())
+
+def add_sparse_args(parser):
+    group = parser.add_argument_group("sparse configuration")
+    gen_parser_from_dataclass(group, SparseConfig())

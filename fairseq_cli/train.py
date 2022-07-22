@@ -13,6 +13,7 @@ import math
 import os
 import sys
 from typing import Any, Callable, Dict, List, Optional, Tuple
+from sparse_core import Masking, CosineDecay
 
 # We need to setup root logger before importing any fairseq libraries.
 logging.basicConfig(
@@ -175,9 +176,20 @@ def main(cfg: FairseqConfig) -> None:
     max_epoch = cfg.optimization.max_epoch or math.inf
     lr = trainer.get_lr()
 
+    # build masks here
+    mask=None
+    if cfg.spa.sparse:
+        decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
+        mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
+                       sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune,
+                       growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution,
+                       args=cfg)
+        mask.add_module(model)
+
     train_meter = meters.StopwatchMeter()
     train_meter.start()
     while epoch_itr.next_epoch_idx <= max_epoch:
+        print(f'epoch_itr.next_epoch_idx is {epoch_itr.next_epoch_idx}')
         if lr <= cfg.optimization.stop_min_lr:
             logger.info(
                 f"stopping training because current learning rate ({lr}) is smaller "
@@ -185,6 +197,8 @@ def main(cfg: FairseqConfig) -> None:
                 f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
             )
             break
+
+        # sparsify models here
 
         # train for one epoch
         valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
