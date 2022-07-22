@@ -328,7 +328,7 @@ def train(
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
                 loss = trainer.criterion(model, sample)
-                print(loss)
+                trainer.optimizer.backward(loss)
                 # loss.backward()
 
                 grads_abs = []
