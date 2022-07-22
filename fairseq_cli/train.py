@@ -328,11 +328,12 @@ def train(
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
                 loss = trainer.criterion(model, sample)
-                trainer.optimizer.backward(loss[0])
-                # loss.backward()
+
+                # trainer.optimizer.backward(loss[0])
+                loss[0].backward()
 
                 grads_abs = []
-                for name, weight in trainer.model.named_parameters():
+                for name, weight in model.named_parameters():
                     if name not in masks: continue
                     grads_abs.append(torch.abs(weight * weight.grad))
 
