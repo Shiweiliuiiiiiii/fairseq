@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o bert_qa_0.09.out
+#SBATCH -o bert_qa.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
@@ -25,9 +25,10 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.09
+for sparsity in 0.15 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.95
 do
-CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp --fp16 \
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/$sparsity
+CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
@@ -44,6 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp --fp16 \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --fix --sparse-init global_magnitude --sparsity $sparsity
-python examples/roberta/commonsense_qa/evaluate.py
+    --seed $SEED --sparse --fix --sparse-init global_magnitude --sparsity $sparsity --save-dir $save_dir
+
 done
+python examples/roberta/commonsense_qa/evaluate.py
