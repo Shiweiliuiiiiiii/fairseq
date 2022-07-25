@@ -24,18 +24,6 @@ for method in ['snip/', 'gm/']:
         print(file)
         roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
-        total_size = 0
-        sparse_size = 0
-        # for module in self.modules:
-        for name, weight in roberta.named_parameters():
-            dense_weight_num = weight.numel()
-            sparse_weight_num = (weight != 0).sum().int().item()
-            total_size += dense_weight_num
-            sparse_size += sparse_weight_num
-            layer_density = sparse_weight_num / dense_weight_num
-            print(f'sparsity of layer {name} with tensor {weight.size()} is {1 - layer_density}')
-        print('Final sparsity level is {0}'.format( 1 - sparse_size / total_size))
-
         roberta.eval()  # disable dropout
         roberta.cuda()  # use the GPU (optional)
         nsamples, ncorrect = 0, 0
