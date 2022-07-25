@@ -93,11 +93,63 @@ class Masking(object):
                     self.names.append(name)
                     self.masks[name] = torch.zeros_like(tensor, dtype=torch.float32, requires_grad=False).to(self.device)
 
+        print('Removing in_proj_weight')
+        self.remove_weight_partial_name('in_proj_weight')
+        print('Removing out_proj_weight')
+        self.remove_weight_partial_name('out_proj_weight')
+        print('Removing fc1_weight')
+        self.remove_weight_partial_name('fc1_weight')
+        print('Removing fc2_weight')
+        self.remove_weight_partial_name('fc2_weight')
+        print('lm_head.dense.weight')
+        self.remove_weight_partial_name('lm_head.dense.weight')
+
+
+    def remove_weight(self, name):
+        if name in self.masks:
+            print('Removing {0} of size {1} = {2} parameters.'.format(name, self.masks[name].shape,
+                                                                      self.masks[name].numel()))
+            self.masks.pop(name)
+        elif name + '.weight' in self.masks:
+            print('Removing {0} of size {1} = {2} parameters.'.format(name, self.masks[name + '.weight'].shape,
+                                                                      self.masks[name + '.weight'].numel()))
+            self.masks.pop(name + '.weight')
+        else:
+            print('ERROR', name)
+
+    def remove_weight_partial_name(self, partial_name, verbose=False):
+        removed = set()
+        for name in list(self.masks.keys()):
+            if partial_name in name:
+                if self.verbose:
+                    print('Removing {0} of size {1} with {2} parameters...'.format(name, self.masks[name].shape,
+                                                                                   np.prod(self.masks[name].shape)))
+                removed.add(name)
+                self.masks.pop(name)
+
+        print('Removed {0} layers.'.format(len(removed)))
+
+        i = 0
+        while i < len(self.names):
+            name = self.names[i]
+            if name in removed:
+                self.names.pop(i)
+            else:
+                i += 1
+
+    def remove_type(self, nn_type, verbose=False):
+        for module in self.modules:
+            for name, module in module.named_modules():
+                if isinstance(module, nn_type):
+                    self.remove_weight(name)
+                    # self.remove_weight_partial_name(name, verbose=self.verbose)
+
     def print_status(self):
         total_size = 0
         sparse_size = 0
         for module in self.modules:
             for name, weight in module.named_parameters():
+                if name not in self.masks: continue
                 dense_weight_num = weight.numel()
                 sparse_weight_num = (weight != 0).sum().int().item()
                 total_size += dense_weight_num
@@ -132,7 +184,7 @@ class Masking(object):
 
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                self.masks[name] = ((torch.abs(weight)) >= acceptable_score).float()
+                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float()
 
         if mode == 'uniform':
             print('initialized with uniform')

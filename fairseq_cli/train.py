@@ -329,10 +329,10 @@ def train(
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
                 loss = trainer.criterion(model, sample)
-                print(loss)
 
-                trainer.optimizer.backward(loss[0])
-                # loss[0].backward()
+                with torch.autograd.profiler.record_function("backward"):
+                    trainer.optimizer.backward(loss[0])
+
 
                 grads_abs = []
                 for name, weight in model.named_parameters():
