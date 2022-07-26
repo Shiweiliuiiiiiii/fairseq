@@ -13,12 +13,12 @@ def sorted_nicely(l):
 
 check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/'
 
-for method in ['snip/', 'gm/']:
+for method in ['snip/']:
 
     check_point_folder = check_point_folder + method
-
-    model_files = os.listdir(check_point_folder)
-    model_files = sorted_nicely(model_files)
+    model_files = [0.02, 0.05]
+    # model_files = os.listdir(check_point_folder)
+    # model_files = sorted_nicely(model_files)
 
     for file in model_files:
         print(file)

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=bert_qa
+#SBATCH --job-name=bert_qa_snip_0.02_0.05
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,11 +7,10 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o bert_qa.out
+#SBATCH -o bert_qa_snip_0.02_0.05_new.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
-
 
 MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
@@ -25,9 +24,9 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.15 0.2 0.3 0.4 0.5 0.6 0.7 0.8 0.9 0.95
+for sparsity in 0.02 0.05
 do
-save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/snip/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -45,7 +44,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --fix --sparse-init global_magnitude --sparsity $sparsity --save-dir $save_dir
+    --seed $SEED --sparse --fix --sparse-init snip --sparsity $sparsity --save-dir $save_dir
 
 done
-python examples/roberta/commonsense_qa/evaluate.py
+#python examples/roberta/commonsense_qa/evaluate.py

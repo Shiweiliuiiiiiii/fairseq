@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=bert_qa_gm_0.02_0.05
+#SBATCH --job-name=test_imp
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-10:00:00
+#SBATCH -t 0-1:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o bert_qa_gm_0.02_0.05.out
+#SBATCH -o test_imp.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
@@ -25,11 +25,11 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.02 0.05
+for sparsity in 0.2
 do
-save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/gm/$sparsity
-CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
-    $DATA_DIR \
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP/
+CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
+    $DATA_DIR --save-dir $save_dir  \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
     --reset-optimizer --reset-dataloader --reset-meters \
@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --fix --sparse-init global_magnitude --sparsity $sparsity --save-dir $save_dir
+    --seed $SEED --fix --sparse-init iterative_gm --sparsity $sparsity --imp_iters 11
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py

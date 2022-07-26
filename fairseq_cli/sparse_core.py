@@ -166,10 +166,10 @@ class Masking(object):
 
     def init(self, model, train_loader , device, mode='snip', density=0.05, erk_power_scale=1.0):
         self.init_growth_prune_and_redist()
-        # self.init_optimizer()
 
-        if mode == 'global_magnitude':
-            print('initialize by global magnitude')
+        if mode == 'one_shot_gm':
+            print('initialize by one_shot_gm')
+            self.baseline_nonzero = 0
             weight_abs = []
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
@@ -185,6 +185,33 @@ class Masking(object):
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
                 self.masks[name] = ((torch.abs(weight)) > acceptable_score).float()
+
+        if mode == 'iterative_gm':
+            print('initialized by iterative_gm')
+            total_num_nonzoros = 0
+            for name, weight in model.named_parameters():
+                if name not in self.masks: continue
+                self.masks[name] = (weight != 0).cuda()
+                self.name2nonzeros[name] = (weight != 0).sum().item()
+                total_num_nonzoros += self.name2nonzeros[name]
+
+            weight_abs = []
+            for module in self.modules:
+                for name, weight in module.named_parameters():
+                    if name not in self.masks: continue
+                    weight_abs.append(torch.abs(weight))
+
+            # Gather all scores in a single vector and normalise
+            all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
+            num_params_to_keep = int(total_num_nonzoros * density)
+
+            threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
+            acceptable_score = threshold[-1]
+
+            for module in self.modules:
+                for name, weight in module.named_parameters():
+                    if name not in self.masks: continue
+                    self.masks[name] = ((torch.abs(weight)) > acceptable_score).float()
 
         if mode == 'uniform':
             print('initialized with uniform')
