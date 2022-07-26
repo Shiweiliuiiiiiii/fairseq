@@ -236,6 +236,10 @@ class Trainer(object):
         else:
             return self.cfg.checkpoint.checkpoint_suffix or ""
 
+    @checkpoint_suffix.setter
+    def checkpoint_suffix(self, new_val: float):
+        self.cfg.checkpoint.checkpoint_suffix = new_val
+
     @property
     def criterion(self):
         if self._wrapped_criterion is None:
