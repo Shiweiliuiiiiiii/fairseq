@@ -172,6 +172,7 @@ def main(cfg: FairseqConfig) -> None:
 
             # Load the latest checkpoint if one is available and restore the
             # corresponding train iterator
+            cfg.checkpoint.reset_dataloader =True
             extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
                 cfg.checkpoint,
                 trainer,
@@ -198,7 +199,7 @@ def main(cfg: FairseqConfig) -> None:
                                sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
                                redistribution_mode=cfg.spa.redistribution, fp16=False, args=cfg)
                 mask.add_module(model)
-                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=cfg.spa.sparsity)
+                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1-cfg.spa.sparsity))
 
             # update the name of subnet with regards to the current pruning iteration
             trainer.checkpoint_suffix = "_iter{}".format(iter)
