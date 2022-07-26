@@ -189,11 +189,15 @@ class Masking(object):
         if mode == 'iterative_gm':
             print('initialized by iterative_gm')
             total_num_nonzoros = 0
+            dense_nonzeros = 0
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
                 self.masks[name] = (weight != 0).cuda()
                 self.name2nonzeros[name] = (weight != 0).sum().item()
                 total_num_nonzoros += self.name2nonzeros[name]
+                dense_nonzeros += weight.numel()
+            
+            print(f'sparsity level of current model is {1-total_num_nonzoros/dense_nonzeros}')
 
             weight_abs = []
             for module in self.modules:
