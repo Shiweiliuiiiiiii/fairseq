@@ -210,7 +210,8 @@ def main(cfg: FairseqConfig) -> None:
             # weight rewinding
             print('loading pretrained weights')
             model.load_state_dict(initalization)
-            mask.apply_mask()
+
+            if mask: mask.apply_mask()
 
             train_meter = meters.StopwatchMeter()
             train_meter.start()
