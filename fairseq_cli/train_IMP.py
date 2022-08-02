@@ -179,6 +179,8 @@ def main(cfg: FairseqConfig) -> None:
                 # don't cache epoch iterators for sharded datasets
                 disable_iterator_cache=task.has_sharded_data("train"),
             )
+
+
             if cfg.common.tpu:
                 import torch_xla.core.xla_model as xm
 
@@ -208,6 +210,7 @@ def main(cfg: FairseqConfig) -> None:
             # weight rewinding
             print('loading pretrained weights')
             model.load_state_dict(initalization)
+            mask.apply_mask()
 
             train_meter = meters.StopwatchMeter()
             train_meter.start()
