@@ -200,7 +200,7 @@ def main(cfg: FairseqConfig) -> None:
                 mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
                                sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
                                redistribution_mode=cfg.spa.redistribution, fp16=False, args=cfg)
-                mask.add_module(model)
+                mask.add_module(trainer.model)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1-cfg.spa.sparsity))
 
             # update the name of subnet with regards to the current pruning iteration
@@ -209,7 +209,7 @@ def main(cfg: FairseqConfig) -> None:
 
             # weight rewinding
             print('loading pretrained weights')
-            model.load_state_dict(initalization)
+            trainer.model.load_state_dict(initalization)
 
             if mask: mask.apply_mask()
 
