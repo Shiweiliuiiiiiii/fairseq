@@ -24,6 +24,14 @@ for method in ['snip/']:
         print(file)
         roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
+        total_zero = 0
+        total_weight = 0
+        for name, weight in roberta.named_parameters():
+            total_zero += (weight==0).sum().item()
+            total_weight += weight.numel()
+
+        print(f'the sparsity level of the model is {total_zero/total_weight} ')
+
         roberta.eval()  # disable dropout
         roberta.cuda()  # use the GPU (optional)
         nsamples, ncorrect = 0, 0
