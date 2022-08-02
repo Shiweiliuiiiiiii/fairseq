@@ -105,7 +105,7 @@ def save_checkpoint(cfg: CheckpointConfig, trainer, epoch_itr, val_loss):
         "checkpoint_last{}.pt".format(suffix)
     ] = not cfg.no_last_checkpoints
 
-    extra_state = {"train_iterator": trainer.model.state_dict(), "val_loss": val_loss}
+    extra_state = {"train_iterator": epoch_itr.state_dict(), "val_loss": val_loss}
     if hasattr(save_checkpoint, "best"):
         extra_state.update({"best": save_checkpoint.best})
 
