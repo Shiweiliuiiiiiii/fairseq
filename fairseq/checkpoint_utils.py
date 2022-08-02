@@ -40,10 +40,11 @@ def save_checkpoint(cfg: CheckpointConfig, trainer, epoch_itr, val_loss):
         os.makedirs(cfg.save_dir, exist_ok=True)
 
     prev_best = getattr(save_checkpoint, "best", val_loss)
+
     if val_loss is not None:
         best_function = max if cfg.maximize_best_checkpoint_metric else min
         save_checkpoint.best = best_function(val_loss, prev_best)
-
+        print(f'saved best is {save_checkpoint.best}')
     if cfg.no_save:
         return
 
@@ -132,6 +133,8 @@ def save_checkpoint(cfg: CheckpointConfig, trainer, epoch_itr, val_loss):
                 checkpoints[0], epoch, updates, val_loss, write_timer.sum
             )
         )
+        save_checkpoint.best = 1000
+
 
     if not end_of_epoch and cfg.keep_interval_updates > 0:
         # remove old checkpoints; checkpoints are sorted in descending order
