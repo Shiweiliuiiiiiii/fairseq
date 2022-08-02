@@ -16,7 +16,7 @@ check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/c
 for method in ['snip/']:
 
     check_point_folder = check_point_folder + method
-    model_files = [0.3]
+    model_files = [0.5]
     # model_files = os.listdir(check_point_folder)
     # model_files = sorted_nicely(model_files)
 
