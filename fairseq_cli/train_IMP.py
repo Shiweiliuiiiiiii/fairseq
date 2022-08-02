@@ -469,14 +469,15 @@ def validate_and_save(
             cfg.checkpoint, trainer, epoch_itr, valid_losses[0]
         )
 
-    total_zero = 0
-    total_weight = 0
-    for name, weight in trainer.model.named_parameters():
-        if name not in mask: continue
-        total_zero += (weight == 0).sum().item()
-        total_weight += weight.numel()
+    if mask:
+        total_zero = 0
+        total_weight = 0
+        for name, weight in trainer.model.named_parameters():
+            if name not in mask: continue
+            total_zero += (weight == 0).sum().item()
+            total_weight += weight.numel()
 
-    print(f'the sparsity level of the model is {total_zero / total_weight} ')
+        print(f'the sparsity level of the model is {total_zero / total_weight} ')
 
     return valid_losses, should_stop
 
