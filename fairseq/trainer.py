@@ -846,6 +846,7 @@ class Trainer(object):
                 # reduce the chance of OOM
                 if self.cuda and self.get_num_updates() == 0:
                     torch.cuda.empty_cache()
+
             except RuntimeError as e:
                 if "out of memory" in str(e):
                     self._log_oom(e)
@@ -968,6 +969,8 @@ class Trainer(object):
                             samples, raise_oom
                         )  # recursion to feed in same batch
 
+            if mask:
+                mask.apply_mask()
         except FloatingPointError:
 
             self.consolidate_optimizer()
