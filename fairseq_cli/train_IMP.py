@@ -473,7 +473,7 @@ def validate_and_save(
         total_zero = 0
         total_weight = 0
         for name, weight in trainer.model.named_parameters():
-            if name not in mask: continue
+            if name not in mask.masks: continue
             total_zero += (weight == 0).sum().item()
             total_weight += weight.numel()
 
