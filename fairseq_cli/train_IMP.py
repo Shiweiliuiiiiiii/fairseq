@@ -368,7 +368,7 @@ def train(
 
         end_of_epoch = not itr.has_next()
         valid_losses, should_stop = validate_and_save(
-            cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch
+            cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch, mask=mask
         )
 
         if should_stop:
@@ -404,6 +404,7 @@ def validate_and_save(
     epoch_itr,
     valid_subsets: List[str],
     end_of_epoch: bool,
+    mask=False
 ) -> Tuple[List[Optional[float]], bool]:
     num_updates = trainer.get_num_updates()
     max_update = cfg.optimization.max_update or math.inf
@@ -471,6 +472,7 @@ def validate_and_save(
     total_zero = 0
     total_weight = 0
     for name, weight in trainer.model.named_parameters():
+        if name not in mask: continue
         total_zero += (weight == 0).sum().item()
         total_weight += weight.numel()
 
