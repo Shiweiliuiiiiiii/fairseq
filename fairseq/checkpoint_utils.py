@@ -133,7 +133,7 @@ def save_checkpoint(cfg: CheckpointConfig, trainer, epoch_itr, val_loss):
                 checkpoints[0], epoch, updates, val_loss, write_timer.sum
             )
         )
-        save_checkpoint.best = 1000
+        save_checkpoint.best = 0.0
 
 
     if not end_of_epoch and cfg.keep_interval_updates > 0:
