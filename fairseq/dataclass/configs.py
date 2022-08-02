@@ -1109,7 +1109,7 @@ class SparseConfig(FairseqDataclass):
     into argparse arguments to be able to specify them on
     the command line.
     """
-    imp_save_intervaliters: int = field(
+    imp_iters: int = field(
         default=1, metadata={'help': 'number of IMP iterations'}
     )
     sparse: bool = field(
