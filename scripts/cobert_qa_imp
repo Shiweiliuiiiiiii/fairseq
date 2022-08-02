@@ -25,7 +25,7 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.2
+for sparsity in 0.5
 do
 save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP/
 CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \

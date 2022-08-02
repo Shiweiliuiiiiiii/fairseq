@@ -196,6 +196,7 @@ class Masking(object):
                 self.name2nonzeros[name] = (weight != 0).sum().item()
                 total_num_nonzoros += self.name2nonzeros[name]
                 dense_nonzeros += weight.numel()
+                print(f'sparsity of layer {name} is {self.name2nonzeros[name]/weight.numel()}')
 
             print(f'sparsity level of current model is {1-total_num_nonzoros/dense_nonzeros}')
 
