@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test_imp_0.2
+#SBATCH --job-name=test_imp_0.1
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-24:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o test_imp_0.2.out
+#SBATCH -o test_imp_0.1.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
@@ -25,7 +25,7 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.2
+for sparsity in 0.1
 do
 save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
