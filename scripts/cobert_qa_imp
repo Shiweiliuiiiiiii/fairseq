@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-1:00:00
+#SBATCH -t 0-2:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o test_imp.out
 
@@ -25,7 +25,7 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.5
+for sparsity in 0.1
 do
 save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP/
 CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11 --max-epoch 1
+    --seed $SEED --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
