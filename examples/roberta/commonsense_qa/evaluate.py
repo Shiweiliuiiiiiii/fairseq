@@ -11,26 +11,26 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/'
+check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/IMP/'
 
-for method in ['snip/']:
+for method in ['0.2/']:
 
     check_point_folder = check_point_folder + method
-    model_files = [0.5]
-    # model_files = os.listdir(check_point_folder)
-    # model_files = sorted_nicely(model_files)
+    # model_files = [0.5]
+    model_files = os.listdir(check_point_folder)
+    model_files = sorted_nicely(model_files)
 
     for file in model_files:
         print(file)
         roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
-        total_zero = 0
-        total_weight = 0
-        for name, weight in roberta.named_parameters():
-            total_zero += (weight==0).sum().item()
-            total_weight += weight.numel()
-
-        print(f'the sparsity level of the model is {total_zero/total_weight} ')
+        # total_zero = 0
+        # total_weight = 0
+        # for name, weight in roberta.named_parameters():
+        #     total_zero += (weight==0).sum().item()
+        #     total_weight += weight.numel()
+        #
+        # print(f'the sparsity level of the model is {total_zero/total_weight} ')
 
         roberta.eval()  # disable dropout
         roberta.cuda()  # use the GPU (optional)
