@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=bert_qa_gm_0.02_0.05
+#SBATCH --job-name=roberta_one_shot_mp
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o bert_qa_gm_0.02_0.05.out
+#SBATCH -o roberta_one_shot_mp.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
