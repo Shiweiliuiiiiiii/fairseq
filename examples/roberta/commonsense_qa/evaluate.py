@@ -11,11 +11,11 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/IMP/'
+check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/IMP/0.2/'
 
-for method in ['0.2/']:
+# for method in ['0.2/']:
 
-    check_point_folder = check_point_folder + method
+    # check_point_folder = check_point_folder + method
     # model_files = [0.5]
     model_files = os.listdir(check_point_folder)
     model_files = sorted_nicely(model_files)
