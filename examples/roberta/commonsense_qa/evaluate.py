@@ -11,47 +11,47 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/IMP/0.1/'
+check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/'
 
-# for method in ['0.2/']:
+for method in ['snip/']:
 
-    # check_point_folder = check_point_folder + method
+    check_point_folder = check_point_folder + method
     # model_files = [0.5]
-model_files = os.listdir(check_point_folder)
-model_files = sorted_nicely(model_files)
+    model_files = os.listdir(check_point_folder)
+    model_files = sorted_nicely(model_files)
 
-for file in model_files:
-    print(file)
-    roberta = RobertaModel.from_pretrained(check_point_folder, file, 'data/CommonsenseQA')
+    for file in model_files:
+        print(file)
+        roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
-    # total_zero = 0
-    # total_weight = 0
-    # for name, weight in roberta.named_parameters():
-    #     total_zero += (weight==0).sum().item()
-    #     total_weight += weight.numel()
-    #
-    # print(f'the sparsity level of the model is {total_zero/total_weight} ')
+        total_zero = 0
+        total_weight = 0
+        for name, weight in roberta.named_parameters():
+            total_zero += (weight==0).sum().item()
+            total_weight += weight.numel()
 
-    roberta.eval()  # disable dropout
-    roberta.cuda()  # use the GPU (optional)
-    nsamples, ncorrect = 0, 0
+        print(f'the sparsity level of the model is {total_zero/total_weight} ')
 
-    with open('/home/sliu/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
-        for line in h:
-            example = json.loads(line)
-            scores = []
-            for choice in example['question']['choices']:
-                input = roberta.encode(
-                    'Q: ' + example['question']['stem'],
-                    'A: ' + choice['text'],
-                    no_separator=True
-                )
-                score = roberta.predict('sentence_classification_head', input, return_logits=True)
-                scores.append(score)
-            pred = torch.cat(scores).argmax()
-            answer = ord(example['answerKey']) - ord('A')
-            nsamples += 1
-            if pred == answer:
-                ncorrect += 1
+        roberta.eval()  # disable dropout
+        roberta.cuda()  # use the GPU (optional)
+        nsamples, ncorrect = 0, 0
 
-    print('Accuracy: ' + str(ncorrect / float(nsamples)))
+        with open('/home/sliu/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
+            for line in h:
+                example = json.loads(line)
+                scores = []
+                for choice in example['question']['choices']:
+                    input = roberta.encode(
+                        'Q: ' + example['question']['stem'],
+                        'A: ' + choice['text'],
+                        no_separator=True
+                    )
+                    score = roberta.predict('sentence_classification_head', input, return_logits=True)
+                    scores.append(score)
+                pred = torch.cat(scores).argmax()
+                answer = ord(example['answerKey']) - ord('A')
+                nsamples += 1
+                if pred == answer:
+                    ncorrect += 1
+
+        print('Accuracy: ' + str(ncorrect / float(nsamples)))
