@@ -205,7 +205,7 @@ def main(cfg: FairseqConfig) -> None:
 
             # update the name of subnet with regards to the current pruning iteration
             trainer.checkpoint_suffix = "_iter{}".format(iter)
-            cfg.checkpoint.restore_file = cfg.checkpoint.save_dir + "checkpoint_best.pt"
+            cfg.checkpoint.restore_file = cfg.checkpoint.save_dir + "/checkpoint_best.pt"
 
             # weight rewinding
             print('loading pretrained weights')
