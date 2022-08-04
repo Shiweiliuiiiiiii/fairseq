@@ -18,7 +18,7 @@ LR=1e-05                # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=32        # Batch size per GPU.
 SEED=1                  # Random seed.
 ROBERTA_PATH=/path/to/roberta/model.pt
-DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/
+DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/WSC/
 # we use the --user-dir option to load the task and criterion
 # from the examples/roberta/wsc directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
