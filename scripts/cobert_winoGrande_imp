@@ -28,7 +28,6 @@ for sparsity in 0.2
 do
 save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/IMP/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train_custom.py winogrande_1.0/ \
-  --data $DATA_DIR --save-dir $save_dir  \
   --restore-file $ROBERTA_PATH \
   --reset-optimizer --reset-dataloader --reset-meters \
   --no-epoch-checkpoints --no-last-checkpoints --no-save-optimizer-state \
