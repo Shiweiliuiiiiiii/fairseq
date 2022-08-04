@@ -24,9 +24,9 @@ DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/winogrande_
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/wsc
 
-for sparsity in 0.2
+for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/IMP/$sparsity
+save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/gm/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train_custom.py $DATA_DIR \
   --restore-file $ROBERTA_PATH \
   --save-dir $save_dir \
@@ -44,8 +44,8 @@ CUDA_VISIBLE_DEVICES=0 python train_custom.py $DATA_DIR \
   --lr-scheduler polynomial_decay --lr $LR \
   --warmup-updates $WARMUP_UPDATES --total-num-update $TOTAL_NUM_UPDATES \
   --batch-size $MAX_SENTENCES \
-  --max-update $TOTAL_NUM_UPDATES --max_epoch 1 \
-  --log-format simple --log-interval 100 --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11
+  --max-update $TOTAL_NUM_UPDATES \
+  --log-format simple --log-interval 100 --sparse-init one_shot_gm --sparsity $sparsity
 done
 
 
