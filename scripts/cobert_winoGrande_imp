@@ -29,6 +29,7 @@ do
 save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/IMP/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train_custom.py $DATA_DIR \
   --restore-file $ROBERTA_PATH \
+  --save-dir $save_dir \
   --reset-optimizer --reset-dataloader --reset-meters \
   --no-epoch-checkpoints --no-last-checkpoints --no-save-optimizer-state \
   --best-checkpoint-metric accuracy --maximize-best-checkpoint-metric \
