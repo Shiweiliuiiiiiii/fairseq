@@ -412,7 +412,7 @@ def train(
         ),
     )
     progress.update_config(_flatten_config(cfg))
-    
+
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
     num_updates = trainer.get_num_updates()
