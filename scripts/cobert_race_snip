@@ -3,16 +3,16 @@
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gpus-per-node=1
-#SBATCH --gpus=1
-#SBATCH -t 0-24:00:00
+#SBATCH --gpus-per-node=2
+#SBATCH --gpus=2
+#SBATCH -t 1-24:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o cobert_race_snip.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
 
-MAX_EPOCH=5           # Number of training epochs.
+MAX_EPOCH=3           # Number of training epochs.
 LR=1e-05              # Peak LR for fixed LR scheduler.
 NUM_CLASSES=4
 MAX_SENTENCES=4       # Batch size per GPU.
