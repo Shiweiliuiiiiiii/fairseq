@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0,1 python train_custom.py $DATA_DIR --ddp-backend=legacy_d
     --required-batch-size-multiple 1 \
     --update-freq $UPDATE_FREQ \
     --max-epoch $MAX_EPOCH \
-    --fix --sparsity iterative_gm --sparsity $sparsity --imp-iters 11 --sparse
+    --fix --sparsity-init iterative_gm --sparsity $sparsity --imp-iters 11 --sparse
 done
 
 
