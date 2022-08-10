@@ -2,6 +2,7 @@ from fairseq.models.roberta import RobertaModel
 from examples.roberta.wsc import wsc_utils  # also loads WSC task and criterion
 import os, re
 
+
 def sorted_nicely(l):
     """ Sort the given iterable in the way that humans expect."""
     convert = lambda text: int(text) if text.isdigit() else text
@@ -24,9 +25,10 @@ for method in ['snip/','gm/']:
         roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', data_dir)
         roberta.cuda()
         nsamples, ncorrect = 0, 0
-        for sentence, label in wsc_utils.winogrande_jsonl_iterator(data_dir+'val.jsonl', eval=True):
+        for sentence, pronoun_span, query, cand in wsc_utils.winogrande_jsonl_iterator(data_dir+'val.jsonl', eval=True):
             pred = roberta.disambiguate_pronoun(sentence)
-            nsamples += 1
-            if pred == label:
-                ncorrect += 1
+            print(pred)
+            # nsamples += 1
+            # if pred == label:
+            #     ncorrect += 1
         print('Accuracy: ' + str(ncorrect / float(nsamples)))
