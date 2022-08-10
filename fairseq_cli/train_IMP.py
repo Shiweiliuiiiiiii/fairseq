@@ -199,7 +199,7 @@ def main(cfg: FairseqConfig) -> None:
                 decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
                 mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
                                sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
-                               redistribution_mode=cfg.spa.redistribution, fp16=False, args=cfg)
+                               redistribution_mode=cfg.spa.redistribution, fp16=cfg.distributed_training.fp16, args=cfg)
                 mask.add_module(trainer.model)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1-cfg.spa.sparsity))
 
