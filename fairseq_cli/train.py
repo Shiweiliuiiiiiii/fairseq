@@ -333,7 +333,6 @@ def train(
                 with torch.autograd.profiler.record_function("backward"):
                     trainer.optimizer.backward(loss[0])
 
-
                 grads_abs = []
                 for name, weight in model.named_parameters():
                     if name not in masks: continue
@@ -375,6 +374,45 @@ def train(
             mask.init(model=trainer.model, train_loader=None, device=mask.device,
                       mode=mask.sparse_init, density=(1 - mask.sparsity))
 
+    progress = progress_bar.progress_bar(
+        itr,
+        log_format=cfg.common.log_format,
+        log_file=cfg.common.log_file,
+        log_interval=cfg.common.log_interval,
+        epoch=epoch_itr.epoch,
+        aim_repo=(
+            cfg.common.aim_repo
+            if distributed_utils.is_master(cfg.distributed_training)
+            else None
+        ),
+        aim_run_hash=(
+            cfg.common.aim_run_hash
+            if distributed_utils.is_master(cfg.distributed_training)
+            else None
+        ),
+        aim_param_checkpoint_dir=cfg.checkpoint.save_dir,
+        tensorboard_logdir=(
+            cfg.common.tensorboard_logdir
+            if distributed_utils.is_master(cfg.distributed_training)
+            else None
+        ),
+        default_log_format=("tqdm" if not cfg.common.no_progress_bar else "simple"),
+        wandb_project=(
+            cfg.common.wandb_project
+            if distributed_utils.is_master(cfg.distributed_training)
+            else None
+        ),
+        wandb_run_name=os.environ.get(
+            "WANDB_NAME", os.path.basename(cfg.checkpoint.save_dir)
+        ),
+        azureml_logging=(
+            cfg.common.azureml_logging
+            if distributed_utils.is_master(cfg.distributed_training)
+            else False
+        ),
+    )
+    progress.update_config(_flatten_config(cfg))
+    
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
     num_updates = trainer.get_num_updates()
