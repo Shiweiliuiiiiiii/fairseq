@@ -30,4 +30,5 @@ fairseq-validate \
     --task sentence_ranking \
     --criterion sentence_ranking \
     --save-predictions $PREDS_OUT
+done
 
