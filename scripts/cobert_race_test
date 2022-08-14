@@ -16,11 +16,11 @@ source activate transformer
 ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
 
 #IMP
-for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
+for ite in 0 1 2 3 4 5 6 7 8 9
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
-MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/imp/$sparsity/checkpoint_best.pt
-PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/preds.tsv
+MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/imp/0.2/checkpoint_best_iter$ite.pt
+PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/0.2/preds$ite.tsv
 TEST_SPLIT=test
 
 fairseq-validate \
