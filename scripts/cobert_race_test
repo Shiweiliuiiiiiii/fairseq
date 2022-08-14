@@ -1,0 +1,33 @@
+#!/bin/bash
+#SBATCH --job-name=cobert_race_gm
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 3-12:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o cobert_race_gm.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate transformer
+
+
+ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
+
+for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
+do
+DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
+MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/checkpoint_best.pt
+PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/preds.tsv
+TEST_SPLIT=test
+
+fairseq-validate \
+    $DATA_DIR \
+    --valid-subset $TEST_SPLIT \
+    --path $MODEL_PATH \
+    --batch-size 1 \
+    --task sentence_ranking \
+    --criterion sentence_ranking \
+    --save-predictions $PREDS_OUT
+
