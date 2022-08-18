@@ -23,7 +23,7 @@ acc_test_gm = acc_test[10:20]
 acc_test_snip = acc_test[20:29]
 acc_test_snip.append(26.0)
 
-acc_test_imp_high = acc_test1[:10]
+acc_test_imp_high = [82, 82.6, 81.4, 79.1, 76, 71.6, 63.9, 56.3, 51.6, 36.8 ]
 acc_test_imp_high.append(26.1)
 acc_test_gm_high = acc_test1[10:20]
 acc_test_snip_high = acc_test1[20:29]
@@ -36,7 +36,7 @@ x_axis = range(10)
 # prune
 roberta_large = fig.add_subplot(1,1,1)
 roberta_large.plot(x_axis, acc_test_snip_high,  '-',   label='SNIP',color='#dbb40c',linewidth=3, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-',   label='LTH',color='orange',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-',   label='LTH',color='orange',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_test_gm_high,  '-',   label='Global Magnitude',color='green',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, [acc_test_imp_high[0]]*10,  '-o',   label='Dense model',color='black',linewidth=3, markersize=markersize, )
 # vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )

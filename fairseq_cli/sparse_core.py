@@ -186,6 +186,14 @@ class Masking(object):
                 if name not in self.masks: continue
                 self.masks[name] = ((torch.abs(weight)) > acceptable_score).float()
 
+        elif mode == 'random':
+            print('initialize by random pruning')
+            self.baseline_nonzero = 0
+            for name, weight in model.named_parameters():
+                if name not in self.masks: continue
+                self.masks[name] = (torch.rand(weight.shape) < density).float()
+
+
         if mode == 'iterative_gm':
             print('initialized by iterative_gm')
             total_num_nonzoros = 0
