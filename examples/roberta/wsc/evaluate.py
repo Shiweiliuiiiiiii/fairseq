@@ -13,7 +13,7 @@ def sorted_nicely(l):
 check_point_folder = '/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/'
 data_dir = '/home/sliu/project_space/pruning_fails/QA/robert/winogrande/winogrande_1.1/'
 
-for method in ['snip/','gm/']:
+for method in ['random/']:
 
     check_point_folder = check_point_folder + method
     # model_files = [0.5]
