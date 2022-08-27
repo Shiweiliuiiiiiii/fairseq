@@ -9,7 +9,7 @@ dense = [77.31]
 
 acc_test = []
 acc_test1 = []
-with open('/home/shiweiliu/PycharmProjects/fairseq/cobert_race_TEST.out') as file:
+with open('/Users/liushiwei/Projects/TUE_projects/fairseq/results/cobert_race_TEST.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test.append(float(line.split()[19]))
