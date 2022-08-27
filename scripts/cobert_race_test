@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cobert_race_imp_test1
+#SBATCH --job-name=cobert_race_random_test
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
