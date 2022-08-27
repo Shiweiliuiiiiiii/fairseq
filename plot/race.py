@@ -15,8 +15,18 @@ with open('/Users/liushiwei/Projects/TUE_projects/fairseq/results/cobert_race_TE
             acc_test.append(float(line.split()[19]))
         if ' | test1 | valid on' in line:
             acc_test1.append(float(line.split()[19]))
-print((acc_test))
-print(acc_test1)
+
+acc_test_random = []
+acc_test_random_high = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_random_test.out') as file:
+    for line in file:
+        if 'test | valid on' in line:
+            acc_test_random.append(float(line.split()[19]))
+        if ' | test1 | valid on' in line:
+            acc_test_random_high.append(float(line.split()[19]))
+
+
+
 acc_test_imp = acc_test[:10]
 acc_test_imp.append(26.1)
 acc_test_gm = acc_test[10:20]
@@ -38,6 +48,7 @@ roberta_large = fig.add_subplot(1,1,1)
 roberta_large.plot(x_axis, acc_test_snip_high,  '-',   label='SNIP',color='#dbb40c',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-',   label='LTH',color='orange',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_test_gm_high,  '-',   label='Global Magnitude',color='green',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_random_high,  '-',   label='Random',color='purple',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, [acc_test_imp_high[0]]*10,  '-o',   label='Dense model',color='black',linewidth=3, markersize=markersize, )
 # vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )
 roberta_large.set_title('Roberta Large on RACE high',fontsize=fontsize)

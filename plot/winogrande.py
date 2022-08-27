@@ -8,22 +8,29 @@ markersize = 3
 dense = [77.31]
 
 acc_gm = []
-with open('/home/shiweiliu/PycharmProjects/fairseq/winogrande_gm_0.2.out') as file:
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_0.2.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_gm.append(float(line.split()[19][:-1]))
 
 acc_snip = []
-with open('/home/shiweiliu/PycharmProjects/fairseq/winogrande_snip_0.2.out') as file:
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_snip_0.2.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_snip.append(float(line.split()[19][:-1]))
 
 acc_imp = []
-with open('/home/shiweiliu/PycharmProjects/fairseq/winogrande_imp_0.2.out') as file:
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_imp_0.2.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_imp.append(float(line.split()[19][:-1]))
+
+acc_random = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/cobert_winogrande_random.out') as file:
+    for line in file:
+        if 'val | epoch 019 |' in line:
+            acc_random.append(float(line.split()[19][:-1]))
+
 
 x_axis = range(10)
 
@@ -33,6 +40,7 @@ roberta_large = fig.add_subplot(1,1,1)
 roberta_large.plot(x_axis, acc_snip,  '-',   label='SNIP',color='#dbb40c',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_imp[1:],  '-',   label='LTH',color='orange',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_gm,  '-',   label='Global Magnitude',color='green',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_random,  '-',   label='Random',color='purple',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, [acc_imp[0]]*10,  '-o',   label='Dense model',color='black',linewidth=3, markersize=markersize, )
 # vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )
 roberta_large.set_title('Roberta Large on WinoGrande',fontsize=fontsize)
