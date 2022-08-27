@@ -59,7 +59,7 @@ MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/ch
 PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/preds_middle.tsv
 TEST_SPLIT=test
 
-fairseq-validate \
+PYTHONPATH=/home/sliu/Projects/fairseq python -m fairseq-validate \
     $DATA_DIR \
     --valid-subset $TEST_SPLIT \
     --path $MODEL_PATH \
