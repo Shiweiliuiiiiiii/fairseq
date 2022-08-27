@@ -10,7 +10,7 @@
 #SBATCH -o cobert_race_random.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate transformer
+source activate slak
 
 MAX_EPOCH=3           # Number of training epochs.
 LR=1e-05              # Peak LR for fixed LR scheduler.
