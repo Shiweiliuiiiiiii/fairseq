@@ -10,7 +10,7 @@
 #SBATCH -o cobert_qa_random.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate transformer
+source activate slak
 
 MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
