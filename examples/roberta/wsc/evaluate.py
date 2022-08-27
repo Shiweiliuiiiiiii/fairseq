@@ -1,5 +1,5 @@
 from fairseq.models.roberta import RobertaModel
-from examples.roberta.wsc import wsc_utils  # also loads WSC task and criterion
+import wsc_utils  # also loads WSC task and criterion
 import os, re
 
 
