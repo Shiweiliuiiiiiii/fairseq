@@ -10,7 +10,7 @@
 #SBATCH -o cobert_race_random_test.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate transformer
+source activate slak
 
 
 ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
@@ -56,7 +56,7 @@ for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
 MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/checkpoint_best.pt
-PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/preds_middle.tsv
+PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/random/$sparsity/preds_middle.tsv
 TEST_SPLIT=test
 
 fairseq-validate \
@@ -73,7 +73,7 @@ for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
 MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/checkpoint_best.pt
-PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm/$sparsity/preds_high.tsv
+PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/random/$sparsity/preds_high.tsv
 TEST_SPLIT=test1
 
 fairseq-validate \
