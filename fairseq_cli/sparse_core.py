@@ -191,7 +191,7 @@ class Masking(object):
             self.baseline_nonzero = 0
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                self.masks[name] = (torch.rand(weight.shape) < density).float()
+                self.masks[name] = (torch.rand(weight.shape) < density).float().data.to('cuda')
 
 
         if mode == 'iterative_gm':
