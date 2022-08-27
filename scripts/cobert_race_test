@@ -10,7 +10,7 @@
 #SBATCH -o cobert_race_random_test.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate transformer
 
 
 ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
