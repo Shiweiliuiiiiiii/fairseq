@@ -10,7 +10,7 @@
 #SBATCH -o roberta_one_shot_mp_after.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate transformer
 
 
 MAX_UPDATES=3000      # Number of training steps.
