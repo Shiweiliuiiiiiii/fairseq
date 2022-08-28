@@ -213,7 +213,7 @@ def main(cfg: FairseqConfig) -> None:
         # don't cache epoch iterators for sharded datasets
         disable_iterator_cache=task.has_sharded_data("train"),
     )
-        
+
     end_of_epoch=True
     valid_subsets = cfg.dataset.valid_subset.split(",")
     valid_losses, should_stop = validate_and_save(
@@ -500,9 +500,15 @@ def validate_and_save(
 
     # Save checkpoint
     if do_save or should_stop:
-        checkpoint_utils.save_checkpoint(
-            cfg.checkpoint, trainer, epoch_itr, valid_losses[0]
+        state_dict = utils.move_to_cpu(trainer.state_dict())
+        checkpoint_utils.torch_persistent_save(
+            trainer.state_dict,
+            cfg.checkpoint.save_dir+'/checkpoint.pt',
+            async_write=trainer.cfg.checkpoint.write_checkpoints_asynchronously,
         )
+        # checkpoint_utils.save_checkpoint(
+        #     cfg.checkpoint, trainer, epoch_itr, valid_losses[0]
+        # )
 
     return valid_losses, should_stop
 
