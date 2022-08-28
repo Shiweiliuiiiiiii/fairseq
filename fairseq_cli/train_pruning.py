@@ -385,8 +385,8 @@ def train(
 
         end_of_epoch = not itr.has_next()
 
-        if end_of_epoch and epoch_itr.epoch == cfg.optimization.max_epoch:
-            print('********************************')
+        if epoch_itr.epoch == cfg.optimization.max_epoch or trainer.get_num_updates() >= cfg.optimization.max_update:
+            logger.info('performing pruning after finishing finetuning')
             if mask.sparse_init == 'snip':
                 layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
                 for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
