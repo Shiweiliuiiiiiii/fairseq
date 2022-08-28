@@ -186,25 +186,11 @@ def main(cfg: FairseqConfig) -> None:
                        growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
                        args=cfg)
         mask.add_module(model)
+        mask.init(model=trainer.model, train_loader=None, device=mask.device,
+                  mode=mask.sparse_init, density=(1 - mask.sparsity))
 
     train_meter = meters.StopwatchMeter()
     train_meter.start()
-    # while epoch_itr.next_epoch_idx <= max_epoch:
-    #     if lr <= cfg.optimization.stop_min_lr:
-    #         logger.info(
-    #             f"stopping training because current learning rate ({lr}) is smaller "
-    #             "than or equal to minimum learning rate "
-    #             f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
-    #         )
-    #         break
-
-        # # train for one epoch
-        # valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
-        # if should_stop:
-        #     break
-        #
-        # # only use first validation loss to update the learning rate
-        # lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
 
     epoch_itr = trainer.get_train_iterator(
         epoch_itr.next_epoch_idx,
@@ -506,9 +492,6 @@ def validate_and_save(
             cfg.checkpoint.save_dir+'/checkpoint.pt',
             async_write=trainer.cfg.checkpoint.write_checkpoints_asynchronously,
         )
-        # checkpoint_utils.save_checkpoint(
-        #     cfg.checkpoint, trainer, epoch_itr, valid_losses[0]
-        # )
 
     return valid_losses, should_stop
 
