@@ -91,7 +91,7 @@ class Masking(object):
             for name, tensor in module.named_parameters():
                 if len(tensor.size()) == 2 or len(tensor.size()) == 4:
                     self.names.append(name)
-                    self.masks[name] = torch.zeros_like(tensor, dtype=torch.float32, requires_grad=False).to(self.device)
+                    self.masks[name] = torch.ones_like(tensor, dtype=torch.float32, requires_grad=False).to(self.device)
 
         print('Removing in_proj_weight')
         self.remove_weight_partial_name('in_proj_weight')
