@@ -13,7 +13,7 @@ def sorted_nicely(l):
 
 check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/'
 
-for method in ['random/']:
+for method in ['gm_after/', 'random_after/']:
 
     check_point_folder = check_point_folder + method
     # model_files = [0.5]

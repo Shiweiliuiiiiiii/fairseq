@@ -13,6 +13,15 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogr
         if 'val | epoch 019 |' in line:
             acc_gm.append(float(line.split()[19][:-1]))
 
+
+acc_omg_after = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_after.out') as file:
+    for line in file:
+        if 'val | epoch 001 |' in line:
+            print(line.split())
+            acc_omg_after.append(float(line.split()[19][:-1]))
+
+
 acc_snip = []
 with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_snip_0.2.out') as file:
     for line in file:
@@ -31,16 +40,25 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/cobert
         if 'val | epoch 019 |' in line:
             acc_random.append(float(line.split()[19][:-1]))
 
+acc_random_after = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_random_after.out') as file:
+    for line in file:
+        if 'val | epoch 001 |' in line:
+            # print(line.split())
+            acc_random_after.append(float(line.split()[19][:-1]))
+
 
 x_axis = range(10)
 
 
 # prune
 roberta_large = fig.add_subplot(1,1,1)
-roberta_large.plot(x_axis, acc_snip,  '-',   label='SNIP',color='#dbb40c',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_snip,  '-',   label='SNIP',color='blue',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_imp[1:],  '-',   label='LTH',color='orange',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, acc_gm,  '-',   label='Global Magnitude',color='green',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_gm,  '-',   label='OMG_Before_FT',color='green',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, acc_random,  '-',   label='Random',color='purple',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_random_after,  '-',   label='Random_After_FT',color='cyan',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, acc_omg_after,  '-',   label='OMG_After_FT',color='brown',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, [acc_imp[0]]*10,  '-o',   label='Dense model',color='black',linewidth=3, markersize=markersize, )
 # vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )
 roberta_large.set_title('Roberta Large on WinoGrande',fontsize=fontsize)
