@@ -397,7 +397,6 @@ def train(
                 mask.init(model=trainer.model, train_loader=None, device=mask.device,
                           mode=mask.sparse_init, density=(1 - mask.sparsity))
 
-
         end_of_epoch = not itr.has_next()
         valid_losses, should_stop = validate_and_save(
             cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch
