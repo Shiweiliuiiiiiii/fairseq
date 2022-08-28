@@ -44,7 +44,7 @@ CUDA_VISIBLE_DEVICES=0 python train_pruning.py --ddp-backend=legacy_ddp \
     --warmup-updates $WARMUP_UPDATES --total-num-update $MAX_UPDATES \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
-    --log-format simple --log-interval 25 --max_epoch 1 \
+    --log-format simple --log-interval 25 --max-epoch 1 \
     --seed $SEED --sparse --fix --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir
 
 done
