@@ -361,18 +361,18 @@ def train(
 
             return layer_wise_sparsities
 
-    # if epoch_itr.epoch == 1:
-    #     print('********************************')
-    #     if mask.sparse_init == 'snip':
-    #         layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
-    #         for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
-    #             mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
-    #                 mask.device)
-    #         mask.apply_mask()
-    #         mask.print_status()
-    #     else:
-    #         mask.init(model=trainer.model, train_loader=None, device=mask.device,
-    #                   mode=mask.sparse_init, density=(1 - mask.sparsity))
+    if epoch_itr.epoch == 1:
+        print('********************************')
+        if mask.sparse_init == 'snip':
+            layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
+            for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
+                mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
+                    mask.device)
+            mask.apply_mask()
+            mask.print_status()
+        else:
+            mask.init(model=trainer.model, train_loader=None, device=mask.device,
+                      mode=mask.sparse_init, density=(1 - mask.sparsity))
 
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
