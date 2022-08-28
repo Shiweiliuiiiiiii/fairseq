@@ -486,7 +486,7 @@ def validate_and_save(
 
     # Save checkpoint
     if do_save or should_stop:
-        state_dict = utils.move_to_cpu(trainer.state_dict())
+        state_dict = utils.move_to_cpu(trainer.model.state_dict())
         checkpoint_utils.torch_persistent_save(
             state_dict,
             cfg.checkpoint.save_dir+'/checkpoint.pt',
