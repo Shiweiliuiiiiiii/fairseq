@@ -23,7 +23,7 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:
-FAIRSEQ_PATH=/home/sliu/Projects/fairseq
+ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
