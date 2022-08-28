@@ -41,7 +41,7 @@ from fairseq.file_io import PathManager
 from fairseq.logging import meters, metrics, progress_bar
 from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from fairseq.trainer import Trainer
-
+from fairseq.dataclass.configs import CheckpointConfig
 
 def main(cfg: FairseqConfig) -> None:
     if isinstance(cfg, argparse.Namespace):
@@ -187,15 +187,8 @@ def main(cfg: FairseqConfig) -> None:
                        args=cfg)
         mask.add_module(model)
 
-    valid_subsets = cfg.dataset.valid_subset.split(",")
-    end_of_epoch = True
-    valid_losses, should_stop = validate_and_save(
-        cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch
-    )
-
-
-    # train_meter = meters.StopwatchMeter()
-    # train_meter.start()
+    train_meter = meters.StopwatchMeter()
+    train_meter.start()
     # while epoch_itr.next_epoch_idx <= max_epoch:
     #     if lr <= cfg.optimization.stop_min_lr:
     #         logger.info(
@@ -204,24 +197,31 @@ def main(cfg: FairseqConfig) -> None:
     #             f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
     #         )
     #         break
-    #
-    #     # train for one epoch
-    #     valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
-    #     if should_stop:
-    #         break
-    #
-    #     # only use first validation loss to update the learning rate
-    #     lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
-    #
-    #     epoch_itr = trainer.get_train_iterator(
-    #         epoch_itr.next_epoch_idx,
-    #         # sharded data: get train iterator for next epoch
-    #         load_dataset=task.has_sharded_data("train"),
-    #         # don't cache epoch iterators for sharded datasets
-    #         disable_iterator_cache=task.has_sharded_data("train"),
-    #     )
-    # train_meter.stop()
-    # logger.info("done training in {:.1f} seconds".format(train_meter.sum))
+
+        # # train for one epoch
+        # valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
+        # if should_stop:
+        #     break
+        #
+        # # only use first validation loss to update the learning rate
+        # lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
+
+    epoch_itr = trainer.get_train_iterator(
+        epoch_itr.next_epoch_idx,
+        # sharded data: get train iterator for next epoch
+        load_dataset=task.has_sharded_data("train"),
+        # don't cache epoch iterators for sharded datasets
+        disable_iterator_cache=task.has_sharded_data("train"),
+    )
+        
+    end_of_epoch=True
+    valid_subsets = cfg.dataset.valid_subset.split(",")
+    valid_losses, should_stop = validate_and_save(
+        cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch
+    )
+
+    train_meter.stop()
+    logger.info("done training in {:.1f} seconds".format(train_meter.sum))
 
     # ioPath implementation to wait for all asynchronous file writes to complete.
     if cfg.checkpoint.write_checkpoints_asynchronously:
