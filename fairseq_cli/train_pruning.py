@@ -41,7 +41,7 @@ from fairseq.file_io import PathManager
 from fairseq.logging import meters, metrics, progress_bar
 from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from fairseq.trainer import Trainer
-from fairseq.dataclass.configs import CheckpointConfig
+
 
 def main(cfg: FairseqConfig) -> None:
     if isinstance(cfg, argparse.Namespace):
@@ -186,26 +186,33 @@ def main(cfg: FairseqConfig) -> None:
                        growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
                        args=cfg)
         mask.add_module(model)
-        mask.init(model=trainer.model, train_loader=None, device=mask.device,
-                  mode=mask.sparse_init, density=(1 - mask.sparsity))
 
     train_meter = meters.StopwatchMeter()
     train_meter.start()
+    while epoch_itr.next_epoch_idx <= max_epoch:
+        if lr <= cfg.optimization.stop_min_lr:
+            logger.info(
+                f"stopping training because current learning rate ({lr}) is smaller "
+                "than or equal to minimum learning rate "
+                f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
+            )
+            break
 
-    epoch_itr = trainer.get_train_iterator(
-        epoch_itr.next_epoch_idx,
-        # sharded data: get train iterator for next epoch
-        load_dataset=task.has_sharded_data("train"),
-        # don't cache epoch iterators for sharded datasets
-        disable_iterator_cache=task.has_sharded_data("train"),
-    )
+        # train for one epoch
+        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
+        if should_stop:
+            break
 
-    end_of_epoch=True
-    valid_subsets = cfg.dataset.valid_subset.split(",")
-    valid_losses, should_stop = validate_and_save(
-        cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch
-    )
+        # only use first validation loss to update the learning rate
+        lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
 
+        epoch_itr = trainer.get_train_iterator(
+            epoch_itr.next_epoch_idx,
+            # sharded data: get train iterator for next epoch
+            load_dataset=task.has_sharded_data("train"),
+            # don't cache epoch iterators for sharded datasets
+            disable_iterator_cache=task.has_sharded_data("train"),
+        )
     train_meter.stop()
     logger.info("done training in {:.1f} seconds".format(train_meter.sum))
 
@@ -354,18 +361,6 @@ def train(
 
             return layer_wise_sparsities
 
-    if epoch_itr.epoch == 1:
-        print('********************************')
-        if mask.sparse_init == 'snip':
-            layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
-            for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
-                mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
-                    mask.device)
-            mask.apply_mask()
-            mask.print_status()
-        else:
-            mask.init(model=trainer.model, train_loader=None, device=mask.device,
-                      mode=mask.sparse_init, density=(1 - mask.sparsity))
 
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
@@ -387,6 +382,21 @@ def train(
                 # reset mid-epoch stats after each log interval
                 # the end-of-epoch stats will still be preserved
                 metrics.reset_meters("train_inner")
+
+
+        if epoch_itr.next_epoch_idx == cfg.optimization.max_epoch:
+            logger.info("Start pruning after finishing the fine-tuning")
+            if mask.sparse_init == 'snip':
+                layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
+                for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
+                    mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
+                        mask.device)
+                mask.apply_mask()
+                mask.print_status()
+            else:
+                mask.init(model=trainer.model, train_loader=None, device=mask.device,
+                          mode=mask.sparse_init, density=(1 - mask.sparsity))
+
 
         end_of_epoch = not itr.has_next()
         valid_losses, should_stop = validate_and_save(
@@ -486,11 +496,8 @@ def validate_and_save(
 
     # Save checkpoint
     if do_save or should_stop:
-        state_dict = utils.move_to_cpu(trainer.model.state_dict())
-        checkpoint_utils.torch_persistent_save(
-            state_dict,
-            cfg.checkpoint.save_dir+'/checkpoint.pt',
-            async_write=trainer.cfg.checkpoint.write_checkpoints_asynchronously,
+        checkpoint_utils.save_checkpoint(
+            cfg.checkpoint, trainer, epoch_itr, valid_losses[0]
         )
 
     return valid_losses, should_stop
