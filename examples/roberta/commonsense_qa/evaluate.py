@@ -24,7 +24,7 @@ for method in ['gm_after/', 'random_after/']:
         print(file)
         # roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
         # model name of methods after finetuning is checkpoint.pt
-        roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint.pt', 'data/CommonsenseQA')
+        roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
         total_zero = 0
         total_weight = 0
