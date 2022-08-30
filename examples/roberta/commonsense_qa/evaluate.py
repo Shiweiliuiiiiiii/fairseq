@@ -13,7 +13,7 @@ def sorted_nicely(l):
 
 check_point_folder = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/'
 
-for method in ['gm_after/', 'random_after/']:
+for method in ['random_after/']:
 
     check_point_folder = check_point_folder + method
     # model_files = [0.5]
@@ -22,8 +22,6 @@ for method in ['gm_after/', 'random_after/']:
 
     for file in model_files:
         print(file)
-        # roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
-        # model name of methods after finetuning is checkpoint.pt
         roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
         total_zero = 0
