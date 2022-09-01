@@ -46,7 +46,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
     --seed $SEED --sparse --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir \
-    --prune magnitude --prune_rate 0.5 --growth gradient --update_frequency 1500 --redistribution None
+    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 1500 --redistribution None
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
