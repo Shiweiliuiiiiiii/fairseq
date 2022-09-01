@@ -355,7 +355,7 @@ class Masking(object):
 
 
     def step(self):
-        self.optimizer.step()
+        # self.optimizer.step()
         self.apply_mask()
 
         # decay the adaptation rate for better results

@@ -177,16 +177,6 @@ def main(cfg: FairseqConfig) -> None:
     max_epoch = cfg.optimization.max_epoch or math.inf
     lr = trainer.get_lr()
 
-    # build masks here
-    mask=None
-    if cfg.spa.sparse:
-        decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
-        mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
-                       sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune,
-                       growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
-                       args=cfg)
-        mask.add_module(model)
-
     train_meter = meters.StopwatchMeter()
     train_meter.start()
     while epoch_itr.next_epoch_idx <= max_epoch:
@@ -362,7 +352,21 @@ def train(
             return layer_wise_sparsities
 
     if epoch_itr.epoch == 1:
-        print('********************************')
+        logger.info("'**********Start pruning the model**********************'")
+
+        # build masks here
+        mask = None
+        if cfg.spa.sparse:
+            if cfg.optimization.max_update != 0:
+                decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update)
+            else:
+                decay = CosineDecay(cfg.spa.prune_rate, int(cfg.optimization.max_epoch * len(progress)))
+            mask = Masking(trainer.optimizer, prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
+                           sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune,
+                           growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
+                           args=cfg)
+            mask.add_module(trainer.model)
+
         if mask.sparse_init == 'snip':
             layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
             for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
@@ -374,10 +378,12 @@ def train(
             mask.init(model=trainer.model, train_loader=None, device=mask.device,
                       mode=mask.sparse_init, density=(1 - mask.sparsity))
 
+
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
     num_updates = trainer.get_num_updates()
     logger.info("Start iterating over samples")
+
     for i, samples in enumerate(progress):
         with metrics.aggregate("train_inner"), torch.autograd.profiler.record_function(
             "train_step-%d" % i

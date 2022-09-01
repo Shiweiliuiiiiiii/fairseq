@@ -837,7 +837,7 @@ class Trainer(object):
                     del loss
 
                 if mask:
-                    mask.apply_mask()
+                    mask.step()
 
                 logging_outputs.append(logging_output)
                 sample_size += sample_size_i
