@@ -39,7 +39,6 @@ acc_test_gm_high = acc_test1[10:20]
 acc_test_snip_high = acc_test1[20:29]
 acc_test_snip_high.append(25.0)
 
-
 x_axis = range(10)
 
 
