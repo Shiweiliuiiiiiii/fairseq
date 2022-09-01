@@ -189,7 +189,7 @@ def main(cfg: FairseqConfig) -> None:
             break
 
         # train for one epoch
-        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
+        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
         if should_stop:
             break
 
