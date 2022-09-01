@@ -51,6 +51,7 @@ class Masking(object):
         self.args = args
         self.fix = self.args.spa.fix
         self.sparse_init = self.args.spa.sparse_init
+        self.update_frequency = self.args.spa.update_frequency
         self.sparsity = sparsity
         self.device = torch.device('cuda')
         self.growth_mode = growth_mode
@@ -83,6 +84,7 @@ class Masking(object):
 
         if self.fix:
             self.update_frequency = None
+
 
 
     def add_module(self, module):
