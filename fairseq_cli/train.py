@@ -355,6 +355,7 @@ def train(
         logger.info("'**********Start pruning the model**********************'")
 
         # build masks here
+        global mask
         mask = None
         if cfg.spa.sparse:
             if cfg.optimization.max_update != 0:
