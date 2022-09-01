@@ -1112,6 +1112,9 @@ class SparseConfig(FairseqDataclass):
     imp_iters: int = field(
         default=1, metadata={'help': 'number of IMP iterations'}
     )
+    update_frequency: int = field(
+        default=1500, metadata={'help': 'exploration iterations of DST'}
+    )
     sparse: bool = field(
         default=False, metadata={"help": "Enable sparse training."}
     )
