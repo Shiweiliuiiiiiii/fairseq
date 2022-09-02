@@ -344,8 +344,8 @@ def train(
                     else:
                         mask = (g > acceptable_score).float()
 
-                    sparsity = float((mask == 0).sum().item() / mask.numel())
-                    layer_wise_sparsities.append(sparsity)
+                    # sparsity = float((mask == 0).sum().item() / mask.numel())
+                    layer_wise_sparsities.append(mask)
 
                 model.zero_grad()
 
@@ -370,9 +370,10 @@ def train(
 
         if mask.sparse_init == 'snip':
             layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
-            for sparsity_, name in zip(layer_wise_sparsities, mask.masks):
-                mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
-                    mask.device)
+            for snip_mask, name in zip(layer_wise_sparsities, mask.masks):
+                mask.masks[name] = snip_mask
+                # mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
+                #     mask.device)
             mask.apply_mask()
             mask.print_status()
         else:

@@ -131,7 +131,7 @@ def main(cfg: FairseqConfig) -> None:
     for iter in range(start_state, cfg.spa.imp_iters):
 
             print('******************************************')
-            print('pruning iteration', iter)
+            print('IMP iteration', iter)
             print('******************************************')
 
             # Load valid dataset (we load training data below, based on the latest checkpoint)
@@ -193,7 +193,7 @@ def main(cfg: FairseqConfig) -> None:
             if iter == 0:
                 initalization = deepcopy(model.state_dict())
 
-            # build masks here
+            # performing pruning at the beginning of each IMP iter
             mask=None
             if iter != 0:
                 decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
@@ -205,13 +205,14 @@ def main(cfg: FairseqConfig) -> None:
 
             # update the name of subnet with regards to the current pruning iteration
             trainer.checkpoint_suffix = "_iter{}".format(iter)
+            # cfg.checkpoint.restore_file is the model that Fairseq will automatically load at intialization
             cfg.checkpoint.restore_file = cfg.checkpoint.save_dir + "/checkpoint_best.pt"
 
             # weight rewinding
             print('loading pretrained weights')
             trainer.model.load_state_dict(initalization)
-
             if mask: mask.apply_mask()
+
 
             train_meter = meters.StopwatchMeter()
             train_meter.start()

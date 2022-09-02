@@ -1122,13 +1122,13 @@ class SparseConfig(FairseqDataclass):
         default=False, metadata={"help": "Fixing the topology of the sparse model."}
     )
     growth: Optional[str] = field(
-        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+        default=None, metadata={"help": "the growth criterion to use."}
     )
     prune: Optional[str] = field(
-        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+        default=None, metadata={"help": "the prune criterion to use."}
     )
     sparse_init: Optional[str] = field(
-        default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
+        default=None, metadata={"help": "the sparse initialization to use."}
     )
     redistribution: Optional[str] = field(
         default=None, metadata={"help": "The name of the dataset to use (via the datasets library)."}
