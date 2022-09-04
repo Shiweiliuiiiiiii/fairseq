@@ -336,16 +336,17 @@ def train(
                 acceptable_score = threshold[-1]
 
                 layer_wise_sparsities = []
-                for i,g in enumerate(grads_abs):
-                    if keep_ratio==0.98 and i == 0:
-                        mask = (torch.rand(g.shape) < 0.85).float()
-                    elif keep_ratio==0.95 and i == 0:
-                        mask = (torch.rand(g.shape) < 0.65).float()
-                    else:
-                        mask = (g > acceptable_score).float()
+                for g in grads_abs:
+                    mask_ = (g > acceptable_score).float()
+                    # if keep_ratio==0.98 and i == 0:
+                    #     mask_ = (torch.rand(g.shape) < 0.85).float()
+                    # elif keep_ratio==0.95 and i == 0:
+                    #     mask_ = (torch.rand(g.shape) < 0.65).float()
+                    # else:
+                    #     mask_ = (g > acceptable_score).float()
 
                     # sparsity = float((mask == 0).sum().item() / mask.numel())
-                    layer_wise_sparsities.append(mask)
+                    layer_wise_sparsities.append(mask_)
 
                 model.zero_grad()
 

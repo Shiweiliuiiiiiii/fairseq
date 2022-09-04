@@ -15,6 +15,7 @@ robert_gm_before = [75.92, 59.41, 39.39, 19.57, 19.57, 19.57, 19.57, 19.57, 19.5
 robert_gm_after = [62.24, 29.07, 20.63, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
 robert_gm_rigl = [60.36, 29.57, 21.38, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
 robert_random_before = [28.99, 20.23, 21.87, 21.29, 20.97, 20.07, 20.48, 20.31, 20.97, 20.72]
+robert_random_rigl = [24.82, 19.57, 21.54, 20.31, 20.23, 22.35, 20.39, 20.72, 20.31, 20.72]
 robert_random_after  =  [18.10, 19.73, 19.25, 18.76, 20.23, 20.07, 20.48, 20.31, 19.00, 20.07]
 # 0.02 0.05 0.1 ... 0.9 0.95
 x_axis = range(10)
@@ -29,6 +30,7 @@ roberta_large.plot(x_axis, robert_gm_rigl,  '-',   label='OMP+RIGL',color='red',
 roberta_large.plot(x_axis, robert_gm_before,  '-',   label='OMP Before',color='green',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, robert_gm_after,  '-',   label='OMP After',color='cyan',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, robert_random_before,  '-',   label='Random Before',color='purple',linewidth=3, markersize=markersize, )
+roberta_large.plot(x_axis, robert_random_rigl,  '-',   label='Random+RIGL',color='purple',linewidth=3, markersize=markersize, )
 roberta_large.plot(x_axis, robert_random_after,  '-',   label='Random After',color='yellow',linewidth=3, markersize=markersize, )
 # vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )
 roberta_large.set_title('Roberta large on CommonsenseQA',fontsize=fontsize)
