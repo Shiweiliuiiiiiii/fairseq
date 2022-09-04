@@ -372,7 +372,7 @@ def train(
         if mask.sparse_init == 'snip':
             layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
             for snip_mask, name in zip(layer_wise_sparsities, mask.masks):
-                mask.masks[name] = snip_mask
+                mask.masks[name][:] = snip_mask
                 # mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
                 #     mask.device)
             mask.apply_mask()

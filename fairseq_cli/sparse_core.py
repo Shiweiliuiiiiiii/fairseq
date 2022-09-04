@@ -54,8 +54,7 @@ class Masking(object):
         self.update_frequency = self.args.spa.update_frequency
         self.sparsity = sparsity
         self.device = torch.device('cuda')
-        self.growth_mode = growth_mode
-        self.prune_mode = prune_mode
+
         self.redistribution_mode = redistribution_mode
         self.prune_rate_decay = prune_rate_decay
         self.verbose = verbose
