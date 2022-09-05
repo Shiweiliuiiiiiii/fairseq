@@ -370,6 +370,7 @@ def train(
             mask.add_module(trainer.model)
 
             if mask.sparse_init == 'snip':
+                mask.init_growth_prune_and_redist()
                 layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
                 for snip_mask, name in zip(layer_wise_sparsities, mask.masks):
                     mask.masks[name][:] = snip_mask
