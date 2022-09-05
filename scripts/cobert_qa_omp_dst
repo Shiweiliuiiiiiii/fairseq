@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_one_shot_mp_rigl
+#SBATCH --job-name=roberta_one_shot_mp_rigl_test
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_one_shot_mp_rigl.out
+#SBATCH -o roberta_one_shot_mp_rigl_test.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
@@ -27,7 +27,7 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/gm_rigl/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/gm_rigl_test/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -46,7 +46,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
     --seed $SEED --sparse --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir \
-    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
+    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 10 --redistribution none
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
