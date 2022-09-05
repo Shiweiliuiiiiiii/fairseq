@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-12:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o cobert_race_omp_random_after.out
+#SBATCH -o cobert_race_omp_random_after_ck3.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
@@ -55,7 +55,7 @@ ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/mo
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
-MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/random_after/$sparsity/checkpoint_best.pt
+MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/random_after/$sparsity/checkpoint3.pt
 PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/random_after/$sparsity/preds_middle.tsv
 TEST_SPLIT=test
 
@@ -72,7 +72,7 @@ done
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
-MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/random_after/$sparsity/checkpoint_best.pt
+MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/random_after/$sparsity/checkpoint3.pt
 PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/random_after/$sparsity/preds_high.tsv
 TEST_SPLIT=test1
 
@@ -91,7 +91,7 @@ done
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
-MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after/$sparsity/checkpoint_best.pt
+MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after/$sparsity/checkpoint3.pt
 PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after/$sparsity/preds_middle.tsv
 TEST_SPLIT=test
 
@@ -108,7 +108,7 @@ done
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
-MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after/$sparsity/checkpoint_best.pt
+MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after/$sparsity/checkpoint3.pt
 PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after/$sparsity/preds_high.tsv
 TEST_SPLIT=test1
 
