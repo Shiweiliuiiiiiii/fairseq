@@ -4,7 +4,7 @@ from matplotlib.pyplot import figure
 fig = figure(num=None, figsize=(8, 5), dpi=150, facecolor='w', edgecolor='k')
 fontsize = 15
 markersize = 3
-
+linewidth =2
 dense = [77.31]
 
 acc_test = []
@@ -27,7 +27,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_random_omp_after = []
 acc_test_random_omp_after_high = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after.out') as file:
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after_ck3.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_random_omp_after.append(float(line.split()[19]))
@@ -49,30 +49,34 @@ acc_test_snip_high = acc_test1[20:29]
 acc_test_snip_high.append(25.0)
 
 acc_test_random_after = acc_test_random_omp_after[:10]
-acc_test_random_omp_after = acc_test_random_omp_after[10:]
+acc_test_omp_after = acc_test_random_omp_after[10:]
 
 acc_test_random_after_high = acc_test_random_omp_after_high[:10]
-acc_test_random_omp_after_high = acc_test_random_omp_after_high[10:]
+acc_test_omp_after_high = acc_test_random_omp_after_high[10:]
 
 x_axis = range(10)
 
 
 # prune
 roberta_large = fig.add_subplot(1,1,1)
-roberta_large.plot(x_axis, acc_test_snip_high,  '-',   label='SNIP',color='#dbb40c',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-',   label='LTH',color='orange',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_gm_high,  '-',   label='OMP Before',color='green',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_random_omp_after_high,  '-',   label='OMP After',color='green',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_random_high,  '-',   label='Random Before',color='purple',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_random_after_high,  '-',   label='Random After',color='purple',linewidth=3, markersize=markersize, )
-roberta_large.plot(x_axis, [acc_test_imp_high[0]]*10,  '-o',   label='Dense model',color='black',linewidth=3, markersize=markersize, )
-# vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )
-roberta_large.set_title('Roberta Large on RACE high',fontsize=fontsize)
+roberta_large.plot(x_axis, [acc_test_imp_high[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_snip_high,  '-',   label='SNIP',color='blue',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_snip_rigl,  '-',   label='SNIP+RIGL',color='blue',linewidth=linewidth, markersize=markersize, marker='^'  )
+roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-',   label='LTH',color='orange',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_gm_high,  '-',   label='OMP Before',color='green',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_omp_after_high,  '--',   label='OMP After',color='green',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_gm_rigl,  '-',   label='OMP+RIGL',color='green',linewidth=linewidth, markersize=markersize, marker='^' )
+roberta_large.plot(x_axis, acc_test_random_high,  '-',   label='Random Before',color='purple',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_random_after_high,  '--',   label='Random After',color='purple',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_random_rigl,  '-',   label='Random+RIGL',color='purple',linewidth=linewidth, markersize=markersize, marker='^' )
+
+
+roberta_large.set_title('Roberta Large on RACE High',fontsize=fontsize)
 roberta_large.set_xticks(range(10))
 roberta_large.set_xticklabels(np.array( [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), fontsize=10 )
 
 roberta_large.set_ylabel('Accuracy', fontsize=fontsize)
-roberta_large.set_xlabel('sparsity',fontsize=fontsize)
+roberta_large.set_xlabel('Sparsity',fontsize=fontsize)
 plt.legend()
 plt.savefig('Roberta_race_high.png')
 plt.show()
