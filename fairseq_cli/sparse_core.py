@@ -17,6 +17,7 @@ class CosineDecay(object):
     def __init__(self, prune_rate, T_max, eta_min=0.005, last_epoch=-1, init_step=0):
         self.sgd = optim.SGD(torch.nn.ParameterList([torch.nn.Parameter(torch.zeros(1))]), lr=prune_rate)
         self.cosine_stepper = torch.optim.lr_scheduler.CosineAnnealingLR(self.sgd, T_max, eta_min, last_epoch)
+        self.T_max = T_max
         if init_step!=0:
             for i in range(init_step):
                 self.cosine_stepper.step()
@@ -48,20 +49,26 @@ class Masking(object):
             print('Growth mode: {0} not supported!'.format(growth_mode))
             print('Supported modes are:', str(growth_modes))
 
-        self.args = args
-        self.fix = self.args.spa.fix
-        self.sparse_init = self.args.spa.sparse_init
-        self.update_frequency = self.args.spa.update_frequency
+        self.fix = args.spa.fix
+        self.sparse_init = args.spa.sparse_init
+        self.sparse_mode = args.spa.sparse_mode
+        self.update_frequency = args.spa.update_frequency
         self.sparsity = sparsity
         self.device = torch.device('cuda')
 
-        self.redistribution_mode = redistribution_mode
         self.prune_rate_decay = prune_rate_decay
+        # T_max is the total training iterations
+        self.total_step = self.prune_rate_decay.T_max
         self.verbose = verbose
         self.growth_func = growth_mode
         self.prune_func = prune_mode
         self.redistribution_func = redistribution_mode
-        self.distributed_world_size = self.args.distributed_training.distributed_world_size
+        self.distributed_world_size = args.distributed_training.distributed_world_size
+
+        # parameters for GMP
+        self.final_prune_time = int(self.total_step * args.spa.final_prune_time)
+        self.initial_prune_time = int(self.total_step * args.spa.initial_prune_time)
+
 
         self.global_growth = False
         self.global_prune = False
@@ -165,10 +172,17 @@ class Masking(object):
                 self.name_to_32bit[name] = tensor2
             self.half = True
 
-    def init(self, model, train_loader , device, mode='snip', density=0.05, erk_power_scale=1.0):
+    def init(self, model, train_loader , device, mode='one_shot_gm', density=0.05, erk_power_scale=1.0):
         self.init_growth_prune_and_redist()
 
-        if mode == 'one_shot_gm':
+        if mode == 'dense':
+            print('initialized with dense model')
+            self.baseline_nonzero = 0
+            for name, weight in model.named_parameters():
+                if name not in self.masks: continue
+                self.masks[name] = torch.ones_like(weight, dtype=torch.float32, requires_grad=False).to(device)
+
+        elif mode == 'one_shot_gm':
             print('initialize by one_shot_gm')
             self.baseline_nonzero = 0
             weight_abs = []
@@ -185,14 +199,14 @@ class Masking(object):
 
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float()
+                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(device)
 
         elif mode == 'random':
             print('initialize by random pruning')
             self.baseline_nonzero = 0
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                self.masks[name] = (torch.rand(weight.shape) < density).float().data.to('cuda')
+                self.masks[name] = (torch.rand(weight.shape) < density).float().data.to(device)
 
 
         if mode == 'iterative_gm':
@@ -225,10 +239,11 @@ class Masking(object):
             for module in self.modules:
                 for name, weight in module.named_parameters():
                     if name not in self.masks: continue
-                    self.masks[name] = ((torch.abs(weight)) > acceptable_score).float()
+                    self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(device)
 
         if mode == 'uniform':
             print('initialized with uniform')
+            self.baseline_nonzero = 0
             # initializes each layer with a constant percentage of dense weights
             # each layer will have weight.numel()*density weights.
             # weight.numel()*density == weight.numel()*(1.0-sparsity)
@@ -365,16 +380,25 @@ class Masking(object):
         self.steps += 1
 
         if self.update_frequency is not None:
-            if self.steps % self.update_frequency == 0:
-                print('*********************************Dynamic Sparsity********************************')
-                self.truncate_weights()
-                self.print_nonzero_counts()
+            if self.sparse_mode == 'GMP':
+                if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:
+                    print('*********************************Gradual Magnitude Pruning***********************')
+                    current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
+                    self.gradual_magnitude_pruning(current_prune_rate)
+
+            elif self.sparse_mode == 'DST':
+                if self.steps % self.update_frequency == 0:
+                    print('*********************************Dynamic Sparsity********************************')
+                    self.truncate_weights()
+                    self.print_nonzero_counts()
+            else:
+                pass
 
 
     def apply_mask(self):
 
         # synchronism masks
-        if self.args.distributed_training.distributed_world_size != 1:
+        if self.distributed_world_size != 1:
             self.synchronism_masks()
 
         for module in self.modules:
@@ -463,4 +487,41 @@ class Masking(object):
 
         for name in self.masks.keys():
             torch.distributed.broadcast(self.masks[name], src=0, async_op=False)
+
+    def gradual_pruning_rate(self,
+            step: int,
+            initial_threshold: float,
+            final_threshold: float,
+            initial_time: int,
+            final_time: int,
+    ):
+        if step <= initial_time:
+            threshold = initial_threshold
+        elif step > final_time:
+            threshold = final_threshold
+        else:
+            mul_coeff = 1 - (step - initial_time) / (final_time - initial_time)
+            threshold = final_threshold + (initial_threshold - final_threshold) * (mul_coeff ** 3)
+
+        return threshold
+
+    def gradual_magnitude_pruning(self, current_pruning_rate):
+        weight_abs = []
+        for module in self.modules:
+            for name, weight in module.named_parameters():
+                if name not in self.masks: continue
+                weight_abs.append(torch.abs(weight))
+
+        # Gather all scores in a single vector and normalise
+        all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
+        num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate))
+
+        threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
+        acceptable_score = threshold[-1]
+
+        for module in self.modules:
+            for name, weight in module.named_parameters():
+                if name not in self.masks: continue
+                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(self.device)
+        self.apply_mask()
 

@@ -1,16 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=winogrande_snip_rigl
+#SBATCH --job-name=winogrande_gmp
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-23:00:00
+#SBATCH -t 0-24:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o winogrande_snip_rigl.out
+#SBATCH -o winogrande_gmp.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate transformer
 
 TOTAL_NUM_UPDATES=23750 # Total number of training steps.
 WARMUP_UPDATES=2375     # Linearly increase LR over this many steps.
@@ -26,7 +26,7 @@ FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/wsc
 
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/snip_rigl/$sparsity
+save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/gmp/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR \
   --restore-file $ROBERTA_PATH \
   --save-dir $save_dir \
@@ -45,10 +45,9 @@ CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR \
   --warmup-updates $WARMUP_UPDATES --total-num-update $TOTAL_NUM_UPDATES \
   --batch-size $MAX_SENTENCES \
   --max-update $TOTAL_NUM_UPDATES \
-  --log-format simple --log-interval 100 --sparse-init snip --sparse_mode DST --sparsity $sparsity --sparse \
+  --log-format simple --log-interval 100 --sparse-init dense --sparse_mode GMP --sparsity $sparsity --sparse \
   --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
 done
-
 
 
 #python examples/roberta/commonsense_qa/evaluate.py

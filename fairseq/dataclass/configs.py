@@ -1137,9 +1137,17 @@ class SparseConfig(FairseqDataclass):
         default=0.5, metadata={"help": "Sparsity of the model"}
     )
     prune_rate: float = field(
-        default=0.5, metadata={"help": "Sparsity of the model"}
+        default=0.5, metadata={"help": "pruning rate of dynamic sparsity"}
     )
-
+    sparse_mode: Optional[str] = field(
+        default='fix', metadata={"help": "sparsity model during training. Options: GMP, DST."}
+    )
+    final_prune_time: float = field(
+        default=0.8, metadata={"help": "the training time where we stop gradual pruning."}
+    )
+    initial_prune_time: float = field(
+        default=0.1, metadata={"help": "the training time where we start gradual pruning."}
+    )
 @dataclass
 class FairseqConfig(FairseqDataclass):
     common: CommonConfig = CommonConfig()

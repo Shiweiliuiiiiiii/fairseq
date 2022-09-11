@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cobert_race_random_rigl
+#SBATCH --job-name=cobert_race_gmp
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,10 +7,10 @@
 #SBATCH --gpus=1
 #SBATCH -t 3-12:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o cobert_race_random_rigl.out
+#SBATCH -o cobert_race_gmp.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate transformer
 
 MAX_EPOCH=3           # Number of training epochs.
 LR=1e-05              # Peak LR for fixed LR scheduler.
@@ -22,7 +22,7 @@ ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/mo
 
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/random_rigl/$sparsity
+save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/gmp/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --restore-file $ROBERTA_PATH \
     --save-dir $save_dir \
@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --required-batch-size-multiple 1 \
     --update-freq $UPDATE_FREQ \
     --max-epoch $MAX_EPOCH \
-    --sparse-init random --sparse_mode DST --sparsity $sparsity --sparse \
+    --sparse-init dense --sparse_mode GMP --sparsity $sparsity --sparse \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
 done
 
