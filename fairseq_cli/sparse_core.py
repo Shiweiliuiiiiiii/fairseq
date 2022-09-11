@@ -57,8 +57,6 @@ class Masking(object):
         self.device = torch.device('cuda')
 
         self.prune_rate_decay = prune_rate_decay
-        # T_max is the total training iterations
-        self.total_step = self.prune_rate_decay.T_max
         self.verbose = verbose
         self.growth_func = growth_mode
         self.prune_func = prune_mode
@@ -66,6 +64,8 @@ class Masking(object):
         self.distributed_world_size = args.distributed_training.distributed_world_size
 
         # parameters for GMP
+        # T_max is the total training iterations
+        self.total_step = self.prune_rate_decay.T_max
         self.final_prune_time = int(self.total_step * args.spa.final_prune_time)
         self.initial_prune_time = int(self.total_step * args.spa.initial_prune_time)
 
