@@ -385,6 +385,7 @@ class Masking(object):
                     print('*********************************Gradual Magnitude Pruning***********************')
                     current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
                     self.gradual_magnitude_pruning(current_prune_rate)
+                    self.print_nonzero_counts()
 
             elif self.sparse_mode == 'DST':
                 if self.steps % self.update_frequency == 0:
