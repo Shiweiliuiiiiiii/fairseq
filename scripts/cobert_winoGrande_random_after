@@ -27,7 +27,7 @@ FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/wsc
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/random_after/$sparsity
-CUDA_VISIBLE_DEVICES=0 python train_pruning.py $DATA_DIR \
+CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR \
   --restore-file $ROBERTA_PATH \
   --save-dir $save_dir \
   --reset-optimizer --reset-dataloader --reset-meters \
