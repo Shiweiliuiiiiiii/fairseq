@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train_pruning.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25\
-    --seed $SEED --sparse --fix --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir --reset-dataloader True
+    --seed $SEED --sparse --fix --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir --reset-dataloader
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
