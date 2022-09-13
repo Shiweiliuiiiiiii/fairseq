@@ -68,6 +68,14 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogr
             # print(line.split())
             acc_random_rigl.append(float(line.split()[19][:-1]))
 
+acc_gmp = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gmp.out') as file:
+    for line in file:
+        if 'val | epoch 019 |' in line:
+            # print(line.split())
+            acc_gmp.append(float(line.split()[19][:-1]))
+
+
 
 
 
@@ -79,6 +87,7 @@ roberta_large = fig.add_subplot(1,1,1)
 roberta_large.plot(x_axis, acc_snip,  '-',   label='SNIP',color='blue',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, acc_snip_rigl,  '-',   label='SNIP+RIGL',color='blue',linewidth=linewidth, markersize=markersize, marker='^'  )
 roberta_large.plot(x_axis, acc_imp[1:],  '-',   label='LTH',color='orange',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_gmp,  '-',   label='GMP',color='yellow',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, acc_gm,  '-',   label='OMP Before',color='green',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, acc_omg_after,  '--',   label='OMP After',color='green',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, acc_omp_rigl,  '-',   label='OMP+RIGL',color='green',linewidth=linewidth, markersize=markersize, marker='^' )

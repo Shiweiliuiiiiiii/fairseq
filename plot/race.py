@@ -7,14 +7,7 @@ markersize = 3
 linewidth =2
 dense = [77.31]
 
-acc_test = []
-acc_test1 = []
-with open('/Users/liushiwei/Projects/TUE_projects/fairseq/results/cobert_race_TEST.out') as file:
-    for line in file:
-        if 'test | valid on' in line:
-            acc_test.append(float(line.split()[19]))
-        if ' | test1 | valid on' in line:
-            acc_test1.append(float(line.split()[19]))
+
 
 acc_test_random = []
 acc_test_random_high = []
