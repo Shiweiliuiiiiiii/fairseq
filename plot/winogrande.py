@@ -17,7 +17,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogr
 acc_omg_after = []
 with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_after.out') as file:
     for line in file:
-        if 'val | epoch 001 |' in line:
+        if 'val | epoch 019 |' in line:
             print(line.split())
             acc_omg_after.append(float(line.split()[19][:-1]))
 
@@ -57,7 +57,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/cobert
 acc_random_after = []
 with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_random_after.out') as file:
     for line in file:
-        if 'val | epoch 001 |' in line:
+        if 'val | epoch 019 |' in line:
             # print(line.split())
             acc_random_after.append(float(line.split()[19][:-1]))
 
