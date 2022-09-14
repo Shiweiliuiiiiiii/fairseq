@@ -3,8 +3,8 @@ import numpy as np
 from matplotlib.pyplot import figure
 fig = figure(num=None, figsize=(8, 5), dpi=150, facecolor='w', edgecolor='k')
 fontsize = 15
-markersize = 8
-linewidth =2
+markersize = 4
+linewidth = 1.5
 dense = [77.31]
 
 acc_gm = []
@@ -84,18 +84,22 @@ x_axis = range(10)
 
 # prune
 roberta_large = fig.add_subplot(1,1,1)
-roberta_large.plot(x_axis, acc_snip,  '-',   label='SNIP',color='blue',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_snip_rigl,  '-',   label='SNIP+RIGL',color='blue',linewidth=linewidth, markersize=markersize, marker='^'  )
-roberta_large.plot(x_axis, acc_imp[1:],  '-',   label='LTH',color='orange',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_gmp,  '-',   label='GMP',color='yellow',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_gm,  '-',   label='OMP Before',color='green',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_omg_after,  '--',   label='OMP After',color='green',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_omp_rigl,  '-',   label='OMP+RIGL',color='green',linewidth=linewidth, markersize=markersize, marker='^' )
-roberta_large.plot(x_axis, acc_random,  '-',   label='Random Before',color='purple',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_random_after,  '--',   label='Random After',color='purple',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_random_rigl,  '-',   label='Random+RIGL',color='purple',linewidth=linewidth, markersize=markersize, marker='^' )
-
 roberta_large.plot(x_axis, [acc_imp[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_imp[1:],  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_omg_after,  '-o',   label='One-Shot LRR (After)',color='#77AC30',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_random_after,  '-o',   label='Random LRR (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_gmp,  '-o',   label='GMP (During)',color='magenta',linewidth=linewidth, markersize=markersize, )
+
+
+roberta_large.plot(x_axis, acc_snip,  '-o',   label='SNIP (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_snip_rigl,  '--o',   label='SNIP+RIGL (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize )
+roberta_large.plot(x_axis, acc_random,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_random_rigl,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
+roberta_large.plot(x_axis, acc_gm,  '-o',   label='OMP (Before)' ,color='cyan',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_omp_rigl,  '--o',   label='OMP+RIGL (Before)',color='cyan',linewidth=linewidth, markersize=markersize )
+
+
+# roberta_large.plot(x_axis, [acc_imp[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
 # vgg_all.plot(x_axis, [50]*11,  '-o',   label='random guess',color='gray',linewidth=3, markersize=markersize, )
 roberta_large.set_title('Roberta Large on WinoGrande',fontsize=fontsize)
 roberta_large.set_xticks(range(10))
