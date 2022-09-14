@@ -82,6 +82,7 @@ acc_test_omp_rigl = acc_test_random_omp_rigl[10:]
 acc_test_random_rigl_high = acc_test_random_omp_rigl_high[:10]
 acc_test_omp_rigl_high = acc_test_random_omp_rigl_high[10:]
 
+robert_snip_rigl = []
 
 x_axis = range(10)
 

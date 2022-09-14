@@ -73,7 +73,7 @@ for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
 MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/snip_rigl/$sparsity/checkpoint_best.pt
-PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/snip_riglc/$sparsity/preds_high.tsv
+PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/snip_rigl/$sparsity/preds_high.tsv
 TEST_SPLIT=test1
 
 fairseq-validate \
