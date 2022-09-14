@@ -58,7 +58,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_imp = acc_test[:10]
 acc_test_imp.append(26.1)
-acc_test_gm = acc_test[10:20]
+acc_test_omp = acc_test[10:20]
 acc_test_snip = acc_test[20:29]
 acc_test_snip.append(26.0)
 
@@ -87,58 +87,47 @@ x_axis = range(10)
 
 
 # high
-roberta_large = fig.add_subplot(1,1,1)
-roberta_large.plot(x_axis, [acc_test_imp_high[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_omp_after_high,  '-o',   label='One-Shot LRR (After)',color='#77AC30',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_random_after_high,  '-o',   label='Random LRR (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_gmp_high,  '-o',   label='GMP (During)',color='magenta',linewidth=linewidth, markersize=markersize, )
-
-
-roberta_large.plot(x_axis, acc_test_snip_high,  '-o',   label='SNIP (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_snip_rigl,  '--o',   label='SNIP+RIGL (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize )
-roberta_large.plot(x_axis, acc_test_random_high,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_random_rigl_high,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
-roberta_large.plot(x_axis, acc_test_omp_high,  '-o',   label='OMP (Before)' ,color='cyan',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, acc_test_omp_rigl_high,  '--o',   label='OMP+RIGL (Before)',color='cyan',linewidth=linewidth, markersize=markersize )
-
-
-
 # roberta_large = fig.add_subplot(1,1,1)
 # roberta_large.plot(x_axis, [acc_test_imp_high[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_snip_high,  '-',   label='SNIP',color='blue',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_gmp_high,  '-',   label='GMP',color='yellow',linewidth=linewidth, markersize=markersize, )
-# # roberta_large.plot(x_axis, robert_snip_rigl,  '-',   label='SNIP+RIGL',color='blue',linewidth=linewidth, markersize=markersize, marker='^'  )
-# roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-',   label='LTH',color='orange',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_gm_high,  '-',   label='OMP Before',color='green',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_omp_after_high,  '--',   label='OMP After',color='green',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_omp_rigl_high,  '-',   label='OMP+RIGL',color='green',linewidth=linewidth, markersize=markersize, marker='^' )
-# roberta_large.plot(x_axis, acc_test_random_high,  '-',   label='Random Before',color='purple',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_random_after_high,  '--',   label='Random After',color='purple',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_random_rigl_high,  '-',   label='Random+RIGL',color='purple',linewidth=linewidth, markersize=markersize, marker='^' )
+# roberta_large.plot(x_axis, acc_test_imp_high[1:],  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, acc_test_omp_after_high,  '-o',   label='One-Shot LRR (After)',color='#77AC30',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, acc_test_random_after_high,  '-o',   label='Random LRR (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, acc_test_gmp_high,  '-o',   label='GMP (During)',color='magenta',linewidth=linewidth, markersize=markersize, )
+#
+#
+# roberta_large.plot(x_axis, acc_test_snip_high,  '-o',   label='SNIP (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, robert_snip_rigl,  '--o',   label='SNIP+RIGL (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize )
+# roberta_large.plot(x_axis, acc_test_random_high,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, acc_test_random_rigl_high,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
+# roberta_large.plot(x_axis, acc_test_omp_high,  '-o',   label='OMP (Before)' ,color='cyan',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, acc_test_omp_rigl_high,  '--o',   label='OMP+RIGL (Before)',color='cyan',linewidth=linewidth, markersize=markersize )
+
 
 # middle
-
-# roberta_large = fig.add_subplot(1,1,1)
-# roberta_large.plot(x_axis, [acc_test_imp[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_snip,  '-',   label='SNIP',color='blue',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_gmp,  '-',   label='GMP',color='yellow',linewidth=linewidth, markersize=markersize, )
-# # roberta_large.plot(x_axis, robert_snip_rigl,  '-',   label='SNIP+RIGL',color='blue',linewidth=linewidth, markersize=markersize, marker='^'  )
-# roberta_large.plot(x_axis, acc_test_imp[1:],  '-',   label='LTH',color='orange',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_gm,  '-',   label='OMP Before',color='green',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_omp_after,  '--',   label='OMP After',color='green',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_omp_rigl,  '-',   label='OMP+RIGL',color='green',linewidth=linewidth, markersize=markersize, marker='^' )
-# roberta_large.plot(x_axis, acc_test_random,  '-',   label='Random Before',color='purple',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_random_after,  '--',   label='Random After',color='purple',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, acc_test_random_rigl,  '-',   label='Random+RIGL',color='purple',linewidth=linewidth, markersize=markersize, marker='^' )
+roberta_large = fig.add_subplot(1,1,1)
+roberta_large.plot(x_axis, [acc_test_imp[0]]*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_imp[1:],  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, acc_test_omp_after_high,  '-o',   label='One-Shot LRR (After)',color='#77AC30',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, acc_test_random_after_high,  '-o',   label='Random LRR (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_gmp,  '-o',   label='GMP (During)',color='magenta',linewidth=linewidth, markersize=markersize, )
 
 
-roberta_large.set_title('Roberta Large on RACE (High)',fontsize=fontsize)
+roberta_large.plot(x_axis, acc_test_snip,  '-o',   label='SNIP (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_snip_rigl,  '--o',   label='SNIP+RIGL (Before)',color='#00FF00',linewidth=linewidth, markersize=markersize )
+roberta_large.plot(x_axis, acc_test_random,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_random_rigl,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
+roberta_large.plot(x_axis, acc_test_omp,  '-o',   label='OMP (Before)' ,color='cyan',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, acc_test_omp_rigl,  '--o',   label='OMP+RIGL (Before)',color='cyan',linewidth=linewidth, markersize=markersize )
+
+
+
+
+roberta_large.set_title('Roberta Large on RACE (Middle)',fontsize=fontsize)
 roberta_large.set_xticks(range(10))
 roberta_large.set_xticklabels(np.array( [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), fontsize=10 )
 
 roberta_large.set_ylabel('Accuracy', fontsize=fontsize)
 roberta_large.set_xlabel('sparsity',fontsize=fontsize)
 plt.legend()
-plt.savefig('Roberta_race_high.png')
+plt.savefig('Roberta_race_middle.png')
 plt.show()
