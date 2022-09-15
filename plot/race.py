@@ -130,5 +130,5 @@ roberta_large.set_xticklabels(np.array( [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 
 roberta_large.set_ylabel('Accuracy', fontsize=fontsize)
 roberta_large.set_xlabel('sparsity',fontsize=fontsize)
 plt.legend()
-plt.savefig('Roberta_race_middle.png')
+plt.savefig('Roberta_race_middle.pdf')
 plt.show()
