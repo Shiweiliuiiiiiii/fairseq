@@ -1,0 +1,51 @@
+#!/bin/bash
+#SBATCH --job-name=cobert_race_gm_after_seed3
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 3-12:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o cobert_race_gm_after_seed3.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+MAX_EPOCH=3           # Number of training epochs.
+LR=1e-05              # Peak LR for fixed LR scheduler.
+NUM_CLASSES=4
+MAX_SENTENCES=4       # Batch size per GPU.
+UPDATE_FREQ=4         # Accumulate gradients to simulate training on 8 GPUs.
+DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
+ROBERTA_PATH=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP/0.2/checkpoint_best_iter0.pt
+
+for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
+do
+save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/gm_after_seed3/$sparsity
+CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
+    --restore-file $ROBERTA_PATH \
+    --save-dir $save_dir \
+    --reset-optimizer --reset-dataloader --reset-meters \
+    --best-checkpoint-metric accuracy --maximize-best-checkpoint-metric \
+    --task sentence_ranking \
+    --num-classes $NUM_CLASSES \
+    --init-token 0 --separator-token 2 \
+    --max-option-length 128 \
+    --max-positions 512 \
+    --shorten-method "truncate" \
+    --arch roberta_large \
+    --dropout 0.1 --attention-dropout 0.1 --weight-decay 0.01 \
+    --criterion sentence_ranking \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --adam-eps 1e-06 \
+    --clip-norm 0.0 \
+    --lr-scheduler fixed --lr $LR \
+    --fp16 --fp16-init-scale 4 --threshold-loss-scale 1 --fp16-scale-window 128 \
+    --batch-size $MAX_SENTENCES \
+    --required-batch-size-multiple 1 \
+    --update-freq $UPDATE_FREQ \
+    --max-epoch $MAX_EPOCH \
+    --fix --sparse-init one_shot_gm --sparsity $sparsity --sparse --seed 3
+done
+
+#python examples/roberta/commonsense_qa/evaluate.py
