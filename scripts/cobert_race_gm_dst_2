@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --required-batch-size-multiple 1 \
     --update-freq $UPDATE_FREQ \
     --max-epoch $MAX_EPOCH \
-    --sparse-init one_shot_gm --sparse_mode DST --sparsity $sparsity --sparse \
+    --sparse-init one_shot_gm --sparse-mode DST --sparsity $sparsity --sparse \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none --seed 2
 done
 
