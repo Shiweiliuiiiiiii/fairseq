@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test_imp_0.2
+#SBATCH --job-name=test_imp_0.2_seed23
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,27 +7,28 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-24:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o test_imp_0.2.out
+#SBATCH -o test_imp_0.2_seed23.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
 
+for seed in 2 3
+do
 
 MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
-SEED=1                # Random seed.
 ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
 DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
-
+SEED=$seed  
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2
 do
-save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/IMP_seed$SEED/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
     $DATA_DIR --save-dir $save_dir  \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -47,5 +48,6 @@ CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
     --log-format simple --log-interval 25 \
     --seed $SEED --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11
 
+done
 done
 #python examples/roberta/commonsense_qa/evaluate.py
