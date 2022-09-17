@@ -132,7 +132,7 @@ def main(cfg: FairseqConfig) -> None:
     
     start_state = 0
     # Iterative magnitude pruning
-    for iter in range(start_state, cfg.spa.imp_iters):
+    for iter in range(1):
 
         print('******************************************')
         print('IMP iteration', iter)
@@ -200,7 +200,7 @@ def main(cfg: FairseqConfig) -> None:
 
         # performing pruning at the beginning of each IMP iter
         mask=None
-        if iter != 0:
+        if cfg.spa.imp_iters != 0:
             decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
             mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
                             sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
