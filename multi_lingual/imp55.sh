@@ -7,7 +7,7 @@
 
 path_2_data=examples/multilingual/multidata  # <path to data> which contains binarized data for each directions
 lang_list=examples/multilingual/lang_list.txt  # <path to a file which contains a list of languages separted by new lines>
-lang_pairs=en-fr,fr-en  #a list language pairs to train multilingual models, e.g. "en-fr,en-cs,fr-en,cs-en"
+lang_pairs=en-fr,en-cs,en-de,en-gu,en-ja,ja-en,gu-en,de-en,cs-en,fr-en  #a list language pairs to train multilingual models, e.g. "en-fr,en-cs,fr-en,cs-en"
 # pretrained can be an mBART pretrained model as well
 pretrained_model=examples/multilingual/mbart.cc25.v2/model.pt #<path to a pretrained model>
 save_dir=mling_5_5
