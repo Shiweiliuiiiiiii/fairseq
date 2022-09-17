@@ -138,6 +138,7 @@ class TranslationMultiSimpleEpochTask(LegacyFairseqTask):
         Args:
             split (str): name of the split (e.g., train, valid, test)
         """
+        print('tt')
         if split in self.datasets:
             dataset = self.datasets[split]
             if self.has_sharded_data(split):
@@ -156,6 +157,7 @@ class TranslationMultiSimpleEpochTask(LegacyFairseqTask):
             # estimate the shard epoch from virtual data size and virtual epoch size
             shard_epoch = self.data_manager.estimate_global_pass_epoch(epoch)
             print('3', shard_epoch)
+        print('ee')
         logger.info(f"loading data for {split} epoch={epoch}/{shard_epoch}")
         logger.info(f"mem usage: {data_utils.get_mem_usage()}")
         if split in self.datasets:
