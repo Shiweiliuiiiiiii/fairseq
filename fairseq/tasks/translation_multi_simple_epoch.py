@@ -141,8 +141,8 @@ class TranslationMultiSimpleEpochTask(LegacyFairseqTask):
         print('tt')
         if split in self.datasets:
             dataset = self.datasets[split]
+            print(self.has_sharded_data(split))
             if self.has_sharded_data(split):
-                print(self.has_sharded_data(split))
                 if self.args.virtual_epoch_size is not None:
                     if dataset.load_next_shard:
                         shard_epoch = dataset.shard_epoch
