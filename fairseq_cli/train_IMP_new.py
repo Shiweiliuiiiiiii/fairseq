@@ -191,7 +191,12 @@ def main(cfg: FairseqConfig) -> None:
 
             xm.rendezvous("load_checkpoint")  # wait for all workers
 
-        max_epoch = cfg.optimization.max_epoch or math.inf
+        # max_epoch = cfg.optimization.max_epoch or math.inf
+
+        max_epoch = 2
+
+
+
         lr = trainer.get_lr()
 
         # # save initialization

@@ -66,9 +66,6 @@ class Masking(object):
         # parameters for GMP
         # T_max is the total training iterations
         self.total_step = self.prune_rate_decay.T_max
-
-        print(self.total_step, args.spa.final_prune_time)
-
         self.final_prune_time = int(self.total_step * args.spa.final_prune_time)
         self.initial_prune_time = int(self.total_step * args.spa.initial_prune_time)
 
