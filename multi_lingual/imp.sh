@@ -17,6 +17,7 @@ CUDA_VISIBLE_DEVICES=0,1 python train_custom_new.py "$path_2_data" \
     --arch mbart_large --layernorm-embedding \
     --task translation_multi_simple_epoch \
     --restore-file "$pretrained_model" \
+    --initialization_checkpoint "$pretrained_model" \
     --reset-optimizer --reset-dataloader --reset-meters \
     --sampling-method "temperature" \
     --sampling-temperature "1.5" \

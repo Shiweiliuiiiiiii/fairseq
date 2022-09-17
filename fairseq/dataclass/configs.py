@@ -1127,6 +1127,9 @@ class SparseConfig(FairseqDataclass):
     prune: Optional[str] = field(
         default=None, metadata={"help": "the prune criterion to use."}
     )
+    initialization_checkpoint: Optional[str] = field(
+        default=None, metadata={"help": "initialization"}
+    )
     sparse_init: Optional[str] = field(
         default=None, metadata={"help": "the sparse initialization to use."}
     )

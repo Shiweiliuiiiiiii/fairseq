@@ -126,8 +126,8 @@ def main(cfg: FairseqConfig) -> None:
         )
     )
 
-    # # load initialization
-    # initalization = torch.load(cfg.initialization_checkpoint)
+    # load initialization
+    initalization = torch.load(cfg.initialization_checkpoint)['model']
     
     start_state = 0
     # Iterative magnitude pruning
@@ -192,9 +192,6 @@ def main(cfg: FairseqConfig) -> None:
 
         max_epoch = cfg.optimization.max_epoch or math.inf
         lr = trainer.get_lr()
-
-        for key in model.state_dict().keys():
-            print(key)
 
         # # save initialization
         # if iter == 0:
