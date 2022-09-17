@@ -202,13 +202,13 @@ def load_checkpoint(cfg: CheckpointConfig, trainer, **passthrough_args):
     reset_meters = cfg.reset_meters
     reset_dataloader = cfg.reset_dataloader
 
-    if cfg.finetune_from_model is not None and (
-        reset_optimizer or reset_lr_scheduler or reset_meters or reset_dataloader
-    ):
-        raise ValueError(
-            "--finetune-from-model can not be set together with either --reset-optimizer"
-            " or reset_lr_scheduler or reset_meters or reset_dataloader"
-        )
+    # if cfg.finetune_from_model is not None and (
+    #     reset_optimizer or reset_lr_scheduler or reset_meters or reset_dataloader
+    # ):
+    #     raise ValueError(
+    #         "--finetune-from-model can not be set together with either --reset-optimizer"
+    #         " or reset_lr_scheduler or reset_meters or reset_dataloader"
+    #     )
 
     suffix = trainer.checkpoint_suffix
     if (
