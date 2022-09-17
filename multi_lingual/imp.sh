@@ -12,7 +12,7 @@ lang_pairs=en-fr,en-cs  #a list language pairs to train multilingual models, e.g
 pretrained_model=examples/multilingual/mbart.cc25.v2/model.pt #<path to a pretrained model>
 
 
-CUDA_VISIBLE_DEVICES=0,1 python train_custom.py  "$path_2_data" \
+CUDA_VISIBLE_DEVICES=0,1 python train_custom.py  --ddp-backend=legacy_ddp "$path_2_data" \
     --encoder-normalize-before --decoder-normalize-before \
     --arch mbart_large --layernorm-embedding \
     --task translation_multi_simple_epoch \
