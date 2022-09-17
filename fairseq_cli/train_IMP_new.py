@@ -127,7 +127,8 @@ def main(cfg: FairseqConfig) -> None:
     )
 
     # load initialization
-    initalization = torch.load(cfg.spa.initialization_checkpoint)['model']
+    print('Load initialization from examples/multilingual/mbart.cc25.v2/model.pt')
+    initalization = torch.load('examples/multilingual/mbart.cc25.v2/model.pt')['model']
     
     start_state = 0
     # Iterative magnitude pruning
