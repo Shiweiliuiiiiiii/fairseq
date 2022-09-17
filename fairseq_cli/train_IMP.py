@@ -138,9 +138,6 @@ def main(cfg: FairseqConfig) -> None:
         # We load the valid dataset AFTER building the model
         data_utils.raise_if_valid_subsets_unintentionally_ignored(cfg)
 
-        print('** {}'.format(cfg.dataset.combine_valid_subsets))
-
-
         if cfg.dataset.combine_valid_subsets:
             task.load_dataset("valid", combine=True, epoch=1)
         else:

@@ -154,6 +154,8 @@ class TranslationMultiSimpleEpochTask(LegacyFairseqTask):
                 else:
                     shard_epoch = epoch
                     print('1', shard_epoch)
+            else:
+                shard_epoch = self.data_manager.estimate_global_pass_epoch(epoch)
         else:
             # estimate the shard epoch from virtual data size and virtual epoch size
             shard_epoch = self.data_manager.estimate_global_pass_epoch(epoch)
