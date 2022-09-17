@@ -14,7 +14,7 @@ pretrained_model=examples/multilingual/mbart.cc25.v2/model.pt #<path to a pretra
 
 CUDA_VISIBLE_DEVICES=0,1 python train_custom.py  "$path_2_data" \
     --encoder-normalize-before --decoder-normalize-before \
-    --arch mbart-large --layernorm-embedding \
+    --arch mbart_large --layernorm-embedding \
     --task translation_multi_simple_epoch \
     --finetune-from-model "$pretrained_model" \
     --sampling-method "temperature" \
