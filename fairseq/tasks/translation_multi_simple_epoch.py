@@ -139,6 +139,7 @@ class TranslationMultiSimpleEpochTask(LegacyFairseqTask):
             split (str): name of the split (e.g., train, valid, test)
         """
         print('tt')
+        print(self.datasets.keys())
         if split in self.datasets:
             dataset = self.datasets[split]
             print(self.has_sharded_data(split))
