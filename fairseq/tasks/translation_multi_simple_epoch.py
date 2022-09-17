@@ -144,15 +144,18 @@ class TranslationMultiSimpleEpochTask(LegacyFairseqTask):
                 if self.args.virtual_epoch_size is not None:
                     if dataset.load_next_shard:
                         shard_epoch = dataset.shard_epoch
+                        print('2', shard_epoch)
                     else:
                         # no need to load next shard so skip loading
                         # also this avoid always loading from beginning of the data
                         return
                 else:
                     shard_epoch = epoch
+                    print('1', shard_epoch)
         else:
             # estimate the shard epoch from virtual data size and virtual epoch size
             shard_epoch = self.data_manager.estimate_global_pass_epoch(epoch)
+            print('3', shard_epoch)
         logger.info(f"loading data for {split} epoch={epoch}/{shard_epoch}")
         logger.info(f"mem usage: {data_utils.get_mem_usage()}")
         if split in self.datasets:
