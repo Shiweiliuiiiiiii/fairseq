@@ -16,7 +16,7 @@ CUDA_VISIBLE_DEVICES=0,1 python train_custom.py  --ddp-backend=legacy_ddp "$path
     --encoder-normalize-before --decoder-normalize-before \
     --arch mbart_large --layernorm-embedding \
     --task translation_multi_simple_epoch \
-    --finetune-from-model "$pretrained_model" \
+    --restore-file "$pretrained_model" \
     --reset-optimizer --reset-dataloader --reset-meters \
     --sampling-method "temperature" \
     --sampling-temperature "1.5" \
