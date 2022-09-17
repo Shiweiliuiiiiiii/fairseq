@@ -127,7 +127,7 @@ def main(cfg: FairseqConfig) -> None:
     )
 
     # load initialization
-    initalization = torch.load(cfg.initialization_checkpoint)['model']
+    initalization = torch.load(cfg.spa.initialization_checkpoint)['model']
     
     start_state = 0
     # Iterative magnitude pruning
