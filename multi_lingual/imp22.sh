@@ -11,7 +11,7 @@ lang_pairs=en-fr,fr-en  #a list language pairs to train multilingual models, e.g
 # pretrained can be an mBART pretrained model as well
 pretrained_model=examples/multilingual/mbart.cc25.v2/model.pt #<path to a pretrained model>
 save_dir=mling_2_2
-sample_dict={"main:en-fr":0.2, "main:fr-en":0.2}
+sample_dict="{'main:en-fr':0.2, 'main:fr-en':0.2}"
 
 CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
     --encoder-normalize-before --decoder-normalize-before \
