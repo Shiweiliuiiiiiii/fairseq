@@ -29,7 +29,7 @@ CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
     --lr-scheduler inverse_sqrt --lr 3e-05 --warmup-updates 2500 --max-update 40000 \
     --dropout 0.3 --attention-dropout 0.1 --weight-decay 0.0 \
     --max-tokens 1024 --update-freq 2 \
-    --save-interval 1 --save-interval-updates 5000 --keep-interval-updates 10 --no-epoch-checkpoints \
+    --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
     --seed 222 --log-format simple --log-interval 100 --save-dir $save_dir/0/ --fix --sparse-init iterative_gm --sparsity 0.2 --imp-iters 0
 
 
@@ -53,6 +53,6 @@ do
         --lr-scheduler inverse_sqrt --lr 3e-05 --warmup-updates 2500 --max-update 40000 \
         --dropout 0.3 --attention-dropout 0.1 --weight-decay 0.0 \
         --max-tokens 1024 --update-freq 2 \
-        --save-interval 1 --save-interval-updates 5000 --keep-interval-updates 10 --no-epoch-checkpoints \
+        --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
         --seed 222 --log-format simple --log-interval 100 --save-dir $save_dir/$i/ --fix --sparse-init iterative_gm --sparsity 0.2 --imp-iters $i
 done
