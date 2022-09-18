@@ -17,7 +17,6 @@ CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
     --encoder-normalize-before --decoder-normalize-before \
     --arch mbart_large --layernorm-embedding \
     --task translation_multi_simple_epoch \
-    --sampling-weights $sample_dict \
     --restore-file "$pretrained_model" \
     --reset-optimizer --reset-dataloader --reset-meters \
     --sampling-method "temperature" \
@@ -41,7 +40,6 @@ do
     CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
         --encoder-normalize-before --decoder-normalize-before \
         --arch mbart_large --layernorm-embedding \
-        --sampling-weights $sample_dict \
         --task translation_multi_simple_epoch \
         --restore-file $save_dir/$j/checkpoint_last_iter0.pt \
         --reset-optimizer --reset-dataloader --reset-meters \

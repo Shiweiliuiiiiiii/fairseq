@@ -195,8 +195,6 @@ def main(cfg: FairseqConfig) -> None:
 
         max_epoch = 2
 
-
-
         lr = trainer.get_lr()
 
         # # save initialization
