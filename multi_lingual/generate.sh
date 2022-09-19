@@ -2,6 +2,9 @@ model=$1
 source_lang=$2
 target_lang=$3
 path_2_data=$4
+lang_list=examples/multilingual/lang_list.txt
+lang_pairs=en-fr,fr-en
+
 
 CUDA_VISIBLE_DEVICES=$5 fairseq-generate $path_2_data \
     --path $model \
