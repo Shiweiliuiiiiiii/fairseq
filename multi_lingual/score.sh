@@ -6,7 +6,7 @@ key=$1_$3
 GPU=$4
 
 tgt=cs
-bash multi_lingual/${RUN}.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${src} ${tgt} ${key} ${GPU}
+./multi_lingual/${RUN}.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${src} ${tgt} ${key} ${GPU}
 bash multi_lingual/${RUN}.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${tgt} ${src} ${key} ${GPU}
 
 tgt=fr
