@@ -8,7 +8,7 @@ CUDA_VISIBLE_DEVICES=$5 fairseq-generate $path_2_data \
     --task translation_multi_simple_epoch \
     --gen-subset test \
     --source-lang $source_lang \
-    --target-lang $target_lang
+    --target-lang $target_lang \
     --sacrebleu --remove-bpe 'sentencepiece'\
     --batch-size 32 \
     --encoder-langtok "src" \
