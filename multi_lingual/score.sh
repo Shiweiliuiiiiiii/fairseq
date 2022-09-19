@@ -4,10 +4,9 @@ Model_idx=$3
 src=en
 key=$1_$3
 GPU=$4
+
 tgt=cs
-bash multi_lingual/generate22.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${src} ${tgt} ${key} ${GPU}
-tgt=cs
-bash multi_lingual/${RUN}.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${src} ${tgt} ${key} ${GPU}
+/bin/bash multi_lingual/${RUN}.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${src} ${tgt} ${key} ${GPU}
 bash multi_lingual/${RUN}.sh ${PATH}/${Model_idx}/checkpoint_best_iter0.pt ${tgt} ${src} ${key} ${GPU}
 
 tgt=fr
