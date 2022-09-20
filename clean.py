@@ -4,7 +4,7 @@ import torch
 
 
 for i in range(6):
-    path = os.path.join(sys.argv[1], i, 'checkpoint_best_iter0.pt')
+    path = os.path.join(sys.argv[1], str(i), 'checkpoint_best_iter0.pt')
     checkpoint = torch.load(path, map_location='cpu')
     checkpoint = checkpoint['model']
     torch.save(checkpoint, path)
