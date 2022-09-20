@@ -3,10 +3,11 @@ import sys
 import torch
 
 
-
-checkpoint = torch.load(sys.argv[1], map_location='cpu')
-checkpoint = checkpoint['model']
-torch.save(checkpoint, map_location='cpu')
+for i in range(6):
+    path = os.path.join(sys.argv[1], i, 'checkpoint_best_iter0.pt')
+    checkpoint = torch.load(path, map_location='cpu')
+    checkpoint = checkpoint['model']
+    torch.save(checkpoint, path)
 
 
 
