@@ -11,7 +11,10 @@ def read_bleu(path):
         data = f.readlines()
     data = data[-1]
     key = 'Generate test with beam=5: BLEU4 = '
-    bleu_score = data[len(key): len(key)+5]
+    bleu_score = data[len(key): len(key)+10]
+    stop_key = bleu_score.find(',')
+    # process_score
+    bleu_score = bleu_score[:stop_key]
     bleu_score = float(bleu_score)
     return bleu_score
 
