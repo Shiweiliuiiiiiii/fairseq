@@ -12,7 +12,7 @@ def read_bleu(path):
     data = data[-1]
     key = 'Generate test with beam=5: BLEU4 = '
     bleu_score = data[len(key): len(key)+5]
-    bleu_score = flaot(bleu_score)
+    bleu_score = float(bleu_score)
     return bleu_score
 
 
