@@ -22,7 +22,7 @@ task = '_1010_'
 
 for lang in lang_list:
     path = 'en_' + lang + str(sparsity) + '.txt'
-    bleu = read_bleu(path)
+    bleu = read_bleu(os.path.join('bleu_result', path))
     print(task, sparsity, lang, bleu)
 
 
