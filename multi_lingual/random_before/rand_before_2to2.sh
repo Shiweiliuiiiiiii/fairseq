@@ -29,7 +29,7 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
     --seed 222 --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --fix --sparse-init random --sparsity $sparsity
 
 # Calculate Scores
-bash multi_lingual/lth/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
+bash multi_lingual/random_before/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
 # Delete Best Model to save storage
 rm -rf $save_dir/$state/checkpoint_best.pt
 rm -rf $save_dir/$state/checkpoint_last.pt

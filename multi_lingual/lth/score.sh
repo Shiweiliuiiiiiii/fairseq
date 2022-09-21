@@ -19,7 +19,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -31,7 +31,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=cs
@@ -46,7 +46,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -58,7 +58,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=de
@@ -73,7 +73,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -85,7 +85,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=gu
@@ -100,7 +100,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -112,7 +112,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=ja
@@ -127,7 +127,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -139,7 +139,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=my
@@ -154,7 +154,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -166,7 +166,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=ro
@@ -181,7 +181,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -193,7 +193,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=ru
@@ -208,7 +208,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -220,7 +220,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=vi
@@ -235,7 +235,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -247,7 +247,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
 
 target_lang=zh
@@ -262,7 +262,7 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
     --task translation_multi_simple_epoch \
@@ -274,5 +274,5 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/to_en_from_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/to_en_from_${target_lang}_${name_keys}.txt
 
