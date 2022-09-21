@@ -27,7 +27,7 @@ CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
     --seed 222 --log-format simple --log-interval 100 --save-dir $save_dir/0/ --fix --sparse-init iterative_gm --sparsity 0.2 --imp-iters 0
 
 # Calculate Scores
-bash multi_lingual/lth/score.sh $save_dir/0/ ${save_dir}_0 $path_2_data $lang_list $lang_pairs $1
+bash multi_lingual/lth/test_score.sh $save_dir/0/ ${save_dir}_0 $path_2_data $lang_list $lang_pairs $1
 # Delete Best Model to save storage
 rm -rf $save_dir/0/checkpoint_best_iter0.pt
 
@@ -55,7 +55,7 @@ do
         --seed 222 --log-format simple --log-interval 100 --save-dir $save_dir/$i/ --fix --sparse-init iterative_gm --sparsity 0.2 --imp-iters $i
     
     # Calculate Scores
-    bash multi_lingual/lth/score.sh $save_dir/$i/ ${save_dir}_$i $path_2_data $lang_list $lang_pairs $1
+    bash multi_lingual/lth/test_score.sh $save_dir/$i/ ${save_dir}_$i $path_2_data $lang_list $lang_pairs $1
     # Delete Best Model to save storage
     rm -rf $save_dir/$i/checkpoint_best_iter0.pt
     rm -rf $save_dir/$j/checkpoint_last_iter0.pt
