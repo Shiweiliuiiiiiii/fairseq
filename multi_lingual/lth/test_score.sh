@@ -17,4 +17,4 @@ CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --encoder-langtok "src" \
     --decoder-langtok \
     --lang-dict "$lang_list" \
-    --lang-pairs "$lang_pairs" > model_path/from_en_to_${target_lang}_${name_keys}.txt
+    --lang-pairs "$lang_pairs" > $model_path/from_en_to_${target_lang}_${name_keys}.txt
