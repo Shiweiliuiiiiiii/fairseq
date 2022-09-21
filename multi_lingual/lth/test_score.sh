@@ -4,7 +4,7 @@ path_2_data=$3
 lang_list=$4
 lang_pairs=$5
 GPU=$6
-
+python check_sparsity.py $model_path/checkpoint_last_iter0.pt
 target_lang=de
 CUDA_VISIBLE_DEVICES=${GPU} fairseq-generate $path_2_data \
     --path $model_path/checkpoint_last_iter0.pt \
