@@ -1,0 +1,1 @@
+nohup bash multi_lingual/random_before/rand_before_2to2.sh 1 79 5 > log_test_random_before_5.out 2>&1 &
