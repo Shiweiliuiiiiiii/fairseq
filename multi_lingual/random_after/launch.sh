@@ -1,1 +1,1 @@
-nohup bash multi_lingual/random_after/rand_after_2to2.sh 1 79 5 > log_test_random_after_5.out 2>&1 &
+nohup bash multi_lingual/random_after/rand_after_2to2.sh 1 0.79 5 > log_test_random_after_5.out 2>&1 &
