@@ -3,7 +3,7 @@ path_2_data=examples/multilingual/multidata
 lang_list=examples/multilingual/lang_list.txt
 lang_pairs=en-fr,en-cs,cs-en,fr-en
 pretrained_model=examples/multilingual/mbart.cc25.v2/model.pt
-save_dir=snip_before_2to2
+save_dir=omp_before_2to2
 sparsity=$2
 state=$3
 
@@ -26,10 +26,10 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
     --dropout 0.3 --attention-dropout 0.1 --weight-decay 0.0 \
     --max-tokens 1024 --update-freq 2 \
     --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
-    --seed 222 --sparse --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --fix --sparse-init snip --sparsity $sparsity
+    --seed 222 --sparse --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --fix --sparse-init one_shot_gm --sparsity $sparsity
 
 # Calculate Scores
-bash multi_lingual/snip_before/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
+bash multi_lingual/omp_before/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
 # Delete Best Model to save storage
 rm -rf $save_dir/$state/checkpoint_best.pt
 rm -rf $save_dir/$state/checkpoint_last.pt

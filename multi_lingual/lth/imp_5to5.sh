@@ -60,3 +60,5 @@ do
     rm -rf $save_dir/$i/checkpoint_best_iter0.pt
     rm -rf $save_dir/$j/checkpoint_last_iter0.pt
 done
+
+rm -rf $save_dir/9/checkpoint_last_iter0.pt
