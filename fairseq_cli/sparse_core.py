@@ -379,7 +379,6 @@ class Masking(object):
         self.prune_rate = self.prune_rate_decay.get_dr(self.prune_rate)
         self.steps += 1
 
-        print(self.update_frequency, self.steps, self.initial_prune_time, self.final_prune_time)
         if self.update_frequency is not None:
             if self.sparse_mode == 'GMP':
                 if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:

@@ -26,7 +26,7 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
     --dropout 0.3 --attention-dropout 0.1 --weight-decay 0.0 \
     --max-tokens 1024 --update-freq 2 \
     --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
-    --seed 222 --sparse --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --fix --sparse-init snip --sparsity $sparsity \
+    --seed 222 --sparse --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --sparse-init snip --sparsity $sparsity \
     --sparse_mode DST --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 5 --redistribution none
 
 # Calculate Scores
