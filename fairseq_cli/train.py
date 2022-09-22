@@ -360,7 +360,7 @@ def train(
         mask = None
         if cfg.spa.sparse:
             if cfg.optimization.max_update != 0:
-                decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update * update_freq[-1])
+                decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update * update_freq)
             else:
                 decay = CosineDecay(cfg.spa.prune_rate, int(cfg.optimization.max_epoch * len(progress)))
             print('update ', update_freq)
