@@ -31,7 +31,7 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
 
 
 # Calculate Scores
-bash multi_lingual/gmp_before/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
+bash multi_lingual/gmp/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
 # Delete Best Model to save storage
 rm -rf $save_dir/$state/checkpoint_best.pt
 rm -rf $save_dir/$state/checkpoint_last.pt
