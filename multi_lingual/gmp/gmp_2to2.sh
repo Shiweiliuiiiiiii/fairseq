@@ -1,4 +1,6 @@
 
+
+
 path_2_data=examples/multilingual/multidata
 lang_list=examples/multilingual/lang_list.txt
 lang_pairs=en-fr,en-cs,cs-en,fr-en
