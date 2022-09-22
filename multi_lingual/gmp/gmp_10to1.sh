@@ -1,9 +1,9 @@
 
 path_2_data=examples/multilingual/multidata
 lang_list=examples/multilingual/lang_list.txt
-lang_pairs=en-fr,en-cs,en-de,en-gu,en-ja,ja-en,gu-en,de-en,cs-en,fr-en
+lang_pairs=zh-en,vi-en,ru-en,ro-en,my-en,ja-en,gu-en,de-en,cs-en,fr-en
 pretrained_model=examples/multilingual/mbart.cc25.v2/model.pt
-save_dir=gmp_5to5
+save_dir=gmp_10to1
 sparsity=$2
 state=$3
 

@@ -31,7 +31,7 @@ save_dir=mling_5_5
 # # Delete Best Model to save storage
 # rm -rf $save_dir/0/checkpoint_best_iter0.pt
 
-for ((i=9; i<10; i++))
+for ((i=9; i<11; i++))
 do
     j=$((i-1))
     CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
