@@ -1,0 +1,1 @@
+nohup bash multi_lingual/snip_before/snip_before_2to2.sh 3 0.64 4 > log_test_snip_before_4.out 2>&1 &
