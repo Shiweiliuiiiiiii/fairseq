@@ -363,6 +363,7 @@ def train(
                 decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update)
             else:
                 decay = CosineDecay(cfg.spa.prune_rate, int(cfg.optimization.max_epoch * len(progress)))
+            print('decay = {}'.format(decay.T_max))
             mask = Masking(trainer.optimizer, prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
                            sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune,
                            growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
