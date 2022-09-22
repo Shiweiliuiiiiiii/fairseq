@@ -27,7 +27,7 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
     --max-tokens 1024 --update-freq 2 \
     --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
     --seed 222 --sparse --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --sparse-init random --sparsity $sparsity \
-    --sparse_mode DST --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 5 --redistribution none
+    --sparse-mode DST --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 5 --redistribution none
 
 # Calculate Scores
 bash multi_lingual/random_rigl_before/score.sh $save_dir/$state/ ${save_dir}_$state $path_2_data $lang_list $lang_pairs $1
