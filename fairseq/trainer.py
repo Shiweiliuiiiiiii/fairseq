@@ -837,7 +837,6 @@ class Trainer(object):
                     del loss
 
                 if mask:
-                    print(self.get_num_updates())
                     mask.step()
 
                 logging_outputs.append(logging_output)
