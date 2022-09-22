@@ -1,9 +1,9 @@
 
 path_2_data=examples/multilingual/multidata
 lang_list=examples/multilingual/lang_list.txt
-lang_pairs=en-fr,en-cs,cs-en,fr-en
-pretrained_model=finetuned_models/2to2/checkpoint_last_iter0.pt
-save_dir=omp_after_2to2
+lang_pairs=zh-en,vi-en,ru-en,ro-en,my-en,ja-en,gu-en,de-en,cs-en,fr-en
+pretrained_model=finetuned_models/10to1/checkpoint_last_iter0.pt
+save_dir=omp_after_10to1
 sparsity=$2
 state=$3
 
