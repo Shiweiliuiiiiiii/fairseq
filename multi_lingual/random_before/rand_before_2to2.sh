@@ -22,7 +22,7 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
     --lang-pairs "$lang_pairs" \
     --criterion label_smoothed_cross_entropy --label-smoothing 0.2 \
     --optimizer adam --adam-eps 1e-06 --adam-betas '(0.9, 0.98)' \
-    --lr-scheduler inverse_sqrt --lr 3e-05 --warmup-updates 2500 --max-update 40000 \
+    --lr-scheduler inverse_sqrt --lr 3e-05 --warmup-updates 2500 --max-update 5 \
     --dropout 0.3 --attention-dropout 0.1 --weight-decay 0.0 \
     --max-tokens 1024 --update-freq 2 \
     --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
