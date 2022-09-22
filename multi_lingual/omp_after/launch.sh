@@ -1,0 +1,1 @@
+nohup bash multi_lingual/omp_after/omp_after_2to2.sh 2 0.52 6 > log_test_omp_after.out 2>&1 &
