@@ -7,7 +7,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from .funcs import redistribution_funcs, growth_funcs, prune_funcs
 
-
+import pdb
 
 class CosineDecay(object):
     """Decays a pruning rate according to a cosine schedule
@@ -184,7 +184,9 @@ class Masking(object):
 
         elif mode == 'one_shot_gm':
             print('initialize by one_shot_gm')
-            self.baseline_nonzero = 0
+            self.baseline_nonzero = 0   
+            pdb.set_trace()
+
             weight_abs = []
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
