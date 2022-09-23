@@ -186,16 +186,10 @@ class Masking(object):
             print('initialize by one_shot_gm')
             self.baseline_nonzero = 0   
 
-
             weight_abs = []
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
                 weight_abs.append(torch.abs(weight.cpu()))
-
-
-
-            pdb.set_trace()
-
 
             # Gather all scores in a single vector and normalise
             all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
@@ -204,11 +198,9 @@ class Masking(object):
             threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
             acceptable_score = threshold[-1]
 
-            print('FLAG')
-
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                self.masks[name] = ((torch.abs(weight.cpu())) > acceptable_score).float().data.to(device)
+                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(device)
 
         elif mode == 'random':
             print('initialize by random pruning')
