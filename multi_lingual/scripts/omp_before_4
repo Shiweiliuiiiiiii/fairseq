@@ -3,7 +3,7 @@
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gpus=2
+#SBATCH --gpus=1
 #SBATCH -t 3-00:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o OMP_before_multilingual_4.out
@@ -12,7 +12,7 @@
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-GPU=0,1
+GPU=0
 SAVE_DIR=omp_before
 bash multi_lingual/${SAVE_DIR}/10to10.sh $GPU 0.2 1
 bash multi_lingual/${SAVE_DIR}/10to10.sh $GPU 0.36 2
