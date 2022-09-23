@@ -191,6 +191,8 @@ class Masking(object):
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
                 weight_abs.append(torch.abs(weight))
+            pdb.set_trace()
+
 
             # Gather all scores in a single vector and normalise
             all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
