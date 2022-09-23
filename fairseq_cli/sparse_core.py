@@ -185,12 +185,15 @@ class Masking(object):
         elif mode == 'one_shot_gm':
             print('initialize by one_shot_gm')
             self.baseline_nonzero = 0   
-            pdb.set_trace()
+
 
             weight_abs = []
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                weight_abs.append(torch.abs(weight))
+                weight_abs.append(torch.abs(weight.cpu()))
+
+
+
             pdb.set_trace()
 
 
