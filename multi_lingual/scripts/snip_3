@@ -1,19 +1,18 @@
 #!/bin/bash
-#SBATCH --job-name=snip_multilingual_1
+#SBATCH --job-name=snip_multilingual_3
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
-#SBATCH --gpus-per-node=1
-#SBATCH --gpus=1
+#SBATCH --gpus=2
 #SBATCH -t 3-00:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o snip_multilingual_1.out
+#SBATCH -o snip_multilingual_3.out
 
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
-GPU=0
+GPU=0,1
 SAVE_DIR=snip_before
 bash multi_lingual/${SAVE_DIR}/10to1.sh $GPU 0.2 1
 bash multi_lingual/${SAVE_DIR}/10to1.sh $GPU 0.36 2
