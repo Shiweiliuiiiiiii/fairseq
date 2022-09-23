@@ -31,7 +31,12 @@ save_dir=mling_5_5
 # # Delete Best Model to save storage
 # rm -rf $save_dir/0/checkpoint_best_iter0.pt
 
-for ((i=9; i<11; i++))
+i=6
+bash multi_lingual/lth/score.sh $save_dir/$i/ ${save_dir}_$i $path_2_data $lang_list $lang_pairs $1
+i=7
+bash multi_lingual/lth/score.sh $save_dir/$i/ ${save_dir}_$i $path_2_data $lang_list $lang_pairs $1
+
+for ((i=8; i<9; i++))
 do
     j=$((i-1))
     CUDA_VISIBLE_DEVICES=$1 python train_custom_new.py "$path_2_data" \
@@ -61,4 +66,4 @@ do
     rm -rf $save_dir/$j/checkpoint_last_iter0.pt
 done
 
-rm -rf $save_dir/9/checkpoint_last_iter0.pt
+rm -rf $save_dir/10/checkpoint_last_iter0.pt
