@@ -26,4 +26,4 @@ CUDA_VISIBLE_DEVICES=$1 python train.py "$path_2_data" \
     --dropout 0.3 --attention-dropout 0.1 --weight-decay 0.0 \
     --max-tokens 1024 --update-freq 2 \
     --save-interval 1 --save-interval-updates 50000 --keep-interval-updates 10 --no-epoch-checkpoints \
-    --seed 222 --sparse --log-format simple --log-interval 100 --save-dir $save_dir/$state/ --fix --sparse-init one_shot_gm --sparsity $sparsity
+    --seed 222 --sparse --log-format simple --log-interval 10 --save-dir $save_dir/$state/ --fix --sparse-init one_shot_gm --sparsity $sparsity
