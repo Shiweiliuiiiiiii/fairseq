@@ -197,9 +197,11 @@ class Masking(object):
             threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
             acceptable_score = threshold[-1]
 
+            print('FLAG')
+
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(device)
+                self.masks[name] = ((torch.abs(weight.cpu())) > acceptable_score).float().data.to(device)
 
         elif mode == 'random':
             print('initialize by random pruning')
