@@ -40,7 +40,7 @@ for i in range(11):
     data = result[i]
     for lang in ['fr', 'cs', 'de', 'gu', 'ja', 'my', 'ro', 'ru', 'vi', 'zh']:
         if not 'from_en_to_{}'.format(lang) in data:
-            data['from_en_to_{}'.format(lang)] = 'None'
+            data['from_en_to_{}'.format(lang)] = -1
     print('{} \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}'.format(i,
         data['from_en_to_fr'],data['from_en_to_cs'],data['from_en_to_de'],data['from_en_to_gu'],data['from_en_to_ja'],
         data['from_en_to_my'],data['from_en_to_ro'],data['from_en_to_ru'],data['from_en_to_vi'],data['from_en_to_zh']))
@@ -49,7 +49,7 @@ for i in range(11):
     data = result[i]
     for lang in ['fr', 'cs', 'de', 'gu', 'ja', 'my', 'ro', 'ru', 'vi', 'zh']:
         if not 'to_en_from_{}'.format(lang) in data:
-            data['to_en_from_{}'.format(lang)] = 'None'
+            data['to_en_from_{}'.format(lang)] = -1
     print('{} \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}, \t {:.2f}'.format(i,
         data['to_en_from_fr'],data['to_en_from_cs'],data['to_en_from_de'],data['to_en_from_gu'],data['to_en_from_ja'],
         data['to_en_from_my'],data['to_en_from_ro'],data['to_en_from_ru'],data['to_en_from_vi'],data['to_en_from_zh']))
