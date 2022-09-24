@@ -41,6 +41,7 @@ from fairseq.file_io import PathManager
 from fairseq.logging import meters, metrics, progress_bar
 from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from fairseq.trainer import Trainer
+from copy import deepcopy
 
 
 def main(cfg: FairseqConfig) -> None:
@@ -125,95 +126,140 @@ def main(cfg: FairseqConfig) -> None:
         )
     )
 
-    # Load valid dataset (we load training data below, based on the latest checkpoint)
-    # We load the valid dataset AFTER building the model
-    data_utils.raise_if_valid_subsets_unintentionally_ignored(cfg)
-    if cfg.dataset.combine_valid_subsets:
-        task.load_dataset("valid", combine=True, epoch=1)
-    else:
-        for valid_sub_split in cfg.dataset.valid_subset.split(","):
-            task.load_dataset(valid_sub_split, combine=False, epoch=1)
+    # load initialization
+    print('Load initialization from examples/multilingual/mbart.cc25.v2/model.pt')
+    initalization = torch.load('examples/multilingual/mbart.cc25.v2/model.pt')['model']
+    
+    start_state = 0
+    # Iterative magnitude pruning
+    for iter in range(1):
 
-    # (optionally) Configure quantization
-    if cfg.common.quantization_config_path is not None:
-        quantizer = quantization_utils.Quantizer(
-            config_path=cfg.common.quantization_config_path,
-            max_epoch=cfg.optimization.max_epoch,
-            max_update=cfg.optimization.max_update,
-        )
-    else:
-        quantizer = None
+        print('******************************************')
+        print('IMP iteration', iter)
+        print('******************************************')
 
-    # Build trainer
-    if cfg.common.model_parallel_size == 1:
-        trainer = Trainer(cfg, task, model, criterion, quantizer)
-    else:
-        trainer = MegatronTrainer(cfg, task, model, criterion)
-    logger.info(
-        "training on {} devices (GPUs/TPUs)".format(
-            cfg.distributed_training.distributed_world_size
-        )
-    )
-    logger.info(
-        "max tokens per device = {} and max sentences per device = {}".format(
-            cfg.dataset.max_tokens,
-            cfg.dataset.batch_size,
-        )
-    )
+        # Load valid dataset (we load training data below, based on the latest checkpoint)
+        # We load the valid dataset AFTER building the model
+        data_utils.raise_if_valid_subsets_unintentionally_ignored(cfg)
 
-    # Load the latest checkpoint if one is available and restore the
-    # corresponding train iterator
-    extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
-        cfg.checkpoint,
-        trainer,
-        # don't cache epoch iterators for sharded datasets
-        disable_iterator_cache=task.has_sharded_data("train"),
-    )
-    if cfg.common.tpu:
-        import torch_xla.core.xla_model as xm
+        if cfg.dataset.combine_valid_subsets:
+            task.load_dataset("valid", combine=True, epoch=1)
+        else:
+            for valid_sub_split in cfg.dataset.valid_subset.split(","):
+                task.load_dataset(valid_sub_split, combine=False, epoch=1)
 
-        xm.rendezvous("load_checkpoint")  # wait for all workers
-
-    max_epoch = cfg.optimization.max_epoch or math.inf
-    lr = trainer.get_lr()
-
-    train_meter = meters.StopwatchMeter()
-    train_meter.start()
-    while epoch_itr.next_epoch_idx <= max_epoch:
-        if lr <= cfg.optimization.stop_min_lr:
-            logger.info(
-                f"stopping training because current learning rate ({lr}) is smaller "
-                "than or equal to minimum learning rate "
-                f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
+        # (optionally) Configure quantization
+        if cfg.common.quantization_config_path is not None:
+            quantizer = quantization_utils.Quantizer(
+                config_path=cfg.common.quantization_config_path,
+                max_epoch=cfg.optimization.max_epoch,
+                max_update=cfg.optimization.max_update,
             )
-            break
+        else:
+            quantizer = None
 
-        # train for one epoch
-        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
-        if should_stop:
-            break
+        # Build trainer
+        if cfg.common.model_parallel_size == 1:
+            trainer = Trainer(cfg, task, model, criterion, quantizer)
+        else:
+            trainer = MegatronTrainer(cfg, task, model, criterion)
+        logger.info(
+            "training on {} devices (GPUs/TPUs)".format(
+                cfg.distributed_training.distributed_world_size
+            )
+        )
+        logger.info(
+            "max tokens per device = {} and max sentences per device = {}".format(
+                cfg.dataset.max_tokens,
+                cfg.dataset.batch_size,
+            )
+        )
 
-        # only use first validation loss to update the learning rate
-        lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
-
-        epoch_itr = trainer.get_train_iterator(
-            epoch_itr.next_epoch_idx,
-            # sharded data: get train iterator for next epoch
-            load_dataset=task.has_sharded_data("train"),
+        # Load the latest checkpoint if one is available and restore the
+        # corresponding train iterator
+        cfg.checkpoint.reset_dataloader =True
+        extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+            cfg.checkpoint,
+            trainer,
             # don't cache epoch iterators for sharded datasets
             disable_iterator_cache=task.has_sharded_data("train"),
         )
-    train_meter.stop()
-    logger.info("done training in {:.1f} seconds".format(train_meter.sum))
 
-    # ioPath implementation to wait for all asynchronous file writes to complete.
-    if cfg.checkpoint.write_checkpoints_asynchronously:
-        logger.info(
-            "ioPath PathManager waiting for all asynchronous checkpoint "
-            "writes to finish."
-        )
-        PathManager.async_close()
-        logger.info("ioPath PathManager finished waiting.")
+
+        if cfg.common.tpu:
+            import torch_xla.core.xla_model as xm
+
+            xm.rendezvous("load_checkpoint")  # wait for all workers
+
+        # max_epoch = cfg.optimization.max_epoch or math.inf
+
+        max_epoch = 2
+
+        lr = trainer.get_lr()
+
+        # # save initialization
+        # if iter == 0:
+        #     initalization = deepcopy(model.state_dict())
+
+        # performing pruning at the beginning of each IMP iter
+        mask=None
+        if cfg.spa.imp_iters != 0:
+            decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
+            mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
+                            sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
+                            redistribution_mode=cfg.spa.redistribution, fp16=cfg.distributed_training.fp16, args=cfg)
+            mask.add_module(trainer.model)
+            mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1-cfg.spa.sparsity))
+
+        # update the name of subnet with regards to the current pruning iteration
+        trainer.checkpoint_suffix = "_iter{}".format(iter)
+        # cfg.checkpoint.restore_file is the model that Fairseq will automatically load at intialization
+        cfg.checkpoint.restore_file = cfg.checkpoint.save_dir + "/checkpoint_best.pt"
+
+        # weight rewinding
+        print('loading pretrained weights')
+        trainer.model.load_state_dict(initalization)
+        if mask: mask.apply_mask()
+
+
+        train_meter = meters.StopwatchMeter()
+        train_meter.start()
+        while epoch_itr.next_epoch_idx <= max_epoch:
+            if lr <= cfg.optimization.stop_min_lr:
+                logger.info(
+                    f"stopping training because current learning rate ({lr}) is smaller "
+                    "than or equal to minimum learning rate "
+                    f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
+                )
+                break
+
+            # train for one epoch
+            valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
+            if should_stop:
+                break
+
+            # only use first validation loss to update the learning rate
+            lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
+
+            epoch_itr = trainer.get_train_iterator(
+                epoch_itr.next_epoch_idx,
+                # sharded data: get train iterator for next epoch
+                load_dataset=task.has_sharded_data("train"),
+                # don't cache epoch iterators for sharded datasets
+                disable_iterator_cache=task.has_sharded_data("train"),
+            )
+        train_meter.stop()
+        logger.info("done training in {:.1f} seconds".format(train_meter.sum))
+
+
+        # ioPath implementation to wait for all asynchronous file writes to complete.
+        if cfg.checkpoint.write_checkpoints_asynchronously:
+            logger.info(
+                "ioPath PathManager waiting for all asynchronous checkpoint "
+                "writes to finish."
+            )
+            PathManager.async_close()
+            logger.info("ioPath PathManager finished waiting.")
 
 
 def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
@@ -246,7 +292,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -308,87 +354,10 @@ def train(
 
     trainer.begin_epoch(epoch_itr.epoch)
 
-    def SNIP(net, trainer, keep_ratio, progress, masks):
-        model = copy.deepcopy(net)
-        model.train()
-        trainer.criterion.train()
-
-        for i, samples in enumerate(progress):
-            for j, sample in enumerate(samples):  # delayed update loop
-                if j > 0:
-                    break
-                sample, is_dummy_batch = trainer._prepare_sample(sample)
-                loss = trainer.criterion(model, sample)
-
-                with torch.autograd.profiler.record_function("backward"):
-                    trainer.optimizer.backward(loss[0])
-
-                grads_abs = []
-                for name, weight in model.named_parameters():
-                    if name not in masks: continue
-                    grads_abs.append(torch.abs(weight * weight.grad))
-
-                # Gather all scores in a single vector and normalise
-                all_scores = torch.cat([torch.flatten(x) for x in grads_abs])
-
-                num_params_to_keep = int(len(all_scores) * keep_ratio)
-                threshold, _ = torch.topk(all_scores, num_params_to_keep+1, sorted=True)
-                acceptable_score = threshold[-1]
-
-                layer_wise_sparsities = []
-                for g in grads_abs:
-                    mask_ = (g > acceptable_score).float()
-                    # if keep_ratio==0.98 and i == 0:
-                    #     mask_ = (torch.rand(g.shape) < 0.85).float()
-                    # elif keep_ratio==0.95 and i == 0:
-                    #     mask_ = (torch.rand(g.shape) < 0.65).float()
-                    # else:
-                    #     mask_ = (g > acceptable_score).float()
-
-                    # sparsity = float((mask == 0).sum().item() / mask.numel())
-                    layer_wise_sparsities.append(mask_)
-
-                model.zero_grad()
-
-            return layer_wise_sparsities
-
-    if epoch_itr.epoch == 1:
-        logger.info("'**********Start pruning the model**********************'")
-
-        # build masks here
-        global mask
-        mask = None
-        if cfg.spa.sparse:
-            if cfg.optimization.max_update != 0:
-                decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update * update_freq)
-            else:
-                decay = CosineDecay(cfg.spa.prune_rate, int(cfg.optimization.max_epoch * len(progress)))
-            print('update ', update_freq)
-            mask = Masking(trainer.optimizer, prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
-                           sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune,
-                           growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
-                           args=cfg)
-            mask.add_module(trainer.model)
-
-            if mask.sparse_init == 'snip':
-                mask.init_growth_prune_and_redist()
-                layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
-                for snip_mask, name in zip(layer_wise_sparsities, mask.masks):
-                    mask.masks[name][:] = snip_mask
-                    # mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
-                    #     mask.device)
-                mask.apply_mask()
-                mask.print_status()
-            else:
-                mask.init(model=trainer.model, train_loader=None, device=mask.device,
-                          mode=mask.sparse_init, density=(1 - mask.sparsity))
-
-
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
     num_updates = trainer.get_num_updates()
     logger.info("Start iterating over samples")
-
     for i, samples in enumerate(progress):
         with metrics.aggregate("train_inner"), torch.autograd.profiler.record_function(
             "train_step-%d" % i
@@ -408,7 +377,7 @@ def train(
 
         end_of_epoch = not itr.has_next()
         valid_losses, should_stop = validate_and_save(
-            cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch
+            cfg, trainer, task, epoch_itr, valid_subsets, end_of_epoch, mask=mask
         )
 
         if should_stop:
@@ -444,6 +413,7 @@ def validate_and_save(
     epoch_itr,
     valid_subsets: List[str],
     end_of_epoch: bool,
+    mask=False
 ) -> Tuple[List[Optional[float]], bool]:
     num_updates = trainer.get_num_updates()
     max_update = cfg.optimization.max_update or math.inf
@@ -507,6 +477,16 @@ def validate_and_save(
         checkpoint_utils.save_checkpoint(
             cfg.checkpoint, trainer, epoch_itr, valid_losses[0]
         )
+
+    # if mask:
+    #     total_zero = 0
+    #     total_weight = 0
+    #     for name, weight in trainer.model.named_parameters():
+    #         if name not in mask.masks: continue
+    #         total_zero += (weight == 0).sum().item()
+    #         total_weight += weight.numel()
+    #
+    #     print(f'the sparsity level of the model is {total_zero / total_weight} ')
 
     return valid_losses, should_stop
 

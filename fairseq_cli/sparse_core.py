@@ -7,7 +7,7 @@ import torch.optim as optim
 import torch.nn.functional as F
 from .funcs import redistribution_funcs, growth_funcs, prune_funcs
 
-
+import pdb
 
 class CosineDecay(object):
     """Decays a pruning rate according to a cosine schedule
@@ -191,11 +191,32 @@ class Masking(object):
 
         elif mode == 'one_shot_gm':
             print('initialize by one_shot_gm')
-            self.baseline_nonzero = 0
+            self.baseline_nonzero = 0   
+
             weight_abs = []
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
                 weight_abs.append(torch.abs(weight))
+
+            # Gather all scores in a single vector and normalise
+            all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
+            num_params_to_keep = int(len(all_scores) * density)
+
+            threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
+            acceptable_score = threshold[-1]
+
+            for name, weight in model.named_parameters():
+                if name not in self.masks: continue
+                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(device)
+
+        elif mode == 'one_shot_gm_cpu':
+            print('initialize by one_shot_gm')
+            self.baseline_nonzero = 0   
+
+            weight_abs = []
+            for name, weight in model.named_parameters():
+                if name not in self.masks: continue
+                weight_abs.append(torch.abs(weight.cpu()))
 
             # Gather all scores in a single vector and normalise
             all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
@@ -394,6 +415,13 @@ class Masking(object):
                     self.gradual_magnitude_pruning(current_prune_rate)
                     self.print_status()
 
+            elif self.sparse_mode == 'GMP_cpu':
+                if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:
+                    print('*********************************Gradual Magnitude Pruning***********************')
+                    current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
+                    self.gradual_magnitude_pruning(current_prune_rate, True)
+                    self.print_status()
+
             elif self.sparse_mode == 'DST':
                 if self.steps % self.update_frequency == 0:
                     print('*********************************Dynamic Sparsity********************************')
@@ -513,12 +541,15 @@ class Masking(object):
 
         return threshold
 
-    def gradual_magnitude_pruning(self, current_pruning_rate):
+    def gradual_magnitude_pruning(self, current_pruning_rate, cpu=False):
         weight_abs = []
         for module in self.modules:
             for name, weight in module.named_parameters():
                 if name not in self.masks: continue
-                weight_abs.append(torch.abs(weight))
+                if cpu: 
+                    weight_abs.append(torch.abs(weight.cpu()))
+                else:
+                    weight_abs.append(torch.abs(weight))
 
         # Gather all scores in a single vector and normalise
         all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
