@@ -50,6 +50,7 @@ class Masking(object):
             print('Supported modes are:', str(growth_modes))
 
         self.fix = args.spa.fix
+        self.noembed = args.spa.noembed
         self.sparse_init = args.spa.sparse_init
         self.sparse_mode = args.spa.sparse_mode
         self.update_frequency = args.spa.update_frequency
@@ -101,6 +102,12 @@ class Masking(object):
                     self.names.append(name)
                     self.masks[name] = torch.ones_like(tensor, dtype=torch.float32, requires_grad=False).to(self.device)
 
+
+        if self.noembed:
+            print('Remove embed_tokens')
+            self.remove_weight_partial_name('embed_tokens')
+            print('Remove embed_positions')
+            self.remove_weight_partial_name('embed_positions')
         print('Removing in_proj_weight')
         self.remove_weight_partial_name('in_proj_weight')
         print('Removing out_proj_weight')

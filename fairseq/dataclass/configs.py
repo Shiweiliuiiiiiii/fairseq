@@ -1118,6 +1118,9 @@ class SparseConfig(FairseqDataclass):
     sparse: bool = field(
         default=False, metadata={"help": "Enable sparse training."}
     )
+    noembed: bool = field(
+        default=False, metadata={"help": "Do not prune embedding layer."}
+    )
     fix: bool = field(
         default=False, metadata={"help": "Fixing the topology of the sparse model."}
     )

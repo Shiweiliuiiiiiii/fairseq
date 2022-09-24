@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=test_imp_0.1
+#SBATCH --job-name=roberta_one_shot_mp_noembed
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,17 +7,17 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-24:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o test_imp_0.1.out
+#SBATCH -o roberta_one_shot_mp_noembed.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate transformer
+
 
 
 MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
-SEED=1                # Random seed.
 ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
 DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 
@@ -25,11 +25,11 @@ DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 # the examples/roberta/commonsense_qa directory:
 FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
-for sparsity in 0.1
+for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=~/4/$sparsity
-CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
-    $DATA_DIR --save-dir $save_dir  \
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/gm_noembed/$sparsity
+CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
+    $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
     --reset-optimizer --reset-dataloader --reset-meters \
@@ -45,7 +45,11 @@ CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11
+    --seed 1 --sparse --fix --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir --noembed
 
+
+python examples/roberta/commonsense_qa/evaluate.py ${save_dir}
+
+rm -rf $save_dir/checkpoint_best.pt
 done
 #python examples/roberta/commonsense_qa/evaluate.py
