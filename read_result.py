@@ -25,7 +25,7 @@ for i in range(11):
     result[i] = single_sparse_result
 
 # show result
-print('Pruning State \t From En to fr, \t cs, \t, de, \t gu, \t ja, \t my, \t ro, \t ru, \t vi, \t zh')
+print('State \t To fr, \t cs, \t, de, \t gu, \t ja, \t my, \t ro, \t ru, \t vi, \t zh')
 for i in range(11):
     data = result[i]
     for lang in ['fr', 'cs', 'de', 'gu', 'ja', 'my', 'ro', 'ru', 'vi', 'zh']:
@@ -34,7 +34,7 @@ for i in range(11):
     print('{} \t {}, \t {}, \t {}, \t {}, \t {}, \t {}, \t {}, \t {}, \t {}, \t {}'.format(i,
         data['from_en_to_fr'],data['from_en_to_cs'],data['from_en_to_de'],data['from_en_to_gu'],data['from_en_to_ja'],
         data['from_en_to_my'],data['from_en_to_ro'],data['from_en_to_ru'],data['from_en_to_vi'],data['from_en_to_zh']))
-print('Pruning State \t To En from fr, \t cs, \t, de, \t gu, \t ja, \t my, \t ro, \t ru, \t vi, \t zh')
+print('State \t From fr, \t cs, \t, de, \t gu, \t ja, \t my, \t ro, \t ru, \t vi, \t zh')
 for i in range(11):
     data = result[i]
     for lang in ['fr', 'cs', 'de', 'gu', 'ja', 'my', 'ro', 'ru', 'vi', 'zh']:
