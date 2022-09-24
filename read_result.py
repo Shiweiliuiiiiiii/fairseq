@@ -10,8 +10,8 @@ print('Searching Result from {}'.format(sys.argv[1]))
 result = {}
 for i in range(11):
     print('Processing Pruning State = {}'.format(i))
-    path_list = os.listdir(os.path.join(sys.argv[1], str(i)))
     if not os.path.exists(os.path.join(sys.argv[1], str(i))): continue
+    path_list = os.listdir(os.path.join(sys.argv[1], str(i)))
     single_sparse_result = {}
     for data_path in path_list:
         if not '.txt' in data_path: continue
