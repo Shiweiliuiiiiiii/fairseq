@@ -14,7 +14,7 @@ for i in range(11):
     single_sparse_result = {}
     for data_path in path_list:
         if not '.txt' in data_path: continue
-        with open(data_path) as f:
+        with open(os.listdir(os.path.join(sys.argv[1], str(i)), data_path)) as f:
             data_lines = f.readlines()
         last_line = data_lines[-1]
         offest = len('Generate test with beam=5: BLEU4 = ')
