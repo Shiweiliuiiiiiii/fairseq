@@ -10,7 +10,7 @@
 #SBATCH -o roberta_one_shot_mp_noembed.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate transformer
+source activate slak
 
 
 
