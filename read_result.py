@@ -37,6 +37,7 @@ for i in range(11):
 # show result
 print('State \t To fr, \t cs, \t, de, \t gu, \t ja, \t my, \t ro, \t ru, \t vi, \t zh')
 for i in range(11):
+    if not i in result: continue
     data = result[i]
     for lang in ['fr', 'cs', 'de', 'gu', 'ja', 'my', 'ro', 'ru', 'vi', 'zh']:
         if not 'from_en_to_{}'.format(lang) in data:
@@ -46,6 +47,7 @@ for i in range(11):
         data['from_en_to_my'],data['from_en_to_ro'],data['from_en_to_ru'],data['from_en_to_vi'],data['from_en_to_zh']))
 print('State \t From fr, \t cs, \t, de, \t gu, \t ja, \t my, \t ro, \t ru, \t vi, \t zh')
 for i in range(11):
+    if not i in result: continue
     data = result[i]
     for lang in ['fr', 'cs', 'de', 'gu', 'ja', 'my', 'ro', 'ru', 'vi', 'zh']:
         if not 'to_en_from_{}'.format(lang) in data:
