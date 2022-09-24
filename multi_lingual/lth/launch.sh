@@ -14,5 +14,6 @@
 
 
 
-nohup bash multi_lingual/lth/imp_10to1.sh 2 > log_LTH_10to1_0924.out 2>&1 &
+# nohup bash multi_lingual/lth/imp_10to1.sh 1 > log_LTH_10to1_0924.out 2>&1 &
 
+nohup bash multi_lingual/lth/extra.sh 2 > log_Extra_0924.out 2>&1 &
