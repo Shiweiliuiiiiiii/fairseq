@@ -21,7 +21,16 @@ for i in range(11):
         bleu_score = last_line[offest:offest+6]
         clip = bleu_score.find(',')
         bleu_score = float(bleu_score[:clip])
-        single_sparse_result[data_path[:13]] = bleu_score
+
+        if not 'from' in data_path:
+            if 'reverse' in data_path:
+                name_key = 'to_en_from_{}'.format(data_path[3:5])
+            else:
+                name_key = 'from_en_to_{}'.format(data_path[3:5])
+        else:
+            name_key = data_path[:13]
+
+        single_sparse_result[name_key] = bleu_score
     result[i] = single_sparse_result
 
 # show result
@@ -45,6 +54,7 @@ for i in range(11):
         data['to_en_from_my'],data['to_en_from_ro'],data['to_en_from_ru'],data['to_en_from_vi'],data['to_en_from_zh']))
         
 
+torch.save(result, 'BLEU_{}.pt'.format(sys.argv[2]))
 
 
 
