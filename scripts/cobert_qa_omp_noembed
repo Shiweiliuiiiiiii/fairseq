@@ -5,7 +5,7 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-24:00:00
+#SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o roberta_one_shot_mp_noembed.out
 
@@ -48,7 +48,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --seed 1 --sparse --fix --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir --noembed
 
 
-python examples/roberta/commonsense_qa/evaluate.py ${save_dir}
+python examples/roberta/commonsense_qa/evaluate_single.py ${save_dir}
 
 rm -rf $save_dir/checkpoint_best.pt
 done

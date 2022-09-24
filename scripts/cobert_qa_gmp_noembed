@@ -13,7 +13,7 @@ source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
 
-MAX_UPDATES=100      # Number of training steps.
+MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
@@ -48,7 +48,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --seed $SEED --sparse --sparse-init dense --sparse-mode GMP --sparsity $sparsity --save-dir $save_dir \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none --noembed
 
-python examples/roberta/commonsense_qa/evaluate.py ${save_dir}
+python examples/roberta/commonsense_qa/evaluate_single.py ${save_dir}
 
 rm -rf $save_dir/checkpoint_best.pt
 

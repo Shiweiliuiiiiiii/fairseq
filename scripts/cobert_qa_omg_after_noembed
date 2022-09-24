@@ -47,7 +47,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --log-format simple --log-interval 25\
     --seed $SEED --sparse --fix --sparse-init one_shot_gm --sparsity $sparsity --save-dir $save_dir --noembed
 
-python examples/roberta/commonsense_qa/evaluate.py ${save_dir}
+python examples/roberta/commonsense_qa/evaluate_single.py ${save_dir}
 
 rm -rf $save_dir/checkpoint_best.pt
 
