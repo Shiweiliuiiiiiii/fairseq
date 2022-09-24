@@ -13,7 +13,7 @@ def sorted_nicely(l):
 
 check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
 
-for method in ['imp_noembed/']:
+for method in ['imp_noembed/0.2/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
