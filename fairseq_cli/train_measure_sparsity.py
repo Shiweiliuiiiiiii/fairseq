@@ -161,8 +161,8 @@ def main(cfg: FairseqConfig) -> None:
         )
     )
 
-    # model_path = '/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/'
-    model_path = '/home/sliu/project_space/pruning_fails/QA/robert/race/'
+    model_path = '/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/'
+    # model_path = '/home/sliu/project_space/pruning_fails/QA/robert/race/'
 
     removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
     #['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']  # SCQA
