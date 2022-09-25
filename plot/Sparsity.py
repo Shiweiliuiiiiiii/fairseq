@@ -17,12 +17,25 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/sparsity/cobert_w
         if 'sparsity of' in line:
             winogrande_sparsity.append(float(line.split()[-1]))
 
+winogrande_sparsity_gmp_imp_gmp = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/sparsity/cobert_winogrande_sparsity_imp_gmp.out') as file:
+    for line in file:
+        if 'sparsity of' in line:
+            winogrande_sparsity_gmp_imp_gmp.append(float(line.split()[-1]))
+
+
+winogrande_sparsity_gmp_imp = np.array(winogrande_sparsity_gmp_imp_gmp).reshape(2, -1)
+winogrande_sparsity_gmp = winogrande_sparsity_gmp_imp[0].reshape(3,-1)
+winogrande_sparsity_IMP = winogrande_sparsity_gmp_imp[1].reshape(3,-1)
+
+
+
 winogrande_sparsity = np.array(winogrande_sparsity).reshape(7, -1)
 
 winogrande_sparsity_gm = winogrande_sparsity[0].reshape(3,-1)
 winogrande_sparsity_gm_after = winogrande_sparsity[1].reshape(3,-1)
-winogrande_sparsity_gmp = winogrande_sparsity[2].reshape(3,-1)
-winogrande_sparsity_IMP = winogrande_sparsity[3].reshape(3,-1)
+# winogrande_sparsity_gmp = winogrande_sparsity[2].reshape(3,-1)
+# winogrande_sparsity_IMP = winogrande_sparsity[3].reshape(3,-1)
 winogrande_sparsity_random = winogrande_sparsity[4].reshape(3,-1)
 winogrande_sparsity_random_after = winogrande_sparsity[5].reshape(3,-1)
 winogrande_sparsity_snip= winogrande_sparsity[6].reshape(3,-1)
@@ -62,14 +75,14 @@ roberta_large = fig.add_subplot(1,1,1)
 
 
 roberta_large.plot(x_axis, winogrande_sparsity_snip_36,  '-o',   label='SNIP (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, winogrande_sparsity_IMP_36,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, winogrande_sparsity_IMP_36[:-2],  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
 
 # roberta_large.plot(x_axis, robert_snip_rigl_csqa,  '--o',   label='SNIP+RIGL (Before)',color='#228B22',linewidth=linewidth, markersize=markersize )
 roberta_large.plot(x_axis, winogrande_sparsity_gm_after_36,  '-o',   label='One-Shot LRR (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, winogrande_sparsity_random_36,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, winogrande_sparsity_random_after_36,  '-o',   label='Random (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, robert_random_rigl_csqa,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
-# roberta_large.plot(x_axis, winogrande_sparsity_gmp_36,  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, winogrande_sparsity_gmp_36[:-2],  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
 
 # roberta_large.plot(x_axis, winogrande_sparsity_gm_36,  '-o',   label='OMP (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, robert_gm_rigl_csqa,  '--o',   label='OMP+RIGL (Before)',color='#bcbd22',linewidth=linewidth, markersize=markersize )
