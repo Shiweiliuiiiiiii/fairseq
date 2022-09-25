@@ -1,0 +1,85 @@
+#!/bin/bash
+#SBATCH --job-name=cobert_race_sparsity
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-01:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o cobert_race_sparsity.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate slak
+
+MAX_EPOCH=3           # Number of training epochs.
+LR=1e-05              # Peak LR for fixed LR scheduler.
+NUM_CLASSES=4
+MAX_SENTENCES=4       # Batch size per GPU.
+UPDATE_FREQ=4         # Accumulate gradients to simulate training on 8 GPUs.
+DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
+ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
+
+
+save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/sparsity/
+CUDA_VISIBLE_DEVICES=0 python train_sparsity_measure.py $DATA_DIR --ddp-backend=legacy_ddp \
+    --restore-file $ROBERTA_PATH \
+    --save-dir $save_dir \
+    --reset-optimizer --reset-dataloader --reset-meters \
+    --best-checkpoint-metric accuracy --maximize-best-checkpoint-metric \
+    --task sentence_ranking \
+    --num-classes $NUM_CLASSES \
+    --init-token 0 --separator-token 2 \
+    --max-option-length 128 \
+    --max-positions 512 \
+    --shorten-method "truncate" \
+    --arch roberta_large \
+    --dropout 0.1 --attention-dropout 0.1 --weight-decay 0.01 \
+    --criterion sentence_ranking \
+    --optimizer adam --adam-betas '(0.9, 0.98)' --adam-eps 1e-06 \
+    --clip-norm 0.0 \
+    --lr-scheduler fixed --lr $LR \
+    --fp16 --fp16-init-scale 4 --threshold-loss-scale 1 --fp16-scale-window 128 \
+    --batch-size $MAX_SENTENCES \
+    --required-batch-size-multiple 1 \
+    --update-freq $UPDATE_FREQ \
+    --max-epoch $MAX_EPOCH \
+    --fix --sparse-init one_shot_gm --sparsity 0.1 --sparse
+
+
+#
+#TOTAL_NUM_UPDATES=23750 # Total number of training steps.
+#WARMUP_UPDATES=2375     # Linearly increase LR over this many steps.
+#LR=1e-05                # Peak LR for polynomial LR scheduler.
+#MAX_SENTENCES=32        # Batch size per GPU.
+#SEED=1                  # Random seed.
+#ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
+#DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/winogrande_1.1/
+## we use the --user-dir option to load the task and criterion
+## from the examples/roberta/wsc directory:
+#FAIRSEQ_PATH=/home/sliu/Projects/fairseq
+#FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/wsc
+#
+#
+#save_dir=/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/sparsity
+#CUDA_VISIBLE_DEVICES=0 python train_sparsity_measure.py $DATA_DIR \
+#  --restore-file $ROBERTA_PATH \
+#  --save-dir $save_dir \
+#  --reset-optimizer --reset-dataloader --reset-meters \
+#  --no-epoch-checkpoints --no-last-checkpoints --no-save-optimizer-state \
+#  --best-checkpoint-metric accuracy --maximize-best-checkpoint-metric \
+#  --valid-subset val \
+#  --ddp-backend legacy_ddp \
+#  --user-dir $FAIRSEQ_USER_DIR \
+#  --task winogrande --criterion winogrande \
+#  --wsc-margin-alpha 5.0 --wsc-margin-beta 0.4 \
+#  --arch roberta_large --bpe gpt2 --max-positions 512 \
+#  --dropout 0.1 --attention-dropout 0.1 --weight-decay 0.01 \
+#  --optimizer adam --adam-betas '(0.9, 0.98)' --adam-eps 1e-06 \
+#  --lr-scheduler polynomial_decay --lr $LR \
+#  --warmup-updates $WARMUP_UPDATES --total-num-update $TOTAL_NUM_UPDATES \
+#  --batch-size $MAX_SENTENCES \
+#  --max-update $TOTAL_NUM_UPDATES \
+#  --log-format simple --log-interval 100 --sparse-init dense --sparse-mode GMP --sparsity 0.1 --sparse \
+#  --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
+
