@@ -31,7 +31,7 @@ for snn in snns:
                     sparsity_all.append((weight==0).sum().item() / weight.numel())
     else:
         for sparsity in sparsity_IMP:
-            roberta = RobertaModel.from_pretrained(snn_path, str(sparsity),
+            roberta = RobertaModel.from_pretrained(os.path.join(snn_path, '0.2'), str(sparsity),
                                                    'data/CommonsenseQA')
             sparsity_all.append((weight == 0).sum().item() / weight.numel())
                 
