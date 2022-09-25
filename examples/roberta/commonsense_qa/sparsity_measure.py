@@ -22,18 +22,22 @@ for snn in snns:
 
             roberta = RobertaModel.from_pretrained(os.path.join(snn_path, sparsity), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
-            total_zero = 0
-            total_weight = 0
 
             for name, weight in roberta.named_parameters():
                 if len(weight.size()) == 2 or len(weight.size()) == 4:
                     if name in removed_layers: continue
                     sparsity_all.append((weight==0).sum().item() / weight.numel())
+                    print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
     else:
         for sparsity in sparsity_IMP:
             roberta = RobertaModel.from_pretrained(os.path.join(snn_path, '0.2'), str(sparsity),
                                                    'data/CommonsenseQA')
-            sparsity_all.append((weight == 0).sum().item() / weight.numel())
+            for name, weight in roberta.named_parameters():
+                if len(weight.size()) == 2 or len(weight.size()) == 4:
+                    if name in removed_layers: continue
+                    sparsity_all.append((weight == 0).sum().item() / weight.numel())
+                    print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
+
                 
 
 torch.save(sparsity_all, 'CSQA_sparsity.pt')
