@@ -9,20 +9,15 @@ markersize = 7
 linewidth = 2.2
 
 
-CSQA = torch.load('/Users/liushiwei/Projects/fairseq/results/reasoning/sparsity/CSQA_sparsity.pt')
-
-print(CSQA)
 
 
+winogrande_sparsity = []
+with open('/Users/liushiwei/Projects/fairseq/results/reasoning/sparsity/cobert_winogrande_sparsity.out') as file:
+    for line in file:
+        if 'sparsity of ' in line:
+            winogrande_sparsity.append(float(line.split()[-1]))
 
-# acc_test_omp_random_after_RACE = []
-# acc_test_omp_random_after_high_RACE = []
-# with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after_test.out') as file:
-#     for line in file:
-#         if 'test | valid on' in line:
-#             acc_test_omp_random_after_RACE.append(float(line.split()[19]))
-#         if ' | test1 | valid on' in line:
-#             acc_test_omp_random_after_high_RACE.append(float(line.split()[19]))
+print(winogrande_sparsity)
 
 
 
