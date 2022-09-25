@@ -26,6 +26,9 @@ for snn in snns:
             if len(weight.size()) == 2 or len(weight.size()) == 4:
                 if name in removed_layers: continue
                 sparsity_all.append((weight==0).sum().item() / weight.numel())
+                
+
+torch.save(sparsity_all, 'CSQA_sparsity.pt')
 
 
 
