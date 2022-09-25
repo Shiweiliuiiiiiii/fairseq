@@ -161,17 +161,52 @@ def main(cfg: FairseqConfig) -> None:
         )
     )
 
-    # Load the latest checkpoint if one is available and restore the
-    # corresponding train iterator
-    extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
-        cfg.checkpoint,
-        trainer,
-        # don't cache epoch iterators for sharded datasets
-        disable_iterator_cache=task.has_sharded_data("train"),
-    )
+    model_path = '/home/sliu/project_space/pruning_fails/QA/robert/race/'
 
-    trainer.model.load_state_dict(state_dict, strict=False)
+    removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
+    snns = ['gm', 'gm_after', 'gmp' , 'imp', 'random', 'random_after', 'snip']
 
+    sparsity_IMP = ['checkpoint_best_iter2.pt', 'checkpoint_best_iter5.pt', 'checkpoint_best_iter8.pt']
+
+    sparsities = ['0.36', '0.672', '0.8325']
+
+    sparsity_all = []
+    for snn in snns:
+        snn_path = os.path.join(model_path, snn)
+
+        if snn != 'imp':
+            for sparsity in sparsities:
+                cfg.checkpoint.restore_file = os.path.join(snn_path, sparsity, 'checkpoint_best.pt')
+
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
+
+                for name, weight in trainer.model.named_parameters():
+                    if len(weight.size()) == 2 or len(weight.size()) == 4:
+                        if name in removed_layers: continue
+                        # print(f'sparsity of {name} is{(weight == 0).sum().item() / weight.numel()}')
+                        sparsity_all.append((weight == 0).sum().item() / weight.numel())
+                        print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
+        else:
+            for sparsity in sparsity_IMP:
+                cfg.checkpoint.restore_file = os.path.join(snn_path, '0.2', str(sparsity))
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
+
+                for name, weight in trainer.model.named_parameters():
+                    if len(weight.size()) == 2 or len(weight.size()) == 4:
+                        if name in removed_layers: continue
+                        # print(f'sparsity of {name} is{(weight == 0).sum().item() / weight.numel()}')
+                        sparsity_all.append((weight == 0).sum().item() / weight.numel())
+                        print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
 
 
     logger.info("Measurement completeed")
