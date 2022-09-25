@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cobert_winogrande_sparsity_imp_gmp
+#SBATCH --job-name=cobert_winogrande_sparsity
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-01:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o cobert_winogrande_sparsity_imp_gmp.out
+#SBATCH -o cobert_winogrande_sparsity.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak

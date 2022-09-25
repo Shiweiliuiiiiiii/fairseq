@@ -13,7 +13,7 @@ removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight
 snns = ['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']
 
 sparsity_IMP = ['checkpoint_best_iter2.pt', 'checkpoint_best_iter5.pt', 'checkpoint_best_iter8.pt']
-sparsities = ['0.36', '0.672', '0.8325']
+sparsities = ['0.2',  '0.36',  '0.488',  '0.590',  '0.672',  '0.738',  '0.791',  '0.8325' , '0.866' , '0.893']
 
 sparsity_all = []
 for snn in snns:
