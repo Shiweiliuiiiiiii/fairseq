@@ -7,7 +7,7 @@ import os, re
 
 import sys
 
-save_path = '/project_space/pruning_fails/QA/robert/commonsenseqa/'
+save_path = '~/project_space/pruning_fails/QA/robert/commonsenseqa/'
 
 removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
 snns = ['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']
