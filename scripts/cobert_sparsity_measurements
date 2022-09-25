@@ -7,7 +7,8 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-01:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o cobert_commonsenseqa_sparsity.out
+#SBATCH -o
+# .out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
