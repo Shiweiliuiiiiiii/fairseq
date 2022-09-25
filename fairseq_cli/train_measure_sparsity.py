@@ -166,8 +166,8 @@ def main(cfg: FairseqConfig) -> None:
 
     removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
     #['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']  # SCQA
-    # snns = ['gm', 'gm_after', 'gmp', 'IMP', 'random', 'random_after', 'snip',]  # wino
-    snns = ['gm', 'gm_after', 'gmp', 'imp', 'random', 'random_after', 'snip',]  # race
+    snns = ['gm', 'gm_after', 'gmp', 'IMP', 'random', 'random_after', 'snip',]  # wino
+    # snns = ['gm', 'gm_after', 'gmp', 'imp', 'random', 'random_after', 'snip',]  # race
 
     sparsity_IMP = ['checkpoint_best_iter1.pt','checkpoint_best_iter2.pt','checkpoint_best_iter3.pt','checkpoint_best_iter4.pt', \
                     'checkpoint_best_iter5.pt', 'checkpoint_best_iter6.pt', 'checkpoint_best_iter7.pt', 'checkpoint_best_iter8.pt', \
@@ -179,7 +179,7 @@ def main(cfg: FairseqConfig) -> None:
     for snn in snns:
         snn_path = os.path.join(model_path, snn)
 
-        if snn == 'imp':
+        if snn == 'IMP':
             for sparsity in sparsity_IMP:
                 cfg.checkpoint.restore_file = os.path.join(snn_path, '0.2', str(sparsity))
                 extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
@@ -197,7 +197,7 @@ def main(cfg: FairseqConfig) -> None:
                         print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
         elif snn == 'gmp':
             for sparsity in sparsities:
-                cfg.checkpoint.restore_file = os.path.join(snn_path, sparsity, 'checkpoint_last.pt')
+                cfg.checkpoint.restore_file = os.path.join(snn_path, sparsity, 'checkpoint_best.pt')
 
                 extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
                     cfg.checkpoint,
