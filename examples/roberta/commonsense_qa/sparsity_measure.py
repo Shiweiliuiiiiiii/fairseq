@@ -10,22 +10,30 @@ import sys
 removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
 snns = ['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']
 
+sparsity_IMP = ['checkpoint_best_iter2.pt', 'checkpoint_best_iter5.pt', 'checkpoint_best_iter8.pt']
 sparsities = ['0.36', '0.672', '0.8325']
 
 sparsity_all = []
 for snn in snns:
     snn_path = os.path.join(sys.argv[1], snn)
-    for sparsity in sparsities:
 
-        roberta = RobertaModel.from_pretrained(os.path.join(snn_path, sparsity), 'checkpoint_best.pt', 'data/CommonsenseQA')
+    if snn != 'IMP':
+        for sparsity in sparsities:
 
-        total_zero = 0
-        total_weight = 0
+            roberta = RobertaModel.from_pretrained(os.path.join(snn_path, sparsity), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
-        for name, weight in roberta.named_parameters():
-            if len(weight.size()) == 2 or len(weight.size()) == 4:
-                if name in removed_layers: continue
-                sparsity_all.append((weight==0).sum().item() / weight.numel())
+            total_zero = 0
+            total_weight = 0
+
+            for name, weight in roberta.named_parameters():
+                if len(weight.size()) == 2 or len(weight.size()) == 4:
+                    if name in removed_layers: continue
+                    sparsity_all.append((weight==0).sum().item() / weight.numel())
+    else:
+        for sparsity in sparsity_IMP:
+            roberta = RobertaModel.from_pretrained(snn_path, str(sparsity),
+                                                   'data/CommonsenseQA')
+            sparsity_all.append((weight == 0).sum().item() / weight.numel())
                 
 
 torch.save(sparsity_all, 'CSQA_sparsity.pt')
