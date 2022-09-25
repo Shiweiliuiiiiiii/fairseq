@@ -329,7 +329,7 @@ def train(
                     grads_abs.append(torch.abs(weight * weight.grad))
 
                 # Gather all scores in a single vector and normalise
-                all_scores = torch.cat([torch.flatten(x) for x in grads_abs])
+                all_scores = torch.cat([torch.flatten(x.cpu()) for x in grads_abs])
 
                 num_params_to_keep = int(len(all_scores) * keep_ratio)
                 threshold, _ = torch.topk(all_scores, num_params_to_keep+1, sorted=True)
