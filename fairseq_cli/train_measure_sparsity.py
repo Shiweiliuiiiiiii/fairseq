@@ -161,10 +161,11 @@ def main(cfg: FairseqConfig) -> None:
         )
     )
 
-    model_path = '/home/sliu/project_space/pruning_fails/QA/robert/race/'
+    model_path = '/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/'
 
     removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
-    snns = ['gm', 'gm_after', 'gmp' , 'imp', 'random', 'random_after', 'snip']
+    #['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']  # SCQA
+    snns = ['gm', 'gm_after', 'gmp', 'IMP', 'random', 'random_after', 'snip',]  # race
 
     sparsity_IMP = ['checkpoint_best_iter2.pt', 'checkpoint_best_iter5.pt', 'checkpoint_best_iter8.pt']
 
@@ -227,7 +228,7 @@ def main(cfg: FairseqConfig) -> None:
 
 
 
-    torch.save(sparsity_all, 'CSQA_sparsity.pt')
+    torch.save(sparsity_all, 'winogrande_sparsity.pt')
     logger.info("Measurement completeed")
 
 
