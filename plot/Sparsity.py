@@ -5,60 +5,93 @@ from matplotlib.pyplot import figure
 fig = figure(num=None, figsize=(16, 10), dpi=150, facecolor='w', edgecolor='k')
 fontsize = 14
 Titlesize = 18
-markersize = 7
-linewidth = 2.2
+markersize = 1
+linewidth = 1
 
 
 
-
+# snns = ['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']
 winogrande_sparsity = []
 with open('/Users/liushiwei/Projects/fairseq/results/reasoning/sparsity/cobert_winogrande_sparsity.out') as file:
     for line in file:
-        if 'sparsity of ' in line:
+        if 'sparsity of' in line:
             winogrande_sparsity.append(float(line.split()[-1]))
 
-print(winogrande_sparsity)
+winogrande_sparsity = np.array(winogrande_sparsity).reshape(7, -1)
+
+winogrande_sparsity_gm = winogrande_sparsity[0].reshape(3,-1)
+winogrande_sparsity_gm_after = winogrande_sparsity[1].reshape(3,-1)
+winogrande_sparsity_gmp = winogrande_sparsity[2].reshape(3,-1)
+winogrande_sparsity_IMP = winogrande_sparsity[3].reshape(3,-1)
+winogrande_sparsity_random = winogrande_sparsity[4].reshape(3,-1)
+winogrande_sparsity_random_after = winogrande_sparsity[5].reshape(3,-1)
+winogrande_sparsity_snip= winogrande_sparsity[6].reshape(3,-1)
+
+winogrande_sparsity_gm_36 = winogrande_sparsity_gm[0]
+winogrande_sparsity_gm_672 = winogrande_sparsity_gm[1]
+winogrande_sparsity_gm_832 = winogrande_sparsity_gm[2]
+
+winogrande_sparsity_gm_after_36 = winogrande_sparsity_gm_after[0]
+winogrande_sparsity_gm_after_672 = winogrande_sparsity_gm_after[1]
+winogrande_sparsity_gm_after_832 = winogrande_sparsity_gm_after[2]
+
+winogrande_sparsity_gmp_36 = winogrande_sparsity_gmp[0]
+winogrande_sparsity_gmp_672 = winogrande_sparsity_gmp[1]
+winogrande_sparsity_gmp_832 = winogrande_sparsity_gmp[2]
+
+winogrande_sparsity_IMP_36 = winogrande_sparsity_IMP[0]
+winogrande_sparsity_IMP_672 = winogrande_sparsity_IMP[1]
+winogrande_sparsity_IMP_832 = winogrande_sparsity_IMP[2]
+print(winogrande_sparsity_IMP_36)
+winogrande_sparsity_random_36 = winogrande_sparsity_random[0]
+winogrande_sparsity_random_672 = winogrande_sparsity_random[1]
+winogrande_sparsity_random_832 = winogrande_sparsity_random[2]
+
+winogrande_sparsity_random_after_36 = winogrande_sparsity_random_after[0]
+winogrande_sparsity_random_after_672 = winogrande_sparsity_random_after[1]
+winogrande_sparsity_random_after_832 = winogrande_sparsity_random_after[2]
+
+winogrande_sparsity_snip_36 = winogrande_sparsity_snip[0]
+winogrande_sparsity_snip_672 = winogrande_sparsity_snip[1]
+winogrande_sparsity_snip_832 = winogrande_sparsity_snip[2]
+
+x_axis = range(len(winogrande_sparsity_gm_36))
+
+roberta_large = fig.add_subplot(1,1,1)
+# roberta_large.plot(x_axis, winogrande_sparsity_gm_36,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
 
 
+roberta_large.plot(x_axis, winogrande_sparsity_snip_36,  '-o',   label='SNIP (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, winogrande_sparsity_IMP_36,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
 
-# roberta_large = fig.add_subplot(1,3,1)
-# roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-#
-#
-# roberta_large.plot(x_axis, robert_snip_csqa,  '-o',   label='SNIP (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_lth_csqa,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
-#
 # roberta_large.plot(x_axis, robert_snip_rigl_csqa,  '--o',   label='SNIP+RIGL (Before)',color='#228B22',linewidth=linewidth, markersize=markersize )
-# roberta_large.plot(x_axis, robert_gm_after_csqa,  '-o',   label='One-Shot LRR (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
-#
-#
-# roberta_large.plot(x_axis, robert_random_before_csqa,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_random_after_csqa,  '-o',   label='Random (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
-#
+roberta_large.plot(x_axis, winogrande_sparsity_gm_after_36,  '-o',   label='One-Shot LRR (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, winogrande_sparsity_random_36,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, winogrande_sparsity_random_after_36,  '-o',   label='Random (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, robert_random_rigl_csqa,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
-# roberta_large.plot(x_axis, robert_gmp_csqa,  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-#
-# roberta_large.plot(x_axis, robert_gm_before_csqa,  '-o',   label='OMP (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, winogrande_sparsity_gmp_36,  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
+
+# roberta_large.plot(x_axis, winogrande_sparsity_gm_36,  '-o',   label='OMP (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, robert_gm_rigl_csqa,  '--o',   label='OMP+RIGL (Before)',color='#bcbd22',linewidth=linewidth, markersize=markersize )
-#
-#
-# roberta_large.set_title('Roberta on CommonsenseQA',fontsize=Titlesize)
-# roberta_large.axes.get_xaxis().set_visible(True)
-# roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
-#
-# # print((dense_csqa[0] - robert_lth_csqa[3])/  dense_csqa)[]
-# roberta_large.xaxis.set_ticks(x_axis)
+
+
+roberta_large.set_title('Roberta on CommonsenseQA',fontsize=Titlesize)
+roberta_large.axes.get_xaxis().set_visible(True)
+roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
+
+# print((dense_csqa[0] - robert_lth_csqa[3])/  dense_csqa)[]
+roberta_large.xaxis.set_ticks(x_axis)
 # roberta_large.set_xticklabels(np.array([0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), rotation=45, fontsize=10 )
-#
-# roberta_large.tick_params(axis='both', which='major', labelsize=fontsize)
-# # xposition = [3,7]
-# # for xc in xposition:
-# #     plt.axvline(x=xc, color='#a90308', linestyle='--', alpha=0.5)
-# roberta_large.grid(True, linestyle='-', linewidth=0.5, )
-#
-# roberta_large.spines['right'].set_visible(False)
-# roberta_large.spines['top'].set_visible(False)
-#
+
+roberta_large.tick_params(axis='both', which='major', labelsize=fontsize)
+# xposition = [3,7]
+# for xc in xposition:
+#     plt.axvline(x=xc, color='#a90308', linestyle='--', alpha=0.5)
+roberta_large.grid(True, linestyle='-', linewidth=0.5, )
+
+roberta_large.spines['right'].set_visible(False)
+roberta_large.spines['top'].set_visible(False)
+
 #
 #
 #
@@ -176,4 +209,4 @@ print(winogrande_sparsity)
 # # roberta_large.set_ylabel('Accuracy', fontsize=fontsize)
 # # roberta_large.set_xlabel('Sparsity',fontsize=fontsize)
 # plt.savefig('Roberta_commonsense_reasoning.pdf')
-# plt.show()
+plt.show()
