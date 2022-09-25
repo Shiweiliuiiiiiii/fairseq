@@ -7,6 +7,8 @@ import os, re
 
 import sys
 
+save_path = '~/project_space/pruning_fails/QA/robert/commonsenseqa/'
+
 removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
 snns = ['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']
 
@@ -15,7 +17,7 @@ sparsities = ['0.36', '0.672', '0.8325']
 
 sparsity_all = []
 for snn in snns:
-    snn_path = os.path.join(sys.argv[1], snn)
+    snn_path = os.path.join(save_path, snn)
 
     if snn != 'IMP':
         for sparsity in sparsities:
