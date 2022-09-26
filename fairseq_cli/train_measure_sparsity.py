@@ -161,59 +161,79 @@ def main(cfg: FairseqConfig) -> None:
         )
     )
 
-    # Load the latest checkpoint if one is available and restore the
-    # corresponding train iterator
-    extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
-        cfg.checkpoint,
-        trainer,
-        # don't cache epoch iterators for sharded datasets
-        disable_iterator_cache=task.has_sharded_data("train"),
-    )
-    if cfg.common.tpu:
-        import torch_xla.core.xla_model as xm
+    model_path = '/home/sliu/project_space/pruning_fails/QA/robert/winogrande/WSC/'
+    # model_path = '/home/sliu/project_space/pruning_fails/QA/robert/race/'
 
-        xm.rendezvous("load_checkpoint")  # wait for all workers
+    removed_layers = ['in_proj_weight', 'out_proj_weight', 'fc1_weight', 'fc2_weight', 'lm_head.dense.weight']
+    #['gm', 'gm_after',  'gmp', 'IMP', 'random', 'random_after',  'snip']  # SCQA
+    snns = ['gm', 'gm_after', 'gmp', 'IMP', 'random', 'random_after', 'snip',]  # wino
+    # snns = ['gm', 'gm_after', 'gmp', 'imp', 'random', 'random_after', 'snip',]  # race
 
-    max_epoch = cfg.optimization.max_epoch or math.inf
-    lr = trainer.get_lr()
+    sparsity_IMP = ['checkpoint_best_iter1.pt','checkpoint_best_iter2.pt','checkpoint_best_iter3.pt','checkpoint_best_iter4.pt', \
+                    'checkpoint_best_iter5.pt', 'checkpoint_best_iter6.pt', 'checkpoint_best_iter7.pt', 'checkpoint_best_iter8.pt', \
+                    'checkpoint_best_iter9.pt', 'checkpoint_best_iter10.pt']
 
-    train_meter = meters.StopwatchMeter()
-    train_meter.start()
-    while epoch_itr.next_epoch_idx <= max_epoch:
-        if lr <= cfg.optimization.stop_min_lr:
-            logger.info(
-                f"stopping training because current learning rate ({lr}) is smaller "
-                "than or equal to minimum learning rate "
-                f"(--stop-min-lr={cfg.optimization.stop_min_lr})"
-            )
-            break
+    sparsities = ['0.2',  '0.36',  '0.488',  '0.590',  '0.672',  '0.738',  '0.791',  '0.8325' , '0.866' , '0.893']
 
-        # train for one epoch
-        valid_losses, should_stop = train(cfg, trainer, task, epoch_itr)
-        if should_stop:
-            break
+    sparsity_all = []
+    for snn in snns:
+        snn_path = os.path.join(model_path, snn)
 
-        # only use first validation loss to update the learning rate
-        lr = trainer.lr_step(epoch_itr.epoch, valid_losses[0])
+        if snn == 'IMP':
+            for sparsity in sparsity_IMP:
+                cfg.checkpoint.restore_file = os.path.join(snn_path, '0.2', str(sparsity))
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
 
-        epoch_itr = trainer.get_train_iterator(
-            epoch_itr.next_epoch_idx,
-            # sharded data: get train iterator for next epoch
-            load_dataset=task.has_sharded_data("train"),
-            # don't cache epoch iterators for sharded datasets
-            disable_iterator_cache=task.has_sharded_data("train"),
-        )
-    train_meter.stop()
-    logger.info("done training in {:.1f} seconds".format(train_meter.sum))
+                for name, weight in trainer.model.named_parameters():
+                    if len(weight.size()) == 2 or len(weight.size()) == 4:
+                        if name in removed_layers: continue
+                        # print(f'sparsity of {name} is{(weight == 0).sum().item() / weight.numel()}')
+                        sparsity_all.append((weight == 0).sum().item() / weight.numel())
+                        print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
+        elif snn == 'gmp':
+            for sparsity in sparsities:
+                cfg.checkpoint.restore_file = os.path.join(snn_path, sparsity, 'checkpoint_best.pt')
 
-    # ioPath implementation to wait for all asynchronous file writes to complete.
-    if cfg.checkpoint.write_checkpoints_asynchronously:
-        logger.info(
-            "ioPath PathManager waiting for all asynchronous checkpoint "
-            "writes to finish."
-        )
-        PathManager.async_close()
-        logger.info("ioPath PathManager finished waiting.")
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
+
+                for name, weight in trainer.model.named_parameters():
+                    if len(weight.size()) == 2 or len(weight.size()) == 4:
+                        if name in removed_layers: continue
+                        # print(f'sparsity of {name} is{(weight == 0).sum().item() / weight.numel()}')
+                        sparsity_all.append((weight == 0).sum().item() / weight.numel())
+                        print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
+        else:
+            for sparsity in sparsities:
+                cfg.checkpoint.restore_file = os.path.join(snn_path, sparsity, 'checkpoint_best.pt')
+
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
+
+                for name, weight in trainer.model.named_parameters():
+                    if len(weight.size()) == 2 or len(weight.size()) == 4:
+                        if name in removed_layers: continue
+                        # print(f'sparsity of {name} is{(weight == 0).sum().item() / weight.numel()}')
+                        sparsity_all.append((weight == 0).sum().item() / weight.numel())
+                        print(f'sparsity of {name} is {(weight == 0).sum().item() / weight.numel()}')
+
+
+
+    torch.save(sparsity_all, 'CSQA_sparsity.pt')
+    logger.info("Measurement completeed")
 
 
 def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
@@ -329,7 +349,7 @@ def train(
                     grads_abs.append(torch.abs(weight * weight.grad))
 
                 # Gather all scores in a single vector and normalise
-                all_scores = torch.cat([torch.flatten(x.cpu()) for x in grads_abs])
+                all_scores = torch.cat([torch.flatten(x) for x in grads_abs])
 
                 num_params_to_keep = int(len(all_scores) * keep_ratio)
                 threshold, _ = torch.topk(all_scores, num_params_to_keep+1, sorted=True)

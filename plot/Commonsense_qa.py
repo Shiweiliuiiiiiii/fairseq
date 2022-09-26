@@ -231,7 +231,7 @@ roberta_large.plot(x_axis, robert_gm_before_csqa,  '-o',   label='OMP (Before)' 
 roberta_large.plot(x_axis, robert_gm_rigl_csqa,  '--o',   label='OMP+RIGL (Before)',color='#bcbd22',linewidth=linewidth, markersize=markersize )
 
 
-roberta_large.set_title('Roberta on CommonsenseQA',fontsize=Titlesize)
+roberta_large.set_title('RoBERTa on CommonsenseQA',fontsize=Titlesize)
 roberta_large.axes.get_xaxis().set_visible(True)
 roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
 
@@ -268,7 +268,7 @@ roberta_large.plot(x_axis, 100*np.array(acc_omp_rigl_wino),  '--o' ,color='#bcbd
 
 
 
-roberta_large.set_title('Roberta on WinoGrande',fontsize=Titlesize)
+roberta_large.set_title('RoBERTa on WinoGrande',fontsize=Titlesize)
 roberta_large.xaxis.set_ticks(x_axis, rotation=45)
 roberta_large.set_xticklabels(np.array([0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), rotation=45, fontsize=10 )
 roberta_large.tick_params(axis='both', which='major', labelsize=fontsize)
@@ -297,7 +297,7 @@ roberta_large.plot(x_axis, acc_test_omp_rigl_RACE,  '--o', color='#bcbd22',linew
 
 print((acc_test_imp_RACE[0] - acc_test_imp_RACE[4])/  acc_test_imp_RACE[0])
 
-roberta_large.set_title('Roberta on RACE (Middle)',fontsize=Titlesize)
+roberta_large.set_title('RoBERTa on RACE (Middle)',fontsize=Titlesize)
 roberta_large.set_xticks(range(10))
 roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
 roberta_large.set_xlabel('Sparsity',fontsize=Titlesize)
@@ -335,7 +335,7 @@ roberta_large.plot(x_axis, acc_test_omp_rigl_high_RACE,  '--o', color='#bcbd22',
 
 print((acc_test_imp_high_RACE[0] - acc_test_imp_high_RACE[4])/  acc_test_imp_high_RACE[0])
 
-roberta_large.set_title('Roberta on RACE (High)',fontsize=Titlesize)
+roberta_large.set_title('RoBERTa on RACE (High)',fontsize=Titlesize)
 roberta_large.set_xticks(range(10))
 # roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
 roberta_large.set_xlabel('Sparsity',fontsize=Titlesize)
