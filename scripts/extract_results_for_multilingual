@@ -1,0 +1,23 @@
+#!/bin/bash
+#SBATCH --job-name=results_multilingual
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 0-00:30:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o results_multilingual.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate prune_cry
+
+for name in gmp omp_after omp_before omp_rigl_before random_after random_before random_rigl_before snip_before snip_rigl_before
+do
+
+python read_result.py $name_2to2/ $name_2to2
+python read_result.py $name_5to5/ $name_5to5
+python read_result.py $name_10to1/ $name_10to1
+python read_result.py $name_10to10/ $name_10to10
+
+done

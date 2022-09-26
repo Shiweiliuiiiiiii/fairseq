@@ -218,7 +218,7 @@ roberta_large.plot(x_axis, robert_snip_csqa,  '-o',   label='SNIP (Before)',colo
 roberta_large.plot(x_axis, robert_lth_csqa,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
 
 roberta_large.plot(x_axis, robert_snip_rigl_csqa,  '--o',   label='SNIP+RIGL (Before)',color='#228B22',linewidth=linewidth, markersize=markersize )
-roberta_large.plot(x_axis, robert_gm_after_csqa,  '-o',   label='One-Shot LRR (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_gm_after_csqa,  '-o',   label='OMP (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
 
 
 roberta_large.plot(x_axis, robert_random_before_csqa,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
@@ -333,7 +333,7 @@ roberta_large.plot(x_axis, acc_test_omp_high_RACE,  '-o', color='#bcbd22',linewi
 roberta_large.plot(x_axis, acc_test_omp_rigl_high_RACE,  '--o', color='#bcbd22',linewidth=linewidth, markersize=markersize )
 
 
-print((acc_test_imp_high_RACE[0] - acc_test_imp_high_RACE[4])/  acc_test_imp_high_RACE[0])
+print( np.array(acc_test_imp_high_RACE[1:]) - np.array(acc_test_gmp_high_RACE))
 
 roberta_large.set_title('RoBERTa on RACE (High)',fontsize=Titlesize)
 roberta_large.set_xticks(range(10))
