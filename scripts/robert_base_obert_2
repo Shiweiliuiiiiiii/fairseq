@@ -15,7 +15,7 @@ FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.738 0.791 0.8325 0.866 0.893
 do
 save_dir=$FAIRSEQ_USER_DIR/oBert_seed1/$sparsity
-CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
+CUDA_VISIBLE_DEVICES=1 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
@@ -33,7 +33,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
     --seed $SEED --sparse --sparse-init dense --sparse-mode oBERT --sparsity $sparsity  --save-dir $save_dir  \
-    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
+    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none  > robert_base_oBERT_2.txt 2>&1 &
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py

@@ -33,7 +33,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
     --seed $SEED --sparse --sparse-init dense --sparse-mode oBERT --sparsity $sparsity --save-dir $save_dir   \
-    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
+    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none > robert_base_oBERT_1.txt 2>&1 &
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
