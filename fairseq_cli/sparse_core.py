@@ -610,7 +610,7 @@ class Masking(object):
             scores = ( (weight.data.view(-1) ** 2).to(self.device) / (2.0 * self._finvs[layer_index].diag()) ).view(weight.shape)
             oBERTR_scores.append(scores)
             layer_index += 1
-            
+
         # Gather all scores in a single vector and normalise
         all_scores = torch.cat([torch.flatten(x) for x in oBERTR_scores])
         num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate))
@@ -619,9 +619,10 @@ class Masking(object):
         acceptable_score = threshold[-1]
 
         layer_index = 0
-        for name, weight in self._trainer.named_parameters():
+        for name, weight in self._trainer.model.named_parameters():
             if name not in self.masks: continue
             self.masks[name] = (self._finvs[layer_index] > acceptable_score).float().data.to(self.device)
+            layer_index += 1
         self.apply_mask()
 
 
