@@ -15,7 +15,7 @@ FAIRSEQ_PATH=/home/shiwei/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 
 
-for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
+for sparsity in 0.5 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 
 CUDA_VISIBLE_DEVICES=6 python train.py --ddp-backend=legacy_ddp \
@@ -35,7 +35,7 @@ CUDA_VISIBLE_DEVICES=6 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --sparse-init ERK --sparse-mode oBERT --sparsity $sparsity  \
+    --seed $SEED --sparse --sparse-init random --sparse-mode oBERT --sparsity $sparsity  \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
 
 done

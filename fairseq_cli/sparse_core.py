@@ -588,11 +588,13 @@ class Masking(object):
                 with torch.autograd.profiler.record_function("backward"):
                     self._trainer.optimizer.backward(loss[0])
 
+                layer_index = 0
                 for name, weight in self._trainer.model.named_parameters():
                     if name not in self.masks: continue
                     weight.grad.mul_(self.masks[name])
                     print(f'sparsity of grad is {(weight.grad==0).sum()/weight.grad.numel()}')
-                    finv.add_grad(weight.grad.view(-1).to(self.device))
+                    self._finvs[layer_index].add_grad(weight.grad.view(-1).to(self.device))
+                    layer_index += 1
 
 
                 grads_abs = []
