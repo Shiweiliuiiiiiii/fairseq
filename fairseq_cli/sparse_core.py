@@ -591,7 +591,7 @@ class Masking(object):
                 with torch.autograd.profiler.record_function("backward"):
                     self._trainer.optimizer.backward(loss[0])
 
-                # collect gradients
+                # update gradients to self._finvs
                 layer_index = 0
                 for name, weight in self._trainer.model.named_parameters():
                     if name not in self.masks: continue
