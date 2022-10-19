@@ -418,18 +418,18 @@ class Masking(object):
                     self.gradual_magnitude_pruning(current_prune_rate)
                     self.print_status()
 
-            elif self.sparse_mode == 'oBERT':
-                if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:
-                    print('*********************************Gradual oBERT Pruning***********************')
-                    current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
-                    self.gradual_oBERT_pruning(current_prune_rate)
-                    self.print_status()
-
             elif self.sparse_mode == 'GMP_cpu':
                 if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:
                     print('*********************************Gradual Magnitude Pruning***********************')
                     current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
                     self.gradual_magnitude_pruning(current_prune_rate, True)
+                    self.print_status()
+
+            elif self.sparse_mode == 'oBERT':
+                if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:
+                    print('*********************************Gradual oBERT Pruning***********************')
+                    current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
+                    self.gradual_oBERT_pruning(current_prune_rate)
                     self.print_status()
 
             elif self.sparse_mode == 'DST':
@@ -574,13 +574,16 @@ class Masking(object):
                 self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(self.device)
         self.apply_mask()
 
-    def gradual_oBERT_pruning(self):
+    def gradual_oBERT_pruning(self, current_pruning_rate, cpu=False):
         # collect grad for oBERT
         self._trainer.model.train()
         self._trainer.criterion.train()
 
+        # forward and bp to collect len(self._progress) num gradient
         for i, samples in enumerate(self._progress):
             for j, sample in enumerate(samples):  # delayed update loop
+
+                self._trainer.model.zero_grad()
 
                 sample, is_dummy_batch = self._trainer._prepare_sample(sample)
                 loss = self._trainer.criterion(self._trainer.model, sample)
@@ -588,43 +591,36 @@ class Masking(object):
                 with torch.autograd.profiler.record_function("backward"):
                     self._trainer.optimizer.backward(loss[0])
 
+                # collect gradients
                 layer_index = 0
                 for name, weight in self._trainer.model.named_parameters():
                     if name not in self.masks: continue
                     weight.grad.mul_(self.masks[name])
-                    print(f'sparsity of grad is {(weight.grad==0).sum()/weight.grad.numel()}')
                     self._finvs[layer_index].add_grad(weight.grad.view(-1).to(self.device))
                     layer_index += 1
 
 
-                grads_abs = []
-                for name, weight in model.named_parameters():
-                    if name not in masks: continue
-                    grads_abs.append(torch.abs(weight * weight.grad))
+        oBERTR_scores = []
+        layer_index = 0
+        for name, weight in self._trainer.named_parameters():
+            if name not in self.masks: continue
+            oBERTR_scores.append(
+                ((weight.data.view(-1) ** 2).to(self.device)
+                / (2.0 * self._finvs[layer_index].diag() + torch.finfo(torch.float32).eps)).view(weight.shape)
+            )
 
-                # Gather all scores in a single vector and normalise
-                all_scores = torch.cat([torch.flatten(x.cpu()) for x in grads_abs])
+        # Gather all scores in a single vector and normalise
+        all_scores = torch.cat([torch.flatten(x) for x in oBERTR_scores])
+        num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate))
 
-                num_params_to_keep = int(len(all_scores) * keep_ratio)
-                threshold, _ = torch.topk(all_scores, num_params_to_keep + 1, sorted=True)
-                acceptable_score = threshold[-1]
+        threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
+        acceptable_score = threshold[-1]
 
-                layer_wise_sparsities = []
-                for g in grads_abs:
-                    mask_ = (g > acceptable_score).float()
-                    # if keep_ratio==0.98 and i == 0:
-                    #     mask_ = (torch.rand(g.shape) < 0.85).float()
-                    # elif keep_ratio==0.95 and i == 0:
-                    #     mask_ = (torch.rand(g.shape) < 0.65).float()
-                    # else:
-                    #     mask_ = (g > acceptable_score).float()
-
-                    # sparsity = float((mask == 0).sum().item() / mask.numel())
-                    layer_wise_sparsities.append(mask_)
-
-                model.zero_grad()
-
-            return layer_wise_sparsities
+        layer_index = 0
+        for name, weight in self._trainer.named_parameters():
+            if name not in self.masks: continue
+            self.masks[name] = (self._finvs[layer_index] > acceptable_score).float().data.to(self.device)
+        self.apply_mask()
 
 
     def setup_fisher_inverse(self, trainer, progress):
@@ -636,4 +632,4 @@ class Masking(object):
         for name in self.masks:
             self._finvs.append(EmpiricalBlockFisherInverse(self._num_grads, self._fisher_block_size, self.masks[name].numel(), self._damp, self.device))
 
-        self.gradual_oBERT_pruning()
+        # self.gradual_oBERT_pruning()
