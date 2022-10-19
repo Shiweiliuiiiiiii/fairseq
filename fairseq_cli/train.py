@@ -378,7 +378,7 @@ def train(
                     mask.masks[name][:] = snip_mask
                 mask.apply_mask()
                 mask.print_status()
-            if mak.sparse_mode == 'oBERT':
+            elif mask.sparse_mode == 'oBERT':
                 mask.setup_fisher_inverse(trainer, progress)
             else:
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
