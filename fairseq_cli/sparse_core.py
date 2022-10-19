@@ -583,10 +583,10 @@ class Masking(object):
             for j, sample in enumerate(samples):  # delayed update loop
 
                 sample, is_dummy_batch = self._trainer._prepare_sample(sample)
-                loss = trainer.criterion(model, sample)
+                loss = self._trainer.criterion(self._trainer.model, sample)
 
                 with torch.autograd.profiler.record_function("backward"):
-                    trainer.optimizer.backward(loss[0])
+                    self._trainer.optimizer.backward(loss[0])
 
                 for name, weight in self._trainer.model.named_parameters():
                     if name not in self.masks: continue
