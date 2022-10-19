@@ -1,16 +1,3 @@
-#!/bin/bash
-#SBATCH --job-name=roberta_gmp
-#SBATCH -p gpu
-#SBATCH -N 1
-#SBATCH --ntasks-per-node=1
-#SBATCH --gpus-per-node=1
-#SBATCH --gpus=1
-#SBATCH -t 0-10:00:00
-#SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp.out
-
-source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
 
 
 MAX_UPDATES=3000      # Number of training steps.
@@ -21,10 +8,13 @@ SEED=1                # Random seed.
 ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
 DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
 
+
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:
-FAIRSEQ_PATH=/home/sliu/Projects/fairseq
+FAIRSEQ_PATH=/home/shiwei/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
+
+
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 
