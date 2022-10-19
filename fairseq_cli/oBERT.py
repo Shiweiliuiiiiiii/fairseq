@@ -1,3 +1,4 @@
+import torch
 class EmpiricalBlockFisherInverse:
     def __init__(
         self,
