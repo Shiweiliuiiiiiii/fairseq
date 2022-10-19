@@ -583,7 +583,7 @@ class Masking(object):
         for i, samples in enumerate(self._progress):
             for j, sample in enumerate(samples):  # delayed update loop
 
-                self._trainer.model.zero_grad()
+
 
                 sample, is_dummy_batch = self._trainer._prepare_sample(sample)
                 loss = self._trainer.criterion(self._trainer.model, sample)
@@ -599,15 +599,15 @@ class Masking(object):
                     self._finvs[layer_index].add_grad(weight.grad.view(-1).to(self.device))
                     layer_index += 1
 
+                self._trainer.model.zero_grad()
 
         oBERTR_scores = []
         layer_index = 0
         for name, weight in self._trainer.model.named_parameters():
             if name not in self.masks: continue
-            oBERTR_scores.append(
-                ((weight.data.view(-1) ** 2).to(self.device)
-                / (2.0 * self._finvs[layer_index].diag() + torch.finfo(torch.float32).eps)).view(weight.shape)
-            )
+
+            scores = ( (weight.data.view(-1) ** 2).to(self.device) / (2.0 * self._finvs[layer_index].diag()) ).view(weight.shape)
+            oBERTR_scores.append(scores)
 
         # Gather all scores in a single vector and normalise
         all_scores = torch.cat([torch.flatten(x) for x in oBERTR_scores])
