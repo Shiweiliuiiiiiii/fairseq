@@ -581,8 +581,6 @@ class Masking(object):
 
         # forward and bp to collect len(self._progress) num gradient
         for i, samples in enumerate(self._progress):
-            if i > 10:
-                break
             for j, sample in enumerate(samples):  # delayed update loop
 
 

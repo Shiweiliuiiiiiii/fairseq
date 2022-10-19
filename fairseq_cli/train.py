@@ -382,7 +382,6 @@ def train(
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
                 mask.setup_fisher_inverse(trainer, progress)
-
             else:
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
 
