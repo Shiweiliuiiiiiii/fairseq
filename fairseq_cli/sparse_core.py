@@ -602,7 +602,7 @@ class Masking(object):
 
         oBERTR_scores = []
         layer_index = 0
-        for name, weight in self._trainer.named_parameters():
+        for name, weight in self._trainer.model.named_parameters():
             if name not in self.masks: continue
             oBERTR_scores.append(
                 ((weight.data.view(-1) ** 2).to(self.device)
