@@ -621,7 +621,7 @@ class Masking(object):
         layer_index = 0
         for name, weight in self._trainer.model.named_parameters():
             if name not in self.masks: continue
-            self.masks[name] = (self._finvs[layer_index] > acceptable_score).float().data.to(self.device)
+            self.masks[name] = (oBERTR_scores[layer_index] > acceptable_score).float().data.to(self.device)
             layer_index += 1
         self.apply_mask()
 
