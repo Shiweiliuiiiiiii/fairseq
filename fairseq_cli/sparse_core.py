@@ -580,7 +580,6 @@ class Masking(object):
         self._trainer.criterion.train()
 
         for i, samples in enumerate(self._progress):
-            print(len(samples))
             for j, sample in enumerate(samples):  # delayed update loop
 
                 sample, is_dummy_batch = self._trainer._prepare_sample(sample)
@@ -588,6 +587,13 @@ class Masking(object):
 
                 with torch.autograd.profiler.record_function("backward"):
                     trainer.optimizer.backward(loss[0])
+
+                for name, weight in self._trainer.model.named_parameters():
+                    if name not in self.masks: continue
+                    weight.grad.mul_(self.masks[name])
+                    print(f'sparsity of grad is {(weight.grad==0).sum()/weight.grad.numel()}')
+                    finv.add_grad(weight.grad.view(-1).to(self.device))
+
 
                 grads_abs = []
                 for name, weight in model.named_parameters():
@@ -627,3 +633,5 @@ class Masking(object):
         self._damp = 1e-07
         for name in self.masks:
             self._finvs.append(EmpiricalBlockFisherInverse(self._num_grads, self._fisher_block_size, self.masks[name].numel(), self._damp, self.device))
+
+        self.gradual_oBERT_pruning()

@@ -319,7 +319,6 @@ def train(
                 if j > 0:
                     break
                 sample, is_dummy_batch = trainer._prepare_sample(sample)
-                print(is_dummy_batch)
                 loss = trainer.criterion(model, sample)
 
                 with torch.autograd.profiler.record_function("backward"):
