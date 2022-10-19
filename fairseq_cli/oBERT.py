@@ -1,4 +1,6 @@
+import math
 import torch
+from torch import Tensor
 class EmpiricalBlockFisherInverse:
     def __init__(
         self,
