@@ -314,6 +314,7 @@ def train(
         trainer.criterion.train()
 
         for i, samples in enumerate(progress):
+            print(f'number of samples in samples is {len(samples)}')
             for j, sample in enumerate(samples):  # delayed update loop
                 if j > 0:
                     break
@@ -375,13 +376,12 @@ def train(
                 layer_wise_sparsities = SNIP(trainer.model, trainer, 1 - mask.sparsity, progress, mask.masks)
                 for snip_mask, name in zip(layer_wise_sparsities, mask.masks):
                     mask.masks[name][:] = snip_mask
-                    # mask.masks[name][:] = (torch.rand(mask.masks[name].shape) < (1 - sparsity_)).float().data.to(
-                    #     mask.device)
                 mask.apply_mask()
                 mask.print_status()
+            if mak.sparse_mode == 'oBERT':
+                mask.setup_fisher_inverse(trainer, progress)
             else:
-                mask.init(model=trainer.model, train_loader=None, device=mask.device,
-                          mode=mask.sparse_init, density=(1 - mask.sparsity))
+                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
 
 
     valid_subsets = cfg.dataset.valid_subset.split(",")

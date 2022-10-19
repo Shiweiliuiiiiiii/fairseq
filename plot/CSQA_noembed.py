@@ -43,7 +43,7 @@ roberta_large.plot(x_axis, robert_gm_before_csqa,  '-o',   label='OMP (Before)' 
 roberta_large.plot(x_axis, robert_gm_before_csqa_noe,  '--*',   label='OMP w/o E (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
 
 
-roberta_large.set_title('Roberta on CommonsenseQA',fontsize=Titlesize)
+roberta_large.set_title('RoBERTa on CommonsenseQA',fontsize=Titlesize)
 roberta_large.axes.get_xaxis().set_visible(True)
 roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
 
@@ -111,7 +111,7 @@ roberta_large.spines['top'].set_visible(False)
 
 plt.tight_layout()
 fig.legend(loc='lower center', bbox_to_anchor=(0.0, 0.0, 1, 1), fancybox=False, shadow=False, ncol=5, fontsize=fontsize, frameon=False)
-fig.subplots_adjust(left=0.06, bottom=0.27, right=0.95, top=0.94, wspace=0.3, hspace=0.35)
+fig.subplots_adjust(left=0.15, bottom=0.27, right=0.85, top=0.94, wspace=0.3, hspace=0.35)
 # roberta_large.set_title('Roberta large on CommonsenseQA',fontsize=fontsize)
 # roberta_large.set_xticks(range(10))
 # roberta_large.set_xticklabels(np.array( [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), fontsize=10 )
