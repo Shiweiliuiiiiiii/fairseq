@@ -36,7 +36,7 @@ for method in ['GMP/', 'oBert_seed1/']:
         roberta.cuda()  # use the GPU (optional)
         nsamples, ncorrect = 0, 0
 
-        with open('/home/sliu/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
+        with open('/home/shiwei/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
             for line in h:
                 example = json.loads(line)
                 scores = []
