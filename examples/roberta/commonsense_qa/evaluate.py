@@ -17,8 +17,8 @@ for method in ['dense/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
-    model_files = os.listdir(check_point_folder)
-    model_files = sorted_nicely(model_files)
+    # model_files = os.listdir(check_point_folder)
+    # model_files = sorted_nicely(model_files)
 
     for file in model_files:
         print(file)
