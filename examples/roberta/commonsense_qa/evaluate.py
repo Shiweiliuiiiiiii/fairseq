@@ -21,7 +21,7 @@ for method in ['dense/']:
     # model_files = sorted_nicely(model_files)
 
     # for file in model_files:
-    print(file)
+    # print(file)
     roberta = RobertaModel.from_pretrained(check_point_folder+str(file), 'checkpoint_best.pt', 'data/CommonsenseQA')
 
     total_zero = 0
