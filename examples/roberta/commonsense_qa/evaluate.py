@@ -13,7 +13,7 @@ def sorted_nicely(l):
 
 check_point_folder_source = '/home/shiwei/Projects/fairseq/examples/roberta/commonsense_qa/'
 
-for method in ['GMP/', 'oBert_seed1/']:
+for method in ['dense/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]

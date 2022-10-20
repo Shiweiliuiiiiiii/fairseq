@@ -12,17 +12,9 @@ dense_csqa = [77.31]
 x_lth_csqa = [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]
 
 
-robert_lth_csqa_noe = [76.57, 74.11, 71.66, 66.17, 51.35, 40.62, 19.57, 19.57, 19.57, 19.57]
-robert_gm_after_csqa_noe  = [76.49, 74.61, 71.33, 54.13, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
-robert_snip_csqa_noe = [73.87, 66.74, 20.96, 20.80, 20.06, 19.90, 19.57, 19.57, 19.57, 19.57 ]
-robert_gmp_csqa_noe  = [76.24, 75.10, 69.86, 59.70, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
-robert_gm_before_csqa_noe  = [75.51, 51.43, 27.60, 28.09, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
+robert_gmp = [64.78, 56.76, 43.49, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
+robert_obert  = [66.50, 65.11, 62.00, 52.91, 37.10, 25.88, 22.19, 19.90, 16.54, 20.07]
 
-robert_lth_csqa = [75.92, 74.04, 69.62, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
-robert_snip_csqa = [20.31, 18.92, 18.51, 19.16, 18.67, 18.76, 18.76, 18.59, 18.59, 18.26]
-robert_gmp_csqa  = [76.00, 72.40, 63.96, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
-robert_gm_before_csqa = [75.92, 59.41, 39.39, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
-robert_gm_after_csqa  = [76.99, 74.86, 55.61, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
 
 
 x_axis = range(10)
@@ -30,17 +22,8 @@ x_axis = range(10)
 
 roberta_large = fig.add_subplot(1,2,1)
 roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-
-roberta_large.plot(x_axis, robert_snip_csqa,  '-o',   label='SNIP (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_snip_csqa_noe,  '--*',   label='SNIP w/o E (Before) ',color='#228B22',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_lth_csqa,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_lth_csqa_noe,  '--*',   label='LTH w/o E (After)',color='orange',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gm_after_csqa,  '-o',   label='OMP (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gm_after_csqa_noe,  '--*',   label='OMP w/o E (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp_csqa,  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp_csqa_noe,  '--*',   label='GMP w/o E (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gm_before_csqa,  '-o',   label='OMP (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gm_before_csqa_noe,  '--*',   label='OMP w/o E (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_obert,  '-o',   label='oBERT (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_gmp,  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
 
 
 roberta_large.set_title('RoBERTa on CommonsenseQA',fontsize=Titlesize)
