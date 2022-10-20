@@ -31,7 +31,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse False --sparse-init dense --sparse-mode GMP --sparsity $sparsity --save-dir $save_dir   \
+    --seed $SEED --sparse-init dense --sparse-mode GMP --sparsity 0.1 --save-dir $save_dir   \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
 
 done
