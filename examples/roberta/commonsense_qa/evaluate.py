@@ -11,9 +11,9 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder_source = '/projects/0/prjste21060/projects/pruning_fails/QA/robert/commonsenseqa/'
+check_point_folder_source = '/home/shiwei/Projects/fairseq/examples/roberta/commonsense_qa/'
 
-for method in ['gm_after/', 'random_after/']:
+for method in ['GMP/', 'oBert_seed1/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
