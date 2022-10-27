@@ -16,7 +16,7 @@ for sparsity in 0.2
 do
 save_dir=$FAIRSEQ_USER_DIR/LTH/
 CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
-    $DATA_DIR \
+    $DATA_DIR --save-dir $save_dir \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
     --reset-optimizer --reset-dataloader --reset-meters \
