@@ -15,7 +15,7 @@ FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2
 do
 save_dir=$FAIRSEQ_USER_DIR/LTH/
-CUDA_VISIBLE_DEVICES=1 python train_custom.py --ddp-backend=legacy_ddp \
+CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
