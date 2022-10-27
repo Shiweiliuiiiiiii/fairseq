@@ -6,6 +6,7 @@ UPDATE_FREQ=4         # Accumulate gradients to simulate training on 8 GPUs.
 DATA_DIR=/home/shiwei/Projects/fairseq/data/race/
 ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.base/model.pt
 
+
 FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/race
 
 save_dir=$FAIRSEQ_USER_DIR/dense/
@@ -32,3 +33,25 @@ CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --required-batch-size-multiple 1 \
     --update-freq $UPDATE_FREQ \
     --max-epoch $MAX_EPOCH \
+
+
+MODEL_PATH=$save_dir/checkpoint_best.pt
+PREDS_OUT=$save_dir/preds_middle.tsv
+TEST_SPLIT=test
+
+fairseq-validate \
+    $DATA_DIR \
+    --valid-subset $TEST_SPLIT \
+    --path $MODEL_PATH \
+    --batch-size 1 \
+    --task sentence_ranking \
+    --criterion sentence_ranking \
+    --save-predictions $PREDS_OUT
+done
+
+rm -rf $save_dir/checkpoint1.pt
+rm -rf $save_dir/checkpoint2.pt
+rm -rf $save_dir/checkpoint3.pt
+rm -rf $save_dir/checkpoint_best.pt
+rm -rf $save_dir/checkpoint_last.pt
+

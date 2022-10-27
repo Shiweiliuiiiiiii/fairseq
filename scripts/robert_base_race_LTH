@@ -36,3 +36,24 @@ CUDA_VISIBLE_DEVICES=3 python train_custom.py $DATA_DIR --ddp-backend=legacy_ddp
     --max-epoch $MAX_EPOCH \
     --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11 --sparse
 done
+
+
+for ite in 0 1 2 3 4 5 6 7 8 9
+do
+
+PREDS_OUT=$save_dir/preds_middle.tsv
+TEST_SPLIT=test
+MODEL_PATH=$save_dir/checkpoint_best_iter$ite.pt
+
+fairseq-validate \
+    $DATA_DIR \
+    --valid-subset $TEST_SPLIT \
+    --path $MODEL_PATH \
+    --batch-size 1 \
+    --task sentence_ranking \
+    --criterion sentence_ranking \
+    --save-predictions $PREDS_OUT
+
+done
+
+rm -rf $save_dir/checkpoint*
