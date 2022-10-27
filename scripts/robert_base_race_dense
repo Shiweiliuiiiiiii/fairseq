@@ -32,4 +32,3 @@ CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --required-batch-size-multiple 1 \
     --update-freq $UPDATE_FREQ \
     --max-epoch $MAX_EPOCH \
-done
