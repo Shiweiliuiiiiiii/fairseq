@@ -11,9 +11,10 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
+# check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
+check_point_folder_source = '/home/shiwei/Projects/fairseq/examples/roberta/commonsense_qa/'
 
-for method in ['imp_noembed/0.2/']:
+for method in ['LTH/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
