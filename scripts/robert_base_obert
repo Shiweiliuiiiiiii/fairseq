@@ -12,7 +12,7 @@ DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
 FAIRSEQ_PATH=e
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 
-for sparsity in 0.672
+for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
 save_dir=$FAIRSEQ_USER_DIR/oBert_seed1/$sparsity
 CUDA_VISIBLE_DEVICES=1 python train.py --ddp-backend=legacy_ddp \

@@ -8,9 +8,10 @@ ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/ro
 
 FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/race
 
-save_dir=$FAIRSEQ_USER_DIR/dense/
-
-CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
+for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
+do
+save_dir=$FAIRSEQ_USER_DIR/obert/$sparsity
+CUDA_VISIBLE_DEVICES=4 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --restore-file $ROBERTA_PATH \
     --save-dir $save_dir \
     --reset-optimizer --reset-dataloader --reset-meters \
@@ -21,7 +22,7 @@ CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --max-option-length 128 \
     --max-positions 512 \
     --shorten-method "truncate" \
-    --arch roberta_base \
+    --arch roberta_large \
     --dropout 0.1 --attention-dropout 0.1 --weight-decay 0.01 \
     --criterion sentence_ranking \
     --optimizer adam --adam-betas '(0.9, 0.98)' --adam-eps 1e-06 \
@@ -32,3 +33,6 @@ CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --required-batch-size-multiple 1 \
     --update-freq $UPDATE_FREQ \
     --max-epoch $MAX_EPOCH \
+    --sparse --sparse-init dense --sparse-mode oBERT --sparsity $sparsity  \
+    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
+done
