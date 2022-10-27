@@ -12,7 +12,7 @@ FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/race
 for sparsity in 0.2
 do
 save_dir=$FAIRSEQ_USER_DIR/LTH/
-CUDA_VISIBLE_DEVICES=3 python train_custom.py $DATA_DIR --ddp-backend=legacy_ddp \
+CUDA_VISIBLE_DEVICES=2 python train_custom.py $DATA_DIR --ddp-backend=legacy_ddp \
     --restore-file $ROBERTA_PATH \
     --save-dir $save_dir \
     --reset-optimizer --reset-dataloader --reset-meters \
