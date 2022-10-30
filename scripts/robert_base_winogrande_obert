@@ -8,7 +8,7 @@ DATA_DIR=/home/shiwei/Projects/fairseq/data/winogrande_1.1/
 # we use the --user-dir option to load the task and criterion
 # from the examples/roberta/wsc directory:
 
-FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/wsc
+FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/wsc/WSC/
 
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
