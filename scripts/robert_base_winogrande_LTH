@@ -10,9 +10,9 @@ DATA_DIR=/home/shiwei/Projects/fairseq/data/winogrande_1.1/
 
 FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/wino
 
-for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
+for sparsity in 0.2
 do
-save_dir=$FAIRSEQ_USER_DIR/obert/$sparsity
+save_dir=$FAIRSEQ_USER_DIR/LTH/
 CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR \
   --restore-file $ROBERTA_PATH \
   --save-dir $save_dir \
@@ -31,8 +31,6 @@ CUDA_VISIBLE_DEVICES=0 python train.py $DATA_DIR \
   --warmup-updates $WARMUP_UPDATES --total-num-update $TOTAL_NUM_UPDATES \
   --batch-size $MAX_SENTENCES \
   --max-update $TOTAL_NUM_UPDATES \
-  --log-format simple --log-interval 100 --sparse-init dense --sparse-mode oBERT --sparsity $sparsity --sparse \
-  --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
+  --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11 --sparse
 
-rm -rf &save_dir/
 done
