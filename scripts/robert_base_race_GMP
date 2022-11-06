@@ -1,18 +1,30 @@
+#!/bin/bash
+#SBATCH --job-name=robert_obert_race_GMP
+#SBATCH -p gpu
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH --gpus-per-node=1
+#SBATCH --gpus=1
+#SBATCH -t 3-12:00:00
+#SBATCH --cpus-per-task=18
+#SBATCH -o robert_obert_race_GMP.out
+
+source /home/sliu/miniconda3/etc/profile.d/conda.sh
+source activate prune_cry
+
+
 MAX_EPOCH=3           # Number of training epochs.
 LR=1e-05              # Peak LR for fixed LR scheduler.
 NUM_CLASSES=4
 MAX_SENTENCES=4       # Batch size per GPU.
 UPDATE_FREQ=4         # Accumulate gradients to simulate training on 8 GPUs.
-DATA_DIR=/home/shiwei/Projects/fairseq/data/race/
-ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.base/model.pt
-
-FAIRSEQ_USER_DIR=/home/shiwei/Projects/fairseq/examples/roberta/race
-
+DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
+ROBERTA_PATH=/home/sliu/project_space/pruning_fails/QA/pretrained_models/roberta.base/model.pt
 
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=$FAIRSEQ_USER_DIR/GMP/$sparsity
-CUDA_VISIBLE_DEVICES=2 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
+save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/GMP/$sparsity
+CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --restore-file $ROBERTA_PATH \
     --save-dir $save_dir \
     --reset-optimizer --reset-dataloader --reset-meters \
@@ -36,4 +48,14 @@ CUDA_VISIBLE_DEVICES=2 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --max-epoch $MAX_EPOCH \
     --sparse-init dense --sparse-mode GMP --sparsity $sparsity --sparse \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
-done
+
+
+
+#CUDA_VISIBLE_DEVICES=1 fairseq-validate \
+#    $DATA_DIR \
+#    --valid-subset $TEST_SPLIT \
+#    --path $MODEL_PATH \
+#    --batch-size 1 \
+#    --task sentence_ranking \
+#    --criterion sentence_ranking \
+#    --save-predictions $PREDS_OUT
