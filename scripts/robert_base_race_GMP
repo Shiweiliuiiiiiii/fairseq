@@ -48,14 +48,4 @@ CUDA_VISIBLE_DEVICES=1 python train.py $DATA_DIR --ddp-backend=legacy_ddp \
     --max-epoch $MAX_EPOCH \
     --sparse-init dense --sparse-mode GMP --sparsity $sparsity --sparse \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
-
-
-
-#CUDA_VISIBLE_DEVICES=1 fairseq-validate \
-#    $DATA_DIR \
-#    --valid-subset $TEST_SPLIT \
-#    --path $MODEL_PATH \
-#    --batch-size 1 \
-#    --task sentence_ranking \
-#    --criterion sentence_ranking \
-#    --save-predictions $PREDS_OUT
+done
