@@ -18,7 +18,7 @@ LR=1e-05              # Peak LR for fixed LR scheduler.
 NUM_CLASSES=4
 MAX_SENTENCES=4       # Batch size per GPU.
 UPDATE_FREQ=4         # Accumulate gradients to simulate training on 8 GPUs.
-DATA_DIR=/home/shiwei/Projects/fairseq/data/race/
+DATA_DIR=/home/sliu/project_space/pruning_fails/QA/robert/race/RACE
 ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.base/model.pt
 
 
