@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=robert_obert_race_test_LTH_oBERT_GMP
+#SBATCH --job-name=robert_obert_race_test_LTH_oBERT_GMP_high
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-2:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o robert_obert_race_test_LTH_oBERT_GMP.out
+#SBATCH -o robert_obert_race_test_LTH_oBERT_GMP_high.out
 
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
@@ -27,7 +27,7 @@ for sparsity in 0 1 2 3 4 5 6 7 8 9 10
 do
 MODEL_PATH=/home/sliu/project_space/pruning_fails/QA/robert/race/LTH/0.2/checkpoint_best_iter$sparsity.pt
 PREDS_OUT=/home/sliu/project_space/pruning_fails/QA/robert/race/LTH/0.2/preds_middle.tsv
-TEST_SPLIT=test
+TEST_SPLIT=test1
 
 fairseq-validate \
     $DATA_DIR \
@@ -47,7 +47,7 @@ save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/oBERT/$sparsity
 
 MODEL_PATH=$save_dir/checkpoint_last.pt
 PREDS_OUT=$save_dir/preds_middle.tsv
-TEST_SPLIT=test
+TEST_SPLIT=test1
 
 fairseq-validate \
     $DATA_DIR \
@@ -68,7 +68,7 @@ save_dir=/home/sliu/project_space/pruning_fails/QA/robert/race/GMP/$sparsity
 
 MODEL_PATH=$save_dir/checkpoint_last.pt
 PREDS_OUT=$save_dir/preds_middle.tsv
-TEST_SPLIT=test
+TEST_SPLIT=test1
 
 fairseq-validate \
     $DATA_DIR \
