@@ -215,22 +215,16 @@ class Masking(object):
         elif mode == 'one_shot_structure':
             print('initialize by one_shot_structure')
             self.baseline_nonzero = 0
-
-            weight_abs = []
             for name, weight in model.named_parameters():
                 if name not in self.masks: continue
-                weight_abs.append(torch.abs(weight).sum())
+                nunits = weight.size(0)
+                criteria_for_layer = weight.data.abs().view(nunits, -1).sum(dim=1)
 
-            # Gather all scores in a single vector and normalise
-            all_scores = torch.cat([torch.flatten(x) for x in weight_abs])
-            num_params_to_keep = int(len(all_scores) * density)
+                num_remove = math.ceil((1-density) * nunits)
 
-            threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
-            acceptable_score = threshold[-1]
-
-            for name, weight in model.named_parameters():
-                if name not in self.masks: continue
-                self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(device)
+                x, idx = torch.sort(criteria_for_layer)
+                self.masks[name][idx[:num_remove]] = 0.0
+            self.apply_mask()
 
         elif mode == 'one_shot_gm_cpu':
             print('initialize by one_shot_gm')
