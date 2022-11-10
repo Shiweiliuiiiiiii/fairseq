@@ -11,9 +11,9 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder_source = '/home/shiwei/Projects/fairseq/examples/roberta/commonsense_qa/'
+check_point_folder_source = '/home/sliu/Projects/fairseq/examples/roberta/commonsense_qa/'
 
-for method in ['dense/']:
+for method in ['structured_l1norm/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
@@ -36,7 +36,7 @@ for method in ['dense/']:
         roberta.cuda()  # use the GPU (optional)
         nsamples, ncorrect = 0, 0
 
-        with open('/home/shiwei/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
+        with open('/home/sliu/Projects/fairseq/data/CommonsenseQA/valid.jsonl') as h:
             for line in h:
                 example = json.loads(line)
                 scores = []

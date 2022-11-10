@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=cobert_qa_GMP
+#SBATCH --job-name=robert_base_csqa_strctured_l1norm
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o cobert_qa_omp_random_after.out
+#SBATCH -o robert_base_csqa_strctured_l1norm.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
