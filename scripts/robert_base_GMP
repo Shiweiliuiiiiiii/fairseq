@@ -4,7 +4,7 @@ LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
 ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.base/model.pt
-DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
+DATA_DIR=ls 
 
 
 # we use the --user-dir option to load the task from

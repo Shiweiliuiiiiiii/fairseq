@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_gmp
+#SBATCH --job-name=roberta_l1_norm_structured
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp.out
+#SBATCH -o roberta_l1_norm_structured.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
@@ -19,7 +19,7 @@ LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
 ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
-DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
+DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:

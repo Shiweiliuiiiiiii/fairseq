@@ -212,15 +212,11 @@ x_axis = range(10)
 
 roberta_large = fig.add_subplot(1,4,1)
 roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-
-
 roberta_large.plot(x_axis, robert_snip_csqa,  '-o',   label='SNIP (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, robert_lth_csqa,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
 
 roberta_large.plot(x_axis, robert_snip_rigl_csqa,  '--o',   label='SNIP+RIGL (Before)',color='#228B22',linewidth=linewidth, markersize=markersize )
 roberta_large.plot(x_axis, robert_gm_after_csqa,  '-o',   label='OMP (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
-
-
 roberta_large.plot(x_axis, robert_random_before_csqa,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, robert_random_after_csqa,  '-o',   label='Random (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
 

@@ -1,8 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.pyplot import figure
-fig = figure(num=None, figsize=(16, 5), dpi=150, facecolor='w', edgecolor='k')
-fontsize = 12
+fig = figure(num=None, figsize=(12, 7), dpi=90, facecolor='w', edgecolor='k')
+fontsize = 15
 Titlesize = 18
 markersize = 7
 linewidth = 2.2
@@ -10,28 +10,45 @@ x_axis = range(10)
 
 
 # commonsenseQA
-dense_csqa = [66.91]
+dense_cf10 = [92.430]
 x_lth_csqa = [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]
 
 
-robert_gmp = [64.78, 56.76, 43.49, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
-robert_obert  = [66.50, 65.11, 62.00, 52.91, 37.10, 25.88, 22.19, 19.90, 16.54, 20.07]
-robert_lth = [66.91, 64.94, 59.37, 32.84, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
+RN20_cf10_gmp = [92.190, 92.010, 91.990, 91.440, 91.780, 91.440, 91.580, 91.350, 91.020, 91.090]
+RN20_cf10_OMP_AFTER  = [92.360, 92.410, 92.290, 92.160, 91.920, 92.030, 91.430, 91.080, 90.970, 90.330]
+RN20_cf10_RANDOM_AFTER   = [92.120, 90.690, 90.420, 90.170, 90.290, 89.240, 88.670, 88.420, 87.460, 86.860]
+RN20_cf10_RANDOM_BEFORE  = [92.100, 91.690, 91.690, 90.950, 90.390, 89.880, 89.070, 88.690, 87.260, 86.300]
+RN20_cf10_RANDOM_RIGL = [92.480, 92.100, 91.750, 91.850, 91.710, 91.070, 90.680, 89.580, 89.800, 88.530]
+RN20_cf10_lth = [92.360, 92.280, 92.500, 92.210, 92.650, 92.110, 92.270, 92.110, 91.730, 91.140]
+robert_snip_csqa = [92.15, 91.97, 92.20, 91.47, 91.00, 90.67, 90.56, 89.60, 88.84, 88.02]
+robert_snip_rigl_csqa = [92.03, 92.10, 91.87, 91.95, 91.52, 91.24, 91.12, 90.46, 90.20, 89.16]
 
 
-roberta_large = fig.add_subplot(1,2,1)
-roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_obert,  '-o',   label='oBERT',color='#228B22',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp,  '-o',   label='GMP',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_lth,  '-o',   label='LTH',color='purple',linewidth=linewidth, markersize=markersize, )
+roberta_large = fig.add_subplot(1,1,1)
+roberta_large.plot(x_axis, dense_cf10*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_snip_csqa,  '-o',   label='SNIP (Before)',color='#228B22',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, RN20_cf10_lth,  '-o',   label='LTH (After)',color='orange',linewidth=linewidth, markersize=markersize, )
+
+roberta_large.plot(x_axis, robert_snip_rigl_csqa,  '--o',   label='SNIP+RIGL (Before)',color='#228B22',linewidth=linewidth, markersize=markersize )
+roberta_large.plot(x_axis, RN20_cf10_OMP_AFTER,  '-o',   label='OMP (After)',color='#00BFFF',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, RN20_cf10_RANDOM_BEFORE,  '-o',   label='Random (Before)',color='brown',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, RN20_cf10_RANDOM_AFTER,  '-o',   label='Random (After)',color='#0072BD',linewidth=linewidth, markersize=markersize, )
+
+roberta_large.plot(x_axis, RN20_cf10_RANDOM_RIGL,  '--o',   label='Random+RIGL (Before)',color='brown',linewidth=linewidth, markersize=markersize)
+roberta_large.plot(x_axis, RN20_cf10_gmp,  '-o',   label='GMP (During)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
+
+# roberta_large.plot(x_axis, robert_gm_before_csqa,  '-o',   label='OMP (Before)' ,color='#bcbd22',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_gm_rigl_csqa,  '--o',   label='OMP+RIGL (Before)',color='#bcbd22',linewidth=linewidth, markersize=markersize )
 
 
-roberta_large.set_title('CommonsenseQA',fontsize=Titlesize)
+
+
+roberta_large.set_title('ResNet-20 on CIFAR-10',fontsize=Titlesize)
 roberta_large.axes.get_xaxis().set_visible(True)
 roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
 roberta_large.set_xlabel('Sparsity', fontsize=Titlesize)
 
-# print((dense_csqa[0] - robert_lth_csqa[3])/  dense_csqa)[]
+
 roberta_large.xaxis.set_ticks(x_axis)
 roberta_large.set_xticklabels(np.array([0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), rotation=45, fontsize=10 )
 
@@ -43,36 +60,11 @@ roberta_large.grid(True, linestyle='-', linewidth=0.5, )
 
 roberta_large.spines['right'].set_visible(False)
 roberta_large.spines['top'].set_visible(False)
-
-
-
-dense_race = [68.09]
-x_lth_race = [0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]
-robert_race_gmp = [67.02, 65.27, 62.14, 56.78, 52.82, 50.33, 50.61, 51.07, 51.98, 49.64]
-robert_race_obert  = [66.64, 65.72, 61.38, 57.24, 52.51, 51.06, 50.33, 50.55, 50.46, 50.45]
-robert_race_lth = [67.17, 65.72, 61.99, 56.55, 54.75, 51.93, 51.77, 51.65, 51.00, 50.22 ]
-
-
-roberta_large = fig.add_subplot(1,2,2)
-roberta_large.plot(x_axis, dense_race*10,  '-o', color='black',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_race_obert,  '-o', color='#228B22',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_race_gmp,  '-o', color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_race_lth,  '-o',  color='purple',linewidth=linewidth, markersize=markersize, )
-
-
-roberta_large.set_title('Winogrande',fontsize=Titlesize)
-roberta_large.set_xlabel('Sparsity', fontsize=Titlesize)
-roberta_large.xaxis.set_ticks(x_axis, rotation=45)
-roberta_large.set_xticklabels(np.array([0.2, 0.36, 0.488, 0.590, 0.672, 0.738, 0.791, 0.8325, 0.866, 0.893]), rotation=45, fontsize=10 )
-roberta_large.tick_params(axis='both', which='major', labelsize=fontsize)
-roberta_large.axes.get_xaxis().set_visible(True)
-roberta_large.grid(True, linestyle='-', linewidth=0.5, )
-roberta_large.spines['right'].set_visible(False)
-roberta_large.spines['top'].set_visible(False)
+plt.ylim((80, 94))
 
 
 plt.tight_layout()
-fig.legend(loc='lower center', bbox_to_anchor=(0.0, 0.0, 1, 1), fancybox=False, shadow=False, ncol=6, fontsize=fontsize, frameon=False)
+fig.legend(loc='lower center', bbox_to_anchor=(0.0, 0.0, 1, 1), fancybox=False, shadow=False, ncol=4, fontsize=fontsize, frameon=False)
 fig.subplots_adjust(left=0.05, bottom=0.29, right=0.95, top=0.94, wspace=0.2, hspace=0.35)
-plt.savefig('Roberta_base_oBERT.pdf', bbox_inches='tight')
+plt.savefig('CIFAR-10.pdf', bbox_inches='tight')
 plt.show()
