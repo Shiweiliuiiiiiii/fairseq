@@ -26,7 +26,7 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=$FAIRSEQ_USER_DIR/GMP_no_emd_classhead/lr104/600/5epochs/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_no_emd_classhead/lr104/600/5epochs/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -64,7 +64,7 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=$FAIRSEQ_USER_DIR/GMP_no_emd_classhead/lr104/600/10epochs/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_no_emd_classhead/lr104/600/10epochs/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -102,7 +102,7 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=$FAIRSEQ_USER_DIR/GMP_no_emd_classhead/lr104/600/15epochs/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_no_emd_classhead/lr104/600/15epochs/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
