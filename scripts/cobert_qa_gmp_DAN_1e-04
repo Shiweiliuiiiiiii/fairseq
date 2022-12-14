@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_lr1e-04_epochs{5,10,15}
+#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_lr1e04_epochs_5_10_15
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
