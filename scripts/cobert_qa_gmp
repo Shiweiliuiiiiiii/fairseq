@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_gmp
+#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp.out
+#SBATCH -o roberta_gmp_no_embedding_no_classifier.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
@@ -27,7 +27,7 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=$FAIRSEQ_USER_DIR/oBert_seed1/$sparsity
+save_dir=$FAIRSEQ_USER_DIR/GMP_no_emd_classhead/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --sparse --sparse-init dense --sparse-mode snip --sparsity $sparsity --save-dir $save_dir  \
+    --seed $SEED --sparse --sparse-init dense --sparse-mode GMP --sparsity $sparsity --save-dir $save_dir  \
     --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none
 
 done

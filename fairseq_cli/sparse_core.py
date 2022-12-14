@@ -37,7 +37,7 @@ class Masking(object):
     Basic usage:
         optimizer = torchoptim.SGD(model.parameters(),lr=args.lr)
         decay = CosineDecay(args.prune_rate, len(train_loader)*(args.epochs))
-        mask = Masking(optimizer, prune_rate_decay=decay)
+        mask = Masking(optimizer, prune_rate_decay=decay)add
         model = MyModel()
         mask.add_module(model)
     """
@@ -119,8 +119,10 @@ class Masking(object):
         self.remove_weight_partial_name('fc1_weight')
         print('Removing fc2_weight')
         self.remove_weight_partial_name('fc2_weight')
-        print('lm_head.dense.weight')
+        print('Removing lm_head.dense.weight')
         self.remove_weight_partial_name('lm_head.dense.weight')
+        print('Removing classification_heads')
+        self.remove_weight_partial_name('classification_heads')
 
 
     def remove_weight(self, name):
