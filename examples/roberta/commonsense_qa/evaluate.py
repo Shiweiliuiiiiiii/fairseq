@@ -11,7 +11,7 @@ def sorted_nicely(l):
     return sorted(l, key = alphanum_key)
 
 
-check_point_folder_source = '~/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_LRR_no_emd_classhead/lr505/5epochs_perpruning/'
+check_point_folder_source = '/home/sliu/project_space//pruning_fails/QA/robert/commonsenseqa/GMP_LRR_no_emd_classhead/lr505/5epochs_perpruning/'
 #
 # for method in ['structured_l1norm/']:
 
