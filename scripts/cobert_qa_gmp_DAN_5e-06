@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_lr5e06_epochs_5_10_15
+#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_lr5e06_epochs_5_10_15_300
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp_no_embedding_no_classifier_lr{5e-06}_5_10_15_epochs.out
+#SBATCH -o roberta_gmp_no_embedding_no_classifier_lr{5e-06}_5_10_15_epochs3_300.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak

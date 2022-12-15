@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_lr1e04_epochs_5_10_15
+#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_lr1e04_epochs_5_10_15_300
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp_no_embedding_no_classifier_lr1e-04_epochs{5,10,15}.out
+#SBATCH -o roberta_gmp_no_embedding_no_classifier_lr1e-04_epochs51015_300.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
@@ -55,8 +55,6 @@ WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-04             # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
-#ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
-DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:
@@ -93,8 +91,7 @@ WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-04              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
-#ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
-DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
+
 
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:

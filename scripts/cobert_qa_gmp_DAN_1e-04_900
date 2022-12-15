@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp_no_embedding_no_classifier_lr1e-04_epochs{5,10,15}_900.out
+#SBATCH -o roberta_gmp_no_embedding_no_classifier_lr1e-04_epochs51015_900.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
