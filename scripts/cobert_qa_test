@@ -13,4 +13,4 @@ source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate slak
 
 
-python examples/roberta/commonsense_qa/evaluate.py
+python examples/roberta/commonsense_qa/evaluate_lth.py
