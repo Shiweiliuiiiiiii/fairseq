@@ -17,8 +17,8 @@ WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-04              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
-ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
-DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
+ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.large/model.pt
+DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
 # the examples/roberta/commonsense_qa directory:
@@ -55,7 +55,7 @@ WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-04             # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
-ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
+#ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
 DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
@@ -93,7 +93,7 @@ WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-04              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
-ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
+#ROBERTA_PATH=/home/shiwei/Projects/fairseq/examples/roberta/pretrained_models/roberta.large/model.pt
 DATA_DIR=/home/shiwei/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
