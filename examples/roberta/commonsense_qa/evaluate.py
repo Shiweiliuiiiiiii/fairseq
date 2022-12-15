@@ -22,7 +22,7 @@ model_files = sorted_nicely(model_files)
 
 for file in model_files:
     print(file)
-    roberta = RobertaModel.from_pretrained(os.path.join(check_point_folder_source, str(file)), 'checkpoint_best.pt', 'data/CommonsenseQA')
+    roberta = RobertaModel.from_pretrained(os.path.join(check_point_folder_source, str(file), 'checkpoint_best.pt', 'data/CommonsenseQA'))
 
     total_zero = 0
     total_weight = 0
