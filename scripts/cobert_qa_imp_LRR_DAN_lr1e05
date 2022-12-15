@@ -1,16 +1,16 @@
 #!/bin/bash
-#SBATCH --job-name=test_imp_0.1
+#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_LRR_5epoch_perpruning_lr1e05
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-24:00:00
+#SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o test_imp_0.1.out
+#SBATCH -o roberta_gmp_no_embedding_no_classifier_LRR_5epoch_perpruning_lr1e05.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate transformer
+source activate prune_cry
 
 
 MAX_UPDATES=3000      # Number of training steps.
@@ -27,8 +27,8 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2
 do
-save_dir=~/4/$sparsity
-CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_LRR_no_emd_classhead/lr105/5epochs_perpruning/
+CUDA_VISIBLE_DEVICES=0 python train_custom_LRR.py --ddp-backend=legacy_ddp \
     $DATA_DIR --save-dir $save_dir  \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
