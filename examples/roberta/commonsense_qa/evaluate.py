@@ -10,10 +10,15 @@ def sorted_nicely(l):
     alphanum_key = lambda key: [ convert(c) for c in re.split('([0-9]+)', key) ]
     return sorted(l, key = alphanum_key)
 
+list = ['lr104/300/5epochs/', 'lr104/600/5epochs/', 'lr105/300/5epochs/', 'lr105/600/5epochs/', 'lr505/300/5epochs/', 'lr505/600/5epochs/', 'lr506/300/5epochs/', 'lr506/600/5epochs/',
+               'lr104/300/10epochs/', 'lr104/600/10epochs/', 'lr105/300/10epochs/', 'lr105/600/10epochs/', 'lr505/300/10epochs/', 'lr505/600/10epochs/', 'lr506/300/10epochs/', 'lr506/600/10epochs/']
+
+print(f'Evaluation list is {list}')
 
 check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_no_emd_classhead/'
 
-for method in ['lr104/300/5epochs/', 'lr104/600/5epochs/', 'lr105/300/5epochs/', 'lr105/600/5epochs/', 'lr505/300/5epochs/', 'lr505/600/5epochs/', 'lr506/300/5epochs/', 'lr506/600/5epochs/']:
+for method in ['lr104/300/5epochs/', 'lr104/600/5epochs/', 'lr105/300/5epochs/', 'lr105/600/5epochs/', 'lr505/300/5epochs/', 'lr505/600/5epochs/', 'lr506/300/5epochs/', 'lr506/600/5epochs/',
+               'lr104/300/10epochs/', 'lr104/600/10epochs/', 'lr105/300/10epochs/', 'lr105/600/10epochs/', 'lr505/300/10epochs/', 'lr505/600/10epochs/', 'lr506/300/10epochs/', 'lr506/600/10epochs/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
