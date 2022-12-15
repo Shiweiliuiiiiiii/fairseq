@@ -10,7 +10,7 @@
 #SBATCH -o roberta_gmp_no_embedding_no_classifier_LRR_5epoch_perpruning_lr1e05_5e05_test.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate prune_cry
 
 
 python examples/roberta/commonsense_qa/evaluate_lth.py
