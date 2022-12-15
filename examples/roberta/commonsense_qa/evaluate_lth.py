@@ -12,9 +12,9 @@ def sorted_nicely(l):
 
 
 # check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
-check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_LRR_no_emd_classhead/lr105/'
+check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_LRR_no_emd_classhead/'
 
-for method in ['5epochs_perpruning/']:
+for method in ['lr105/5epochs_perpruning/', 'lr505/5epochs_perpruning/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
