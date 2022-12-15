@@ -10,7 +10,7 @@
 #SBATCH -o roberta_gmp_no_embedding_no_classifier_lr{5e-05}_epochs{5,10,15}_900.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate prune_cry
 
 MAX_UPDATES=3000      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
