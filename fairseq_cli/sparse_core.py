@@ -177,6 +177,7 @@ class Masking(object):
                 layer_density = sparse_weight_num / dense_weight_num
                 print(f'sparsity of layer {name} with tensor {weight.size()} is {1-layer_density}')
         print('Final sparsity level of {0}: {1}'.format(self.sparsity, 1 - sparse_size / total_size))
+        print(f'Total number of params of the dense model is P{total_size}')
 
     def init_optimizer(self):
         if 'fp32_from_fp16' in self.optimizer.state_dict():
