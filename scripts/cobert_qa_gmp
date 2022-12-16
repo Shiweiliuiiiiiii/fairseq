@@ -10,7 +10,7 @@
 #SBATCH -o roberta_gmp_nparam_count.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
-source activate slak
+source activate prune_cry
 
 
 MAX_UPDATES=3000      # Number of training steps.
