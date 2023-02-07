@@ -29,69 +29,69 @@ robert_random_after_csqa  = [36.61, 25.06, 21.95, 20.39, 20.88, 20.31, 19.74, 20
 # winogrande
 
 acc_gm_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_0.2.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_0.2.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_gm_wino.append(float(line.split()[19][:-1]))
 
 
 acc_omg_after_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_after.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_after.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
-            print(line.split())
+            # print(line.split())
             acc_omg_after_wino.append(float(line.split()[19][:-1]))
 
 
 acc_snip_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_snip_0.2.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_snip_0.2.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_snip_wino.append(float(line.split()[19][:-1]))
 
 acc_snip_rigl_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_snip_rigl.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_snip_rigl.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_snip_rigl_wino.append(float(line.split()[19][:-1]))
 
 
 acc_omp_rigl_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_rigl.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gm_rigl.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_omp_rigl_wino.append(float(line.split()[19][:-1]))
 
 
 acc_imp_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_imp_0.2.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_imp_0.2.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_imp_wino.append(float(line.split()[19][:-1]))
 
-print(acc_imp_wino[0])
+# print(acc_imp_wino[0])
 acc_random_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/cobert_winogrande_random.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/cobert_winogrande_random.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             acc_random_wino.append(float(line.split()[19][:-1]))
 
 acc_random_after_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_random_after.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_random_after.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             # print(line.split())
             acc_random_after_wino.append(float(line.split()[19][:-1]))
 
 acc_random_rigl_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_random_rigl.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_random_rigl.out') as file:
     for line in file:
         if 'val | epoch 001 |' in line:
             # print(line.split())
             acc_random_rigl_wino.append(float(line.split()[19][:-1]))
 
 acc_gmp_wino = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gmp.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/winogrande/winogrande_gmp.out') as file:
     for line in file:
         if 'val | epoch 019 |' in line:
             # print(line.split())
@@ -103,7 +103,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/winogrande/winogr
 
 acc_test_RACE = []
 acc_test1_RACE = []
-with open('/Users/liushiwei/Projects/TUE_projects/fairseq/results/cobert_race_TEST.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_TEST.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_RACE.append(float(line.split()[19]))
@@ -112,7 +112,7 @@ with open('/Users/liushiwei/Projects/TUE_projects/fairseq/results/cobert_race_TE
 
 acc_test_random_RACE = []
 acc_test_random_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_random_test.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_random_test.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_random_RACE.append(float(line.split()[19]))
@@ -121,7 +121,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_gmp_RACE = []
 acc_test_gmp_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_gmp.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_gmp.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_gmp_RACE.append(float(line.split()[19]))
@@ -131,7 +131,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_random_omp_after_RACE = []
 acc_test_random_omp_after_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after_ck3.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after_ck3.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_random_omp_after_RACE.append(float(line.split()[19]))
@@ -141,7 +141,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_random_omp_rigl_RACE = []
 acc_test_random_omp_rigl_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_rigl_after_ck3.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_rigl_after_ck3.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_random_omp_rigl_RACE.append(float(line.split()[19]))
@@ -150,7 +150,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_snip_rigl_RACE = []
 acc_test_snip_rigl_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_snip_rigl_test.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_snip_rigl_test.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_snip_rigl_RACE.append(float(line.split()[19]))
@@ -159,7 +159,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_snip_rigl_RACE = []
 acc_test_snip_rigl_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_snip_rigl_test.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_snip_rigl_test.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_snip_rigl_RACE.append(float(line.split()[19]))
@@ -168,7 +168,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 acc_test_omp_random_after_RACE = []
 acc_test_omp_random_after_high_RACE = []
-with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after_test.out') as file:
+with open('/Users/shiwei/Projects/fairseq/results/reasoning/race/cobert_race_omp_random_after_test.out') as file:
     for line in file:
         if 'test | valid on' in line:
             acc_test_omp_random_after_RACE.append(float(line.split()[19]))
@@ -179,7 +179,7 @@ with open('/Users/liushiwei/Projects/fairseq/results/reasoning/race/cobert_race_
 
 
 acc_test_imp_RACE = acc_test_RACE[:10]
-print(acc_test_imp_RACE)
+# print(acc_test_imp_RACE)
 acc_test_imp_RACE.append(26.1)
 acc_test_omp_RACE = acc_test_RACE[10:20]
 acc_test_snip_RACE = acc_test_RACE[20:29]
@@ -227,6 +227,7 @@ roberta_large.plot(x_axis, robert_gm_before_csqa,  '-o',   label='OMP (Before)' 
 roberta_large.plot(x_axis, robert_gm_rigl_csqa,  '--o',   label='OMP+RIGL (Before)',color='#bcbd22',linewidth=linewidth, markersize=markersize )
 
 
+
 roberta_large.set_title('RoBERTa on CommonsenseQA',fontsize=Titlesize)
 roberta_large.axes.get_xaxis().set_visible(True)
 roberta_large.set_ylabel('Accuracy [%]', fontsize=Titlesize)
@@ -253,15 +254,12 @@ roberta_large.plot(x_axis, 100*np.array(acc_imp_wino[1:]),  '-o', color='orange'
 roberta_large.plot(x_axis, 100*np.array(acc_omg_after_wino),  '-o', color='#00BFFF',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, 100*np.array(acc_random_after_wino),  '-o', color='#0072BD',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, 100*np.array(acc_gmp_wino),  '-o', color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-
-
 roberta_large.plot(x_axis, 100*np.array(acc_snip_wino),  '-o', color='#228B22',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, 100*np.array(acc_snip_rigl_wino),  '--o', color='#228B22',linewidth=linewidth, markersize=markersize )
 roberta_large.plot(x_axis, 100*np.array(acc_random_wino),  '-o', color='brown',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, 100*np.array(acc_random_rigl_wino),  '--o', color='brown',linewidth=linewidth, markersize=markersize)
 roberta_large.plot(x_axis, 100*np.array(acc_gm_wino),  '-o',  color='#bcbd22',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, 100*np.array(acc_omp_rigl_wino),  '--o' ,color='#bcbd22',linewidth=linewidth, markersize=markersize )
-
 
 
 roberta_large.set_title('RoBERTa on WinoGrande',fontsize=Titlesize)
@@ -292,7 +290,9 @@ roberta_large.plot(x_axis, acc_test_random_rigl_RACE, '--o', color='brown',linew
 roberta_large.plot(x_axis, acc_test_omp_RACE,  '-o', color='#bcbd22',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, acc_test_omp_rigl_RACE,  '--o', color='#bcbd22',linewidth=linewidth, markersize=markersize )
 
-print((acc_test_imp_RACE[0] - acc_test_imp_RACE[4])/  acc_test_imp_RACE[0])
+
+
+
 
 roberta_large.set_title('RoBERTa on RACE (Middle)',fontsize=Titlesize)
 roberta_large.set_xticks(range(10))
@@ -330,7 +330,19 @@ roberta_large.plot(x_axis, acc_test_omp_high_RACE,  '-o', color='#bcbd22',linewi
 roberta_large.plot(x_axis, acc_test_omp_rigl_high_RACE,  '--o', color='#bcbd22',linewidth=linewidth, markersize=markersize )
 
 
-print( np.array(acc_test_imp_high_RACE[1:]) - np.array(acc_test_gmp_high_RACE))
+print(acc_test_snip_high_RACE)
+print(acc_test_snip_rigl_high_RACE)
+print(acc_test_imp_high_RACE)
+print(acc_test_omp_high_RACE)
+print(acc_test_omp_after_high_RACE)
+print(acc_test_omp_rigl_high_RACE)
+print(acc_test_random_high_RACE)
+print(acc_test_random_after_high_RACE)
+print(acc_test_random_rigl_high_RACE)
+print(acc_test_gmp_high_RACE)
+
+
+# print( np.array(acc_test_imp_high_RACE[1:]) - np.array(acc_test_gmp_high_RACE))
 
 roberta_large.set_title('RoBERTa on RACE (High)',fontsize=Titlesize)
 roberta_large.set_xticks(range(10))

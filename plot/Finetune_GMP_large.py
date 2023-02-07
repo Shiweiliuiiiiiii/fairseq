@@ -8,6 +8,7 @@ markersize = 7
 linewidth = 2.2
 x_axis = range(10)
 
+## LLR refers to LTH + learning rate rewinding
 
 # commonsenseQA
 dense_csqa = [77.31]
@@ -17,6 +18,9 @@ robert_gmp_csqa_5epochs  = [76.00, 72.40, 63.96, 19.57, 19.57, 19.57, 19.57, 19.
 robert_gmp_csqa_no_embed_5epochs  = [76.24, 75.10, 69.86, 59.70, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
 robert_gmp_csqa_no_embed_no_classifier_5epochs = [76.00, 75.10, 71.74, 62.08, 41.68, 28.17, 19.73, 19.57, 19.81, 18.50]
 robert_gmp_LLR_no_embed_no_classifier_5epochs  = [76.49, 74.12, 70.51, 64.78, 54.95, 43.57, 36.77, 30.63, 22.11, 19.57]
+robert_obert_LLR_no_embed_no_classifier_5epochs_noKD  = [72, 73.2, 70.2, 70, 67.7, 58.7, 54.2, 48.3, 47.4, 45.5]
+robert_obert_LLR_no_embed_no_classifier_5epochs  = [74, 74.2, 72.2, 71, 68.7, 60.7, 56.2, 52.3, 51.4, 48]
+robert_obert_plain_5epochs  = [71, 70.7, 70.8, 69.1, 63.1 ,51.2, 32.6, 30.8, 22.5, 22.2]
 
 # robert_lth_csqa = [75.92, 74.04, 69.62, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57, 19.57]
 
@@ -42,23 +46,26 @@ robert_gmp_506_600_no_embed_no_classifier_10epochs = [76.49, 74.61, 71.99, 64.53
 
 
 roberta_large = fig.add_subplot(1,1,1)
-# roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_csqa_5epochs,  '-o',   label='GMP',color='#228B22',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_csqa_no_embed_5epochs,  '-o',   label='GMP (no emb)',color='blue',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp_csqa_no_embed_no_classifier_5epochs,  '-o',   label='GMP (no emb and no classifier)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10 epochs',color='orange',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_LLR_no_embed_no_classifier_5epochs,  '-o',   label='GMP + LRR (no emb and no classifier)',color='purple',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_gmp_csqa_5epochs,  '-o',   label='GMP',color='#228B22',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_gmp_csqa_no_embed_5epochs,  '-o',   label='GMP (not pruning emb)',color='blue',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_gmp_csqa_no_embed_no_classifier_5epochs,  '-o',   label='GMP (not pruning emb and classifier)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_obert_plain_5epochs,  '--',   label='oBERT - KD - LRR (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10 epochs',color='orange',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_gmp_LLR_no_embed_no_classifier_5epochs,  '-o',   label='GMP + LRR (not pruning emb and classifier)',color='purple',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_obert_LLR_no_embed_no_classifier_5epochs_noKD,  '--o',   label='oBERT - KD (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, robert_obert_LLR_no_embed_no_classifier_5epochs,  '-o',   label='oBERT (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
 # # roberta_large.plot(x_axis, robert_structured,  '-o',   label='Structrued (L1 Norm)',color='orange',linewidth=linewidth, markersize=markersize, )
 
-roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_104_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP lr=0.0001',color='#228B22',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_505_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP lr=0.00005',color='blue',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP (no emb and no classifier) 5epochs',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10epochs',color='orange',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10 epochs',color='orange',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_gmp_506_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP lr=0.000005',color='purple',linewidth=linewidth, markersize=markersize, )
-# roberta_large.plot(x_axis, robert_structured,  '-o',   label='Structrued (L1 Norm)',color='orange',linewidth=linewidth, markersize=markersize, )
-
+# roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, robert_gmp_104_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP lr=0.0001',color='#228B22',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, robert_gmp_505_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP lr=0.00005',color='blue',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP (no emb and no classifier) 5epochs',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10epochs',color='orange',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10 epochs',color='orange',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, robert_gmp_506_600_no_embed_no_classifier_5epochs,  '-o',   label='GMP lr=0.000005',color='purple',linewidth=linewidth, markersize=markersize, )
+# # roberta_large.plot(x_axis, robert_structured,  '-o',   label='Structrued (L1 Norm)',color='orange',linewidth=linewidth, markersize=markersize, )
+#
 
 roberta_large.set_title('CommonsenseQA (Roberta Large no emb and no classifier)',fontsize=Titlesize)
 roberta_large.axes.get_xaxis().set_visible(True)
@@ -80,7 +87,7 @@ roberta_large.spines['top'].set_visible(False)
 
 
 plt.tight_layout()
-fig.legend(loc='lower center', bbox_to_anchor=(0.0, 0.0, 1, 1), fancybox=False, shadow=False, ncol=6, fontsize=fontsize, frameon=False)
+fig.legend(loc='lower center', bbox_to_anchor=(0.0, 0.0, 1, 1), fancybox=False, shadow=False, ncol=4, fontsize=fontsize, frameon=False)
 fig.subplots_adjust(left=0.05, bottom=0.29, right=0.95, top=0.94, wspace=0.2, hspace=0.35)
 plt.savefig('GMP_10_epochs.pdf', bbox_inches='tight')
 plt.show()
