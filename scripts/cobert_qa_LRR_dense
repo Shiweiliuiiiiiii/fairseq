@@ -28,7 +28,7 @@ for sparsity in 0.2
 do
 
 save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/LRR_Dense/
-CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
+CUDA_VISIBLE_DEVICES=0 python train_custom_LRR_dense.py --ddp-backend=legacy_ddp \
     $DATA_DIR --save-dir $save_dir  \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
