@@ -377,6 +377,8 @@ class Masking(object):
                 total_nonzero += density_dict[name] * mask.numel()
             print(f"Overall sparsity {total_nonzero / total_params}")
 
+        elif mode == 'oBERT':
+            self.gradual_oBERT_pruning(density)
 
         self.apply_mask()
         self.print_status()
