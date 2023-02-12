@@ -121,8 +121,8 @@ class Masking(object):
         self.remove_weight_partial_name('fc2_weight')
         print('Removing lm_head.dense.weight')
         self.remove_weight_partial_name('lm_head.dense.weight')
-        # print('Removing classification_heads')
-        # self.remove_weight_partial_name('classification_heads')
+        print('Removing classification_heads')
+        self.remove_weight_partial_name('classification_heads')
 
 
     def remove_weight(self, name):
