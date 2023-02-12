@@ -378,14 +378,15 @@ def train(
                     mask.masks[name][:] = snip_mask
                 mask.apply_mask()
                 mask.print_status()
+            elif mask.sparse_init == 'oBERT_one_shot':
+                mask.setup_fisher_inverse(trainer, progress)
+                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
+                          density=(1 - mask.sparsity))
             elif mask.sparse_mode == 'oBERT':
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
                 mask.setup_fisher_inverse(trainer, progress)
-            elif mask.sparse_mode == 'oBERT_one_shot':
-                mask.setup_fisher_inverse(trainer, progress)
-                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
-                          density=(1 - mask.sparsity))
+
             else:
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
 
