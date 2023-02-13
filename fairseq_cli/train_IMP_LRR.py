@@ -356,7 +356,7 @@ def train(
                            args=cfg)
             mask.add_module(trainer.model)
 
-            if mask.sparse_init == 'oBERT_one_shot':
+            if mask.sparse_init == 'oBERT_LRR':
                 mask.setup_fisher_inverse(trainer, progress)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
@@ -424,7 +424,7 @@ def train(
 
                 trainer.begin_epoch(epoch_itr.epoch)
 
-            elif mask.sparse_mode == 'oBERT':
+            elif mask.sparse_mode == 'oBERT_GMP':
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
                 mask.setup_fisher_inverse(trainer, progress)

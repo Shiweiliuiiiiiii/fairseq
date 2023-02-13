@@ -376,8 +376,11 @@ class Masking(object):
                 total_nonzero += density_dict[name] * mask.numel()
             print(f"Overall sparsity {total_nonzero / total_params}")
 
-        elif mode == 'oBERT_LLR':
+        elif mode == 'oBERT_LRR':
             self.gradual_oBERT_pruning(current_pruning_rate=(1-density), IMP=True)
+
+        elif mode == 'oBERT_one_shot':
+            self.gradual_oBERT_pruning(current_pruning_rate=(1-density), IMP=False)
 
         self.apply_mask()
         self.print_status()
@@ -644,10 +647,10 @@ class Masking(object):
                     dense_nonzeros += weight.numel()
 
             print(f'sparsity level of current model is {1 - total_num_nonzoros / dense_nonzeros}')
-            num_params_to_keep = int(total_num_nonzoros) * (1 - current_pruning_rate)
+            num_params_to_keep = int(total_num_nonzoros * (1 - current_pruning_rate))
         else:
             print('performing oBERT normal pruning')
-            num_params_to_keep = int(all_scores) * (1 - current_pruning_rate)
+            num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate))
 
         threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
         acceptable_score = threshold[-1]

@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train_custom_LRR.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --fix --sparse --sparse-init oBERT_LLR --sparsity $sparsity --imp-iters 11 --noembed
+    --seed $SEED --fix --sparse --sparse-init oBERT_LRR --sparsity $sparsity --imp-iters 11 --noembed
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
