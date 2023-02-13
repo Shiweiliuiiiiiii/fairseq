@@ -382,6 +382,7 @@ def train(
                 mask.setup_fisher_inverse(trainer, progress)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
+
                 progress = progress_bar.progress_bar(
                     itr,
                     log_format=cfg.common.log_format,
