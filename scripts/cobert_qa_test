@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_gmp_no_embedding_no_classifier_104_105_505_506_frequency300_600_5epoch_10epochs.out
+#SBATCH -o reberta_one_shot_noemb_nocla_and_emb_cla.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate prune_cry

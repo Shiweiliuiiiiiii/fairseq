@@ -15,10 +15,9 @@ list = ['lr104/300/5epochs/', 'lr104/600/5epochs/', 'lr105/300/5epochs/', 'lr105
 
 print(f'Evaluation list is {list}')
 
-check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_no_emd_classhead/'
+check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
 
-for method in ['lr104/300/5epochs/', 'lr104/600/5epochs/', 'lr105/300/5epochs/', 'lr105/600/5epochs/', 'lr505/300/5epochs/', 'lr505/600/5epochs/', 'lr506/300/5epochs/', 'lr506/600/5epochs/',
-               'lr104/300/10epochs/', 'lr104/600/10epochs/', 'lr105/300/10epochs/', 'lr105/600/10epochs/', 'lr505/300/10epochs/', 'lr505/600/10epochs/', 'lr506/300/10epochs/', 'lr506/600/10epochs/']:
+for method in ['obert_one_shot_after_noemb_noclassifier/', 'obert_one_shot_after/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
