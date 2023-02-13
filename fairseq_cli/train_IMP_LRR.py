@@ -341,66 +341,6 @@ def train(
     if epoch_itr.epoch == 1 and iter > 0:
         logger.info("'**********Start pruning the model**********************'")
 
-        epoch_itr_obert = trainer.get_train_iterator(
-            epoch=1, load_dataset=True)
-
-        itr = epoch_itr_obert.next_epoch_itr(
-            fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
-            shuffle=(epoch_itr_obert.next_epoch_idx > cfg.dataset.curriculum),
-        )
-
-        update_freq = (
-            cfg.optimization.update_freq[epoch_itr_obert.epoch - 1]
-            if epoch_itr_obert.epoch <= len(cfg.optimization.update_freq)
-            else cfg.optimization.update_freq[-1]
-        )
-        itr = iterators.GroupedIterator(
-            itr,
-            update_freq,
-            skip_remainder_batch=cfg.optimization.skip_remainder_batch,
-        )
-        if cfg.common.tpu:
-            itr = utils.tpu_data_loader(itr)
-
-        progress_obert = progress_bar.progress_bar(
-            itr,
-            log_format=cfg.common.log_format,
-            log_file=cfg.common.log_file,
-            log_interval=cfg.common.log_interval,
-            epoch=epoch_itr_obert.epoch,
-            aim_repo=(
-                cfg.common.aim_repo
-                if distributed_utils.is_master(cfg.distributed_training)
-                else None
-            ),
-            aim_run_hash=(
-                cfg.common.aim_run_hash
-                if distributed_utils.is_master(cfg.distributed_training)
-                else None
-            ),
-            aim_param_checkpoint_dir=cfg.checkpoint.save_dir,
-            tensorboard_logdir=(
-                cfg.common.tensorboard_logdir
-                if distributed_utils.is_master(cfg.distributed_training)
-                else None
-            ),
-            default_log_format=("tqdm" if not cfg.common.no_progress_bar else "simple"),
-            wandb_project=(
-                cfg.common.wandb_project
-                if distributed_utils.is_master(cfg.distributed_training)
-                else None
-            ),
-            wandb_run_name=os.environ.get(
-                "WANDB_NAME", os.path.basename(cfg.checkpoint.save_dir)
-            ),
-            azureml_logging=(
-                cfg.common.azureml_logging
-                if distributed_utils.is_master(cfg.distributed_training)
-                else False
-            ),
-        )
-        progress_obert.update_config(_flatten_config(cfg))
-
         # build masks here
         # global mask
         mask = None
@@ -417,14 +357,76 @@ def train(
             mask.add_module(trainer.model)
 
             if mask.sparse_init == 'oBERT_LRR':
-                mask.setup_fisher_inverse(trainer, progress_obert)
+                mask.setup_fisher_inverse(trainer, progress)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
 
-            elif mask.sparse_mode == 'oBERT_GMP':
+                epoch_itr = trainer.get_train_iterator(
+                    epoch=1, load_dataset=True)
+
+                itr = epoch_itr.next_epoch_itr(
+                    fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
+                    shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
+                )
+
+                update_freq = (
+                    cfg.optimization.update_freq[epoch_itr.epoch - 1]
+                    if epoch_itr.epoch <= len(cfg.optimization.update_freq)
+                    else cfg.optimization.update_freq[-1]
+                )
+                itr = iterators.GroupedIterator(
+                    itr,
+                    update_freq,
+                    skip_remainder_batch=cfg.optimization.skip_remainder_batch,
+                )
+                if cfg.common.tpu:
+                    itr = utils.tpu_data_loader(itr)
+
+                progress = progress_bar.progress_bar(
+                    itr,
+                    log_format=cfg.common.log_format,
+                    log_file=cfg.common.log_file,
+                    log_interval=cfg.common.log_interval,
+                    epoch=epoch_itr.epoch,
+                    aim_repo=(
+                        cfg.common.aim_repo
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    aim_run_hash=(
+                        cfg.common.aim_run_hash
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    aim_param_checkpoint_dir=cfg.checkpoint.save_dir,
+                    tensorboard_logdir=(
+                        cfg.common.tensorboard_logdir
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    default_log_format=("tqdm" if not cfg.common.no_progress_bar else "simple"),
+                    wandb_project=(
+                        cfg.common.wandb_project
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    wandb_run_name=os.environ.get(
+                        "WANDB_NAME", os.path.basename(cfg.checkpoint.save_dir)
+                    ),
+                    azureml_logging=(
+                        cfg.common.azureml_logging
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else False
+                    ),
+                )
+                progress.update_config(_flatten_config(cfg))
+
+                trainer.begin_epoch(epoch_itr.epoch)
+
+            elif mask.sparse_mode == 'oBERT':
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
-                mask.setup_fisher_inverse(trainer, progress_obert)
+                mask.setup_fisher_inverse(trainer, progress)
 
             else:
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
