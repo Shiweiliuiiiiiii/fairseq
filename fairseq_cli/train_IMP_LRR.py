@@ -218,7 +218,7 @@ def main(cfg: FairseqConfig) -> None:
                 break
 
             # train for one epoch
-            valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask)
+            valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask, iter)
             if should_stop:
                 break
 
@@ -276,7 +276,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask, iter
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -338,7 +338,7 @@ def train(
 
     trainer.begin_epoch(epoch_itr.epoch)
 
-    if epoch_itr.epoch == 1:
+    if epoch_itr.epoch == 1 and iter > 0:
         logger.info("'**********Start pruning the model**********************'")
 
         # build masks here
