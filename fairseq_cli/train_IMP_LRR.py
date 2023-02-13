@@ -191,86 +191,14 @@ def main(cfg: FairseqConfig) -> None:
         lr = trainer.get_lr()
 
         # performing pruning at the beginning of each IMP iter
-        mask=None
-        if iter != 0:
-            decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
-            mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
-                            sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
-                            redistribution_mode=cfg.spa.redistribution, fp16=cfg.distributed_training.fp16, args=cfg)
-            mask.add_module(trainer.model)
-
-            if mask.sparse_init == 'oBERT_one_shot':
-                mask.setup_fisher_inverse(trainer, progress)
-                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
-                          density=(1 - mask.sparsity))
-
-                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
-                    cfg.checkpoint,
-                    trainer,
-                    # don't cache epoch iterators for sharded datasets
-                    disable_iterator_cache=task.has_sharded_data("train"),
-                )
-
-                itr = epoch_itr.next_epoch_itr(
-                    fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
-                    shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
-                )
-
-                update_freq = (
-                    cfg.optimization.update_freq[epoch_itr.epoch - 1]
-                    if epoch_itr.epoch <= len(cfg.optimization.update_freq)
-                    else cfg.optimization.update_freq[-1]
-                )
-                itr = iterators.GroupedIterator(
-                    itr,
-                    update_freq,
-                    skip_remainder_batch=cfg.optimization.skip_remainder_batch,
-                )
-                if cfg.common.tpu:
-                    itr = utils.tpu_data_loader(itr)
-
-                progress = progress_bar.progress_bar(
-                    itr,
-                    log_format=cfg.common.log_format,
-                    log_file=cfg.common.log_file,
-                    log_interval=cfg.common.log_interval,
-                    epoch=epoch_itr.epoch,
-                    aim_repo=(
-                        cfg.common.aim_repo
-                        if distributed_utils.is_master(cfg.distributed_training)
-                        else None
-                    ),
-                    aim_run_hash=(
-                        cfg.common.aim_run_hash
-                        if distributed_utils.is_master(cfg.distributed_training)
-                        else None
-                    ),
-                    aim_param_checkpoint_dir=cfg.checkpoint.save_dir,
-                    tensorboard_logdir=(
-                        cfg.common.tensorboard_logdir
-                        if distributed_utils.is_master(cfg.distributed_training)
-                        else None
-                    ),
-                    default_log_format=("tqdm" if not cfg.common.no_progress_bar else "simple"),
-                    wandb_project=(
-                        cfg.common.wandb_project
-                        if distributed_utils.is_master(cfg.distributed_training)
-                        else None
-                    ),
-                    wandb_run_name=os.environ.get(
-                        "WANDB_NAME", os.path.basename(cfg.checkpoint.save_dir)
-                    ),
-                    azureml_logging=(
-                        cfg.common.azureml_logging
-                        if distributed_utils.is_master(cfg.distributed_training)
-                        else False
-                    ),
-                )
-                progress.update_config(_flatten_config(cfg))
-
-                trainer.begin_epoch(epoch_itr.epoch)
-            else:
-                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
+        mask = None
+        # if iter != 0:
+        #     decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
+        #     mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
+        #                     sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune, growth_mode=cfg.spa.growth,
+        #                     redistribution_mode=cfg.spa.redistribution, fp16=cfg.distributed_training.fp16, args=cfg)
+        #     mask.add_module(trainer.model)
+        #     mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1-cfg.spa.sparsity))
 
         # update the name of subnet with regards to the current pruning iteration
         trainer.checkpoint_suffix = "_iter{}".format(iter)
@@ -409,6 +337,104 @@ def train(
     progress.update_config(_flatten_config(cfg))
 
     trainer.begin_epoch(epoch_itr.epoch)
+
+    if epoch_itr.epoch == 1:
+        logger.info("'**********Start pruning the model**********************'")
+
+        # build masks here
+        # global mask
+        mask = None
+        if cfg.spa.sparse:
+            if cfg.optimization.max_update != 0:
+                decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update * update_freq)
+            else:
+                decay = CosineDecay(cfg.spa.prune_rate, int(cfg.optimization.max_epoch * len(progress)))
+            print('update ', update_freq)
+            mask = Masking(trainer.optimizer, prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
+                           sparsity=cfg.spa.sparsity, prune_mode=cfg.spa.prune,
+                           growth_mode=cfg.spa.growth, redistribution_mode=cfg.spa.redistribution, fp16=cfg.common.fp16,
+                           args=cfg)
+            mask.add_module(trainer.model)
+
+            if mask.sparse_init == 'oBERT_one_shot':
+                mask.setup_fisher_inverse(trainer, progress)
+                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
+                          density=(1 - mask.sparsity))
+
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
+
+                itr = epoch_itr.next_epoch_itr(
+                    fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
+                    shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
+                )
+
+                update_freq = (
+                    cfg.optimization.update_freq[epoch_itr.epoch - 1]
+                    if epoch_itr.epoch <= len(cfg.optimization.update_freq)
+                    else cfg.optimization.update_freq[-1]
+                )
+                itr = iterators.GroupedIterator(
+                    itr,
+                    update_freq,
+                    skip_remainder_batch=cfg.optimization.skip_remainder_batch,
+                )
+                if cfg.common.tpu:
+                    itr = utils.tpu_data_loader(itr)
+
+                progress = progress_bar.progress_bar(
+                    itr,
+                    log_format=cfg.common.log_format,
+                    log_file=cfg.common.log_file,
+                    log_interval=cfg.common.log_interval,
+                    epoch=epoch_itr.epoch,
+                    aim_repo=(
+                        cfg.common.aim_repo
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    aim_run_hash=(
+                        cfg.common.aim_run_hash
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    aim_param_checkpoint_dir=cfg.checkpoint.save_dir,
+                    tensorboard_logdir=(
+                        cfg.common.tensorboard_logdir
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    default_log_format=("tqdm" if not cfg.common.no_progress_bar else "simple"),
+                    wandb_project=(
+                        cfg.common.wandb_project
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else None
+                    ),
+                    wandb_run_name=os.environ.get(
+                        "WANDB_NAME", os.path.basename(cfg.checkpoint.save_dir)
+                    ),
+                    azureml_logging=(
+                        cfg.common.azureml_logging
+                        if distributed_utils.is_master(cfg.distributed_training)
+                        else False
+                    ),
+                )
+                progress.update_config(_flatten_config(cfg))
+
+                trainer.begin_epoch(epoch_itr.epoch)
+
+            elif mask.sparse_mode == 'oBERT':
+                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
+                          density=(1 - mask.sparsity))
+                mask.setup_fisher_inverse(trainer, progress)
+
+            else:
+                mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init, density=(1 - mask.sparsity))
+
 
     valid_subsets = cfg.dataset.valid_subset.split(",")
     should_stop = False
