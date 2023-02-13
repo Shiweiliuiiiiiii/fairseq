@@ -361,6 +361,7 @@ def train(
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
 
+                # reinitialize data sampler for training
                 epoch_itr = trainer.get_train_iterator(
                     epoch=1, load_dataset=True)
 

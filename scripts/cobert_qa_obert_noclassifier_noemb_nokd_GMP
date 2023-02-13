@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_one_shot_obert_after_noembed_noclassifier
+#SBATCH --job-name=obert_GMP_noemb_noclassifier
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o roberta_one_shot_obert_after_noembed_noclassifier.out
+#SBATCH -o obert_GMP_noemb_noclassifier.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate prune_cry
@@ -18,8 +18,7 @@ WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
 SEED=1                # Random seed.
-ROBERTA_PATH=~/project_space/pruning_fails/QA/robert/commonsenseqa/GMP_LRR_no_emd_classhead/lr105/5epochs_perpruning/checkpoint_best_iter0.pt
-#ROBERTA_PATH=ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.base/model.pt
+ROBERTA_PATH=~/project_space/pruning_fails/QA/pretrained_models/roberta.base/model.pt
 DATA_DIR=/home/sliu/Projects/fairseq/data/CommonsenseQA
 
 # we use the --user-dir option to load the task from
@@ -28,7 +27,7 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2 0.36 0.488 0.590 0.672 0.738 0.791 0.8325 0.866 0.893
 do
-save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/obert_one_shot_after_noemb_noclassifier/$sparsity
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/obert_GMP_noemb_noclassifier/$sparsity
 CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     $DATA_DIR \
     --user-dir $FAIRSEQ_USER_DIR \
@@ -46,7 +45,8 @@ CUDA_VISIBLE_DEVICES=0 python train.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25\
-    --seed $SEED --sparse --fix --sparse-init oBERT_one_shot --sparsity $sparsity --save-dir $save_dir --noembed
+    --seed $SEED --sparse --sparse-init dense --sparse-mode oBERT_GMP --sparsity $sparsity --save-dir $save_dir  \
+    --prune magnitude --prune-rate 0.5 --growth gradient --update-frequency 500 --redistribution none --noembed
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py

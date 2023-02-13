@@ -44,6 +44,11 @@ robert_gmp_506_300_no_embed_no_classifier_10epochs = [76.57, 74.49, 71.90, 65.02
 robert_gmp_506_600_no_embed_no_classifier_10epochs = [76.49, 74.61, 71.99, 64.53, 53.89, 38.49, 31.44, 22.85, 20.14, 20.63]
 
 
+# new results of oBERT
+oBERT_LLR_noembed_nocla =        [75.51, 76.00, 75.51, 75.75, 75.84, 75.10, 76.17, 74.52, 73.87, 73.46]
+oBERT_GMP_noembed_nocla =        []
+oBERT_oneshot_ft_noembed_nocla = [76.58, 76.33, 73.96, 18.51, 22.27, 23.67, 22.60, 19.25, 20.15, 18.92]
+oBERT_oneshot_ft =               [76.00, 74.69, 51.76, 20.80, 21.04, 21.62, 18.84, 21.29, 20.56, 19.33]
 
 
 roberta_large = fig.add_subplot(1,1,1)
@@ -51,11 +56,12 @@ roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='bl
 roberta_large.plot(x_axis, robert_gmp_csqa_5epochs,  '-o',   label='GMP',color='#228B22',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, robert_gmp_csqa_no_embed_5epochs,  '-o',   label='GMP (not pruning emb)',color='blue',linewidth=linewidth, markersize=markersize, )
 roberta_large.plot(x_axis, robert_gmp_csqa_no_embed_no_classifier_5epochs,  '-o',   label='GMP (not pruning emb and classifier)',color='#CD00CD',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_obert_plain_5epochs,  '--',   label='oBERT - KD - LRR (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, oBERT_LLR_noembed_nocla,  '--',   label='oBERT + LRR (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, robert_gmp_105_600_no_embed_no_classifier_10epochs,  '-o',   label='GMP (no emb and no classifier) 10 epochs',color='orange',linewidth=linewidth, markersize=markersize, )
 # roberta_large.plot(x_axis, robert_gmp_LLR_no_embed_no_classifier_5epochs,  '-o',   label='GMP + LRR (not pruning emb and classifier)',color='purple',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_obert_LLR_no_embed_no_classifier_5epochs_noKD,  '--o',   label='oBERT - KD (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
-roberta_large.plot(x_axis, robert_obert_LLR_no_embed_no_classifier_5epochs,  '-o',   label='oBERT (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
+# roberta_large.plot(x_axis, robert_obert_LLR_no_embed_no_classifier_5epochs_noKD,  '--o',   label='oBERT - KD (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, oBERT_oneshot_ft,  '-o',   label='oBERT After',color='red',linewidth=linewidth, markersize=markersize, )
+roberta_large.plot(x_axis, oBERT_oneshot_ft_noembed_nocla,  '-o',   label='oBERT After (not pruning emb and classifier)',color='red',linewidth=linewidth, markersize=markersize, )
 # # roberta_large.plot(x_axis, robert_structured,  '-o',   label='Structrued (L1 Norm)',color='orange',linewidth=linewidth, markersize=markersize, )
 
 # roberta_large.plot(x_axis, dense_csqa*10,  '-o',   label='Dense model',color='black',linewidth=linewidth, markersize=markersize, )

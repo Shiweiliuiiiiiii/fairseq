@@ -66,7 +66,7 @@ class Masking(object):
         self.fisher_inv = None # used for oBERT pruning
         # parameters for GMP
         # T_max is the total training iterations
-        if args.spa.sparse_init == 'GMP':
+        if args.spa.sparse_mode == 'GMP' or args.spa.sparse_mode == 'oBERT_GMP':
             self.total_step = self.prune_rate_decay.T_max
             self.final_prune_time = int(self.total_step * args.spa.final_prune_time)
             self.initial_prune_time = int(self.total_step * args.spa.initial_prune_time)
@@ -316,7 +316,6 @@ class Masking(object):
                 self.masks[name][:] = (weight != 0.0).float().data.to(device)
                 self.baseline_nonzero += weight.numel()*density
 
-
         elif mode == 'ERK':
             print('initialize by fixed_ERK')
             total_params = 0
@@ -377,8 +376,8 @@ class Masking(object):
                 total_nonzero += density_dict[name] * mask.numel()
             print(f"Overall sparsity {total_nonzero / total_params}")
 
-        elif mode == 'oBERT_one_shot':
-            self.gradual_oBERT_pruning(1-density)
+        elif mode == 'oBERT_LLR':
+            self.gradual_oBERT_pruning(current_pruning_rate=(1-density), IMP=True)
 
         self.apply_mask()
         self.print_status()
@@ -444,11 +443,11 @@ class Masking(object):
                     self.gradual_magnitude_pruning(current_prune_rate, True)
                     self.print_status()
 
-            elif self.sparse_mode == 'oBERT':
+            elif self.sparse_mode == 'oBERT_GMP':
                 if self.steps >= self.initial_prune_time and self.steps < self.final_prune_time and self.steps % self.update_frequency == 0:
                     print('*********************************Gradual oBERT Pruning***********************')
                     current_prune_rate = self.gradual_pruning_rate(self.steps, 0.0, self.sparsity, self.initial_prune_time, self.final_prune_time)
-                    self.gradual_oBERT_pruning(current_prune_rate)
+                    self.gradual_oBERT_pruning(current_pruning_rate=current_prune_rate, IMP=False)
                     self.print_status()
 
             elif self.sparse_mode == 'DST':
@@ -593,8 +592,9 @@ class Masking(object):
                 self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(self.device)
         self.apply_mask()
 
-    def gradual_oBERT_pruning(self, current_pruning_rate, cpu=False):
+    def gradual_oBERT_pruning(self, current_pruning_rate, cpu=False, IMP=False):
         # collect grad for oBERT
+        # IMP refers to iterative magnitude pruning
         self._trainer.model.train()
         self._trainer.criterion.train()
 
@@ -630,7 +630,24 @@ class Masking(object):
 
         # Gather all scores in a single vector and normalise
         all_scores = torch.cat([torch.flatten(x) for x in oBERTR_scores])
-        num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate))
+
+        if IMP:
+            print('performing oBERT IMP')
+            total_num_nonzoros = 0
+            dense_nonzeros = 0
+            for module in self.modules:
+                for name, tensor in module.named_parameters():
+                    if name not in self.masks: continue
+                    self.masks[name] = (weight != 0).cuda()
+                    self.name2nonzeros[name] = (weight != 0).sum().item()
+                    total_num_nonzoros += self.name2nonzeros[name]
+                    dense_nonzeros += weight.numel()
+
+            print(f'sparsity level of current model is {1 - total_num_nonzoros / dense_nonzeros}')
+            num_params_to_keep = int(total_num_nonzoros) * (1 - current_pruning_rate)
+        else:
+            print('performing oBERT normal pruning')
+            num_params_to_keep = int(all_scores) * (1 - current_pruning_rate)
 
         threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
         acceptable_score = threshold[-1]
