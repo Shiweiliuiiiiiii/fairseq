@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=roberta_gmp_no_embedding_no_classifier_LRR_5epoch_perpruning_lr1e05_5e05_test
+#SBATCH --job-name=reberta_one_shot_noemb_nocla_and_emb_cla
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-10:00:00
+#SBATCH -t 0-2:00:00
 #SBATCH --cpus-per-task=18
 #SBATCH -o reberta_one_shot_noemb_nocla_and_emb_cla.out
 
