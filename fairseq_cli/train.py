@@ -385,6 +385,13 @@ def train(
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
 
+                extra_state, epoch_itr = checkpoint_utils.load_checkpoint(
+                    cfg.checkpoint,
+                    trainer,
+                    # don't cache epoch iterators for sharded datasets
+                    disable_iterator_cache=task.has_sharded_data("train"),
+                )
+
                 itr = epoch_itr.next_epoch_itr(
                     fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
                     shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
