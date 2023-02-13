@@ -111,6 +111,8 @@ class Masking(object):
             self.remove_weight_partial_name('embed_tokens')
             print('Remove embed_positions')
             self.remove_weight_partial_name('embed_positions')
+            print('Removing classification_heads')
+            self.remove_weight_partial_name('classification_heads')
         print('Removing in_proj_weight')
         self.remove_weight_partial_name('in_proj_weight')
         print('Removing out_proj_weight')
@@ -121,8 +123,6 @@ class Masking(object):
         self.remove_weight_partial_name('fc2_weight')
         print('Removing lm_head.dense.weight')
         self.remove_weight_partial_name('lm_head.dense.weight')
-        print('Removing classification_heads')
-        self.remove_weight_partial_name('classification_heads')
 
 
     def remove_weight(self, name):
