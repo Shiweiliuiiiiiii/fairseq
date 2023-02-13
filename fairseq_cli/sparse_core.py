@@ -66,10 +66,10 @@ class Masking(object):
         self.fisher_inv = None # used for oBERT pruning
         # parameters for GMP
         # T_max is the total training iterations
-        # if args.spa.sparse_init != 'iterative_gm':
-        self.total_step = self.prune_rate_decay.T_max
-        self.final_prune_time = int(self.total_step * args.spa.final_prune_time)
-        self.initial_prune_time = int(self.total_step * args.spa.initial_prune_time)
+        if args.spa.sparse_init == 'GMP':
+            self.total_step = self.prune_rate_decay.T_max
+            self.final_prune_time = int(self.total_step * args.spa.final_prune_time)
+            self.initial_prune_time = int(self.total_step * args.spa.initial_prune_time)
 
 
         self.global_growth = False
