@@ -448,7 +448,7 @@ def train(
 
                 trainer.begin_epoch(epoch_itr.epoch)
 
-            elif mask.sparse_mode == 'oBERT':
+            elif mask.sparse_mode == 'oBERT_GMP':
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
                 mask.setup_fisher_inverse(trainer, progress)
