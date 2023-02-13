@@ -395,7 +395,7 @@ def train(
                 itr = epoch_itr.next_epoch_itr(
                     fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
                     shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
-                    set_dataset_epoch=False
+                    set_dataset_epoch=True
                 )
                 if cfg.common.tpu:
                     itr = utils.tpu_data_loader(itr)
