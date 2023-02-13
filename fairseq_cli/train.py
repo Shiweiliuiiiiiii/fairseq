@@ -383,6 +383,9 @@ def train(
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
                           density=(1 - mask.sparsity))
 
+
+                if cfg.common.tpu:
+                    itr = utils.tpu_data_loader(itr)
                 progress = progress_bar.progress_bar(
                     itr,
                     log_format=cfg.common.log_format,
@@ -438,15 +441,14 @@ def train(
     num_updates = trainer.get_num_updates()
     logger.info("Start iterating over samples")
 
+    print(progress)
+    
     for i, samples in enumerate(progress):
         with metrics.aggregate("train_inner"), torch.autograd.profiler.record_function(
             "train_step-%d" % i
         ):
             log_output = trainer.train_step(samples, mask=mask)
-        print(f'progress ite is {i}')
-        print(f'progress ite is {i}')
-        print(f'progress ite is {i}')
-        print(f'progress ite is {i}')
+
         if log_output is not None:  # not OOM, overflow, ...
             # log mid-epoch stats
             num_updates = trainer.get_num_updates()
