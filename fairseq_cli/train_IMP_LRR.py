@@ -341,17 +341,17 @@ def train(
     if epoch_itr.epoch == 1 and iter > 0:
         logger.info("'**********Start pruning the model**********************'")
 
-        epoch_itr = trainer.get_train_iterator(
+        epoch_itr_obert = trainer.get_train_iterator(
             epoch=1, load_dataset=True)
 
-        itr = epoch_itr.next_epoch_itr(
+        itr = epoch_itr_obert.next_epoch_itr(
             fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
-            shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
+            shuffle=(epoch_itr_obert.next_epoch_idx > cfg.dataset.curriculum),
         )
 
         update_freq = (
-            cfg.optimization.update_freq[epoch_itr.epoch - 1]
-            if epoch_itr.epoch <= len(cfg.optimization.update_freq)
+            cfg.optimization.update_freq[epoch_itr_obert.epoch - 1]
+            if epoch_itr_obert.epoch <= len(cfg.optimization.update_freq)
             else cfg.optimization.update_freq[-1]
         )
         itr = iterators.GroupedIterator(
@@ -367,7 +367,7 @@ def train(
             log_format=cfg.common.log_format,
             log_file=cfg.common.log_file,
             log_interval=cfg.common.log_interval,
-            epoch=epoch_itr.epoch,
+            epoch=epoch_itr_obert.epoch,
             aim_repo=(
                 cfg.common.aim_repo
                 if distributed_utils.is_master(cfg.distributed_training)
@@ -401,7 +401,6 @@ def train(
         )
         progress_obert.update_config(_flatten_config(cfg))
 
-        trainer.begin_epoch(epoch_itr.epoch)
         # build masks here
         # global mask
         mask = None
