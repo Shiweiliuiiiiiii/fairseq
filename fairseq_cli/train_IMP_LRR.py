@@ -341,6 +341,27 @@ def train(
     if epoch_itr.epoch == 1 and iter > 0:
         logger.info("'**********Start pruning the model**********************'")
 
+        epoch_itr = trainer.get_train_iterator(
+            epoch=1, load_dataset=True)
+
+        itr = epoch_itr.next_epoch_itr(
+            fix_batches_to_gpus=cfg.distributed_training.fix_batches_to_gpus,
+            shuffle=(epoch_itr.next_epoch_idx > cfg.dataset.curriculum),
+        )
+
+        update_freq = (
+            cfg.optimization.update_freq[epoch_itr.epoch - 1]
+            if epoch_itr.epoch <= len(cfg.optimization.update_freq)
+            else cfg.optimization.update_freq[-1]
+        )
+        itr = iterators.GroupedIterator(
+            itr,
+            update_freq,
+            skip_remainder_batch=cfg.optimization.skip_remainder_batch,
+        )
+        if cfg.common.tpu:
+            itr = utils.tpu_data_loader(itr)
+
         progress_obert = progress_bar.progress_bar(
             itr,
             log_format=cfg.common.log_format,
@@ -379,6 +400,8 @@ def train(
             ),
         )
         progress_obert.update_config(_flatten_config(cfg))
+
+        trainer.begin_epoch(epoch_itr.epoch)
         # build masks here
         # global mask
         mask = None
