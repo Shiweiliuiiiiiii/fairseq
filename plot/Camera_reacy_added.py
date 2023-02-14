@@ -45,10 +45,9 @@ robert_gmp_506_600_no_embed_no_classifier_10epochs = [76.49, 74.61, 71.99, 64.53
 
 
 # new results of oBERT
-oBERT_LLR_noembed_nocla =        [75.51, 76.00, 75.51, 75.75, 75.84, 75.10, 76.17, 74.52, 73.87, 73.46]
-oBERT_GMP_noembed_nocla =        []
-oBERT_oneshot_ft_noembed_nocla = [76.58, 76.33, 73.96, 18.51, 22.27, 23.67, 22.60, 19.25, 20.15, 18.92]
-oBERT_oneshot_ft =               [76.00, 74.69, 51.76, 20.80, 21.04, 21.62, 18.84, 21.29, 20.56, 19.33]
+robert_lth_csqa_noe = [76.57, 74.11, 71.66, 66.17, 51.35, 40.62, 19.57, 19.57, 19.57, 19.57]
+robert_lth_noe_noc  = [76.58, 75.10, 71.58, 66.17, 58.89, 46.52, 38.90, 35.30, 24.73, 22.11]  # reberta_LTH_noemb_nocla_noLRR.out
+
 
 
 roberta_large = fig.add_subplot(1,1,1)
