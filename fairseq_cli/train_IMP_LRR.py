@@ -276,7 +276,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask, iter
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask, iteration
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -359,7 +359,7 @@ def train(
             if mask.sparse_init == 'oBERT_LRR':
                 mask.setup_fisher_inverse(trainer, progress)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
-                          density=(1 - mask.sparsity))
+                          density=(1 - mask.sparsity), iteration=iter)
 
 
                 epoch_itr = trainer.get_train_iterator(

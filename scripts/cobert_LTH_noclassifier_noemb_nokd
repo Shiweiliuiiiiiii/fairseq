@@ -1,19 +1,19 @@
 #!/bin/bash
-#SBATCH --job-name=test_imp_0.1
+#SBATCH --job-name=roberta_obert_LLR_noembed_noclassifier
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
 #SBATCH --gpus-per-node=1
 #SBATCH --gpus=1
-#SBATCH -t 0-24:00:00
+#SBATCH -t 0-10:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o test_imp_0.1.out
+#SBATCH -o roberta_obert_LLR_noembed_noclassifier.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate prune_cry
 
 
-MAX_UPDATES=3000      # Number of training steps.
+MAX_UPDATES=100      # Number of training steps.
 WARMUP_UPDATES=150    # Linearly increase LR over this many steps.
 LR=1e-05              # Peak LR for polynomial LR scheduler.
 MAX_SENTENCES=16      # Batch size.
@@ -27,8 +27,8 @@ FAIRSEQ_PATH=/home/sliu/Projects/fairseq
 FAIRSEQ_USER_DIR=${FAIRSEQ_PATH}/examples/roberta/commonsense_qa
 for sparsity in 0.2
 do
-save_dir=~/4/$sparsity
-CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
+save_dir=~/project_space/pruning_fails/QA/robert/commonsenseqa/obert_after_noemb_noclassifier_LRR/$sparsity
+CUDA_VISIBLE_DEVICES=0 python train_IMP.py --ddp-backend=legacy_ddp \
     $DATA_DIR --save-dir $save_dir  \
     --user-dir $FAIRSEQ_USER_DIR \
     --restore-file $ROBERTA_PATH \
@@ -45,7 +45,7 @@ CUDA_VISIBLE_DEVICES=0 python train_custom.py --ddp-backend=legacy_ddp \
     --batch-size $MAX_SENTENCES \
     --max-update $MAX_UPDATES \
     --log-format simple --log-interval 25 \
-    --seed $SEED --fix --sparse-init iterative_gm --sparsity $sparsity --imp-iters 11
+    --seed $SEED --fix --sparse --sparse-init oBERT_LRR --sparsity $sparsity --imp-iters 11 --noembed
 
 done
 #python examples/roberta/commonsense_qa/evaluate.py
