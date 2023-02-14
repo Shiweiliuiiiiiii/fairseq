@@ -192,7 +192,7 @@ def main(cfg: FairseqConfig) -> None:
 
         # performing pruning at the beginning of each IMP iter
         mask = None
-        global mask
+        # global mask
         # if iter != 0:
         #     decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
         #     mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
