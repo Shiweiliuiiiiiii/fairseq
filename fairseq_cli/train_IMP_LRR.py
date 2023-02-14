@@ -192,6 +192,7 @@ def main(cfg: FairseqConfig) -> None:
 
         # performing pruning at the beginning of each IMP iter
         mask = None
+        global mask
         # if iter != 0:
         #     decay = CosineDecay(cfg.spa.prune_rate, max_epoch)
         #     mask = Masking(trainer.optimizer,  prune_rate_decay=decay, prune_rate=cfg.spa.prune_rate,
@@ -218,7 +219,7 @@ def main(cfg: FairseqConfig) -> None:
                 break
 
             # train for one epoch
-            valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, mask, iter)
+            valid_losses, should_stop = train(cfg, trainer, task, epoch_itr, iter)
             if should_stop:
                 break
 
@@ -276,7 +277,7 @@ def should_stop_early(cfg: DictConfig, valid_loss: float) -> bool:
 
 @metrics.aggregate("train")
 def train(
-    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, mask, iteration
+    cfg: DictConfig, trainer: Trainer, task: tasks.FairseqTask, epoch_itr, iteration
 ) -> Tuple[List[Optional[float]], bool]:
     """Train the model for one epoch and return validation losses."""
     # Initialize data iterator
@@ -342,8 +343,8 @@ def train(
         logger.info("'**********Start pruning the model**********************'")
 
         # build masks here
-        # global mask
-        mask = None
+        global mask
+
         if cfg.spa.sparse:
             if cfg.optimization.max_update != 0:
                 decay = CosineDecay(cfg.spa.prune_rate, cfg.optimization.max_update * update_freq)
