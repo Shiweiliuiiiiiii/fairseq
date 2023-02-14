@@ -336,12 +336,11 @@ def train(
     progress.update_config(_flatten_config(cfg))
 
     trainer.begin_epoch(epoch_itr.epoch)
-
+    global mask
     if epoch_itr.epoch == 1 and iteration > 0:
         logger.info("'**********Start pruning the model**********************'")
 
         # build masks here
-        global mask
 
         if mask.sparse_init == 'oBERT_LRR':
             mask.setup_fisher_inverse(trainer, progress)
