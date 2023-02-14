@@ -338,7 +338,7 @@ def train(
 
     trainer.begin_epoch(epoch_itr.epoch)
 
-    if epoch_itr.epoch == 1 and iter > 0:
+    if epoch_itr.epoch == 1 and iteration > 0:
         logger.info("'**********Start pruning the model**********************'")
 
         # build masks here
@@ -359,7 +359,7 @@ def train(
             if mask.sparse_init == 'oBERT_LRR':
                 mask.setup_fisher_inverse(trainer, progress)
                 mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
-                          density=(1 - mask.sparsity), iteration=iter)
+                          density=(1 - mask.sparsity), iteration=iteration)
 
 
                 epoch_itr = trainer.get_train_iterator(
