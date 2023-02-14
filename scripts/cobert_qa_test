@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=reberta_oBERT_LRR_noemb_nocla
+#SBATCH --job-name=reberta_LTH_noemb_nocla_noLRR
 #SBATCH -p gpu
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -7,7 +7,7 @@
 #SBATCH --gpus=1
 #SBATCH -t 0-2:00:00
 #SBATCH --cpus-per-task=18
-#SBATCH -o reberta_oBERT_LRR_noemb_nocla.out
+#SBATCH -o reberta_LTH_noemb_nocla_noLRR.out
 
 source /home/sliu/miniconda3/etc/profile.d/conda.sh
 source activate prune_cry

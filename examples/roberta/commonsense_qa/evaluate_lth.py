@@ -13,8 +13,8 @@ def sorted_nicely(l):
 
 # check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
 check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
-
-for method in ['obert_after_noemb_noclassifier_LRR/0.2/']:
+# QA/robert/commonsenseqa/LTH_noembed_noclassifier/
+for method in ['LTH_noembed_noclassifier/0.2/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
