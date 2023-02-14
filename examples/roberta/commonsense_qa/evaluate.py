@@ -17,7 +17,7 @@ print(f'Evaluation list is {list}')
 
 check_point_folder_source = '/home/sliu/project_space/pruning_fails/QA/robert/commonsenseqa/'
 
-for method in ['obert_one_shot_after_noemb_noclassifier/', 'obert_one_shot_after/']:
+for method in ['obert_after_noemb_noclassifier_LRR/']:
 
     check_point_folder = check_point_folder_source + method
     # model_files = [0.5]
