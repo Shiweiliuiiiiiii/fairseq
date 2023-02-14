@@ -345,7 +345,7 @@ def train(
         if mask.sparse_init == 'oBERT_LRR':
             mask.setup_fisher_inverse(trainer, progress)
             mask.init(model=trainer.model, train_loader=None, device=mask.device, mode=mask.sparse_init,
-                      density=(1 - mask.sparsity), iteration=iteration)
+                      density=(1 - mask.sparsity))
 
 
             epoch_itr = trainer.get_train_iterator(
