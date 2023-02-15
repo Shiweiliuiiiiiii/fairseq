@@ -185,7 +185,7 @@ class Masking(object):
                 self.name_to_32bit[name] = tensor2
             self.half = True
 
-    def init(self, model, train_loader , device, mode='one_shot_gm', density=0.05, erk_power_scale=1.0):
+    def init(self, model, train_loader , device, mode='one_shot_gm', density=0.05, erk_power_scale=1.0, iteration=0):
         self.init_growth_prune_and_redist()
 
         if mode == 'dense':
@@ -378,7 +378,7 @@ class Masking(object):
             print(f"Overall sparsity {total_nonzero / total_params}")
 
         elif mode == 'oBERT_one_shot':
-            self.gradual_oBERT_pruning(1-density)
+            self.gradual_oBERT_pruning(1-density, iteration=iteration)
 
         self.apply_mask()
         self.print_status()
@@ -593,7 +593,7 @@ class Masking(object):
                 self.masks[name] = ((torch.abs(weight)) > acceptable_score).float().data.to(self.device)
         self.apply_mask()
 
-    def gradual_oBERT_pruning(self, current_pruning_rate, cpu=False):
+    def gradual_oBERT_pruning(self, current_pruning_rate, cpu=False, iteration=0):
         # collect grad for oBERT
         self._trainer.model.train()
         self._trainer.criterion.train()
@@ -630,7 +630,7 @@ class Masking(object):
 
         # Gather all scores in a single vector and normalise
         all_scores = torch.cat([torch.flatten(x) for x in oBERTR_scores])
-        num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate))
+        num_params_to_keep = int(len(all_scores) * (1 - current_pruning_rate)**iteration)
 
         threshold, _ = torch.topk(all_scores, num_params_to_keep, sorted=True)
         acceptable_score = threshold[-1]
